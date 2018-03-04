@@ -1,1 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
+$g_grayPalette: (
+    0: #ffffff,
+    1: #e6e6e6,
+    2: #cccccc,
+    3: #b2b2b2,
+    4: #999999,
+    5: #7f7f7f,
+    6: #666666,
+    7: #4d4d4d,
+    8: #323232,
+    9: #191919,
+    10: #000000
+);
+
+$g_FontColor: map-get($g_grayPalette, 7);
+$g_BackgroundColor: map-get($g_grayPalette, 1);
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: $g_BackgroundColor;
+}
+
+
+blockquote {
+    margin-left: 10px !important;
+}
+
+
+//---- 반응형 관련 ----
+
+$g_mediaMobile: 320px;
+$g_mediaTablet: 768px;
+$g_mediaLaptop: 900px;
+$g_mediaDesktop: 1200px;
+
+// 미디어 쿼리 용도의 전체 클래스에요.
+.g_mobile, .g_tablet, .g_laptop, .g_desktop {
+    display: none;
+}
+
+// @media (max-width: $g_mediaMobile) {
+    
+// }
+
+// @media (min-width: $g_mediaTablet) {
+
+// }
+
+// @media (min-width: $g_mediaLaptop) {
+
+// }
+
+// @media (min-width: $g_mediaDesktop) {
+
+// }
