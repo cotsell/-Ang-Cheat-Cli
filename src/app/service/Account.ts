@@ -22,12 +22,12 @@ export default class Account {
     // 엑세스토큰이 활성화된 값이 아니라면, 로컬 저장소의 AccessToken과 UserId값을 제거합니다.
     // TODO 로그인에 실패했을 경우의 대응은?
     // - 이건 AccessToken을 이용한 로그인이므로, 실패 대응 필요없다.
-    loginWithAccessToken(cbFunc): Subscription {
+    loginWithAccessToken(cbFunc, cbFailLoginFunc?): Subscription {
         let subscription: Subscription;
 
         subscription = this.store.select(Redux.getAccount)
             .subscribe(obs => {
-                cbFunc(obs);
+                cbFunc(obs); // 콜백함수에 Account 리덕스의 구독 내용을 보내준다.
                 if (obs.loggedIn === undefined || obs.loggedIn === false || obs.loggedIn === null) {
                     login(this.network, this.store);
                 }
@@ -49,8 +49,21 @@ export default class Account {
                         } else { // 유요한 엑세스토큰이 아니므로, 로컬 저장소 정리.
                             localStorage.removeItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN);
                             localStorage.removeItem(SysConf.LOCAL_STORAGE_USER_ID);
+
+                            // 로그인 실패하면 실행할 함수가 입력되었다면, 시행.
+                            if (cbFailLoginFunc !== undefined && cbFailLoginFunc !== null) {
+                                console.log('로그인 실패 함수 가동.');
+                                cbFailLoginFunc();
+                            }
                         }
                     });
+            } else {
+                // 엑세스 토큰이 로컬 저장소에 존재하지 않으면..
+                // 로그인 실패하면 실행할 함수가 입력되었다면, 시행.
+                if (cbFailLoginFunc !== undefined && cbFailLoginFunc !== null) {
+                    console.log('로그인 실패 함수 가동.');
+                    cbFailLoginFunc();
+                }
             }
         }
 

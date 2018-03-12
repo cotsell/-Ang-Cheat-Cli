@@ -9,27 +9,47 @@
   <!-- profile_div의 좌측 빈공간 -->
   <div></div>
 
-  <div id="profile_grid">
-    <div id="user_img">
-      <i class="material-icons" style="font-size: 10rem; color: white;">account_circle</i>
-    </div>
+  <div>
+    <form  [formGroup]="profileForm" (ngSubmit)="test()">
+      <div id="profile_grid">
+        <div id="user_img">
+          <i class="material-icons" style="font-size: 10rem; color: white;">account_circle</i>
+        </div>
 
-    <div>아이디</div>
-    <div>cotsell@gmail.com</div>
+        <div>아이디</div>
+        <div>
+          <div *ngIf="!isEditMode">{{ userInfo?.id }}</div>
+          <div *ngIf="isEditMode"><input type="text" [formControlName]="'id'"></div>
+        </div>
 
-    <div>닉네임</div>
-    <div>cotsell</div>
+        <div>닉네임</div>
+        <div>
+          <div *ngIf="!isEditMode">{{ userInfo?.nickName }}</div>
+          <div *ngIf="isEditMode"><input type="text" [formControlName]="'nickName'"></div>
+        </div>
 
-    <div>비밀번호</div>
-    <div>********</div>
+        <div>비밀번호</div>
+        <div>
+          <div *ngIf="!isEditMode">********</div>
+          <div *ngIf="isEditMode"><input type="password" [formControlName]="'password'"></div>
+        </div>
 
-    <div id="signature">시그니쳐</div>
+        <div id="signature">시그니쳐</div>
 
-    <div id="buttons">
-      <button id="save" type="button">저장</button> 
-      <button id="cancel" type="button">취소</button>
-    </div>
+        <div *ngIf="!isEditMode">
+          <button type="button" (click)="modalOpen($event)">수정하기</button>
+        </div>
 
+        <div 
+          *ngIf="isEditMode"
+          id="buttons"
+          >
+          <button id="save" type="submit" (click)="$event.stopPropagation();">저장</button> 
+          <button id="cancel" type="button" (click)="cancelEditProfile($event)">취소</button>
+        </div>
+
+      </div>
+    </form>
   </div>
 
   <!-- profile_div의 우측 빈공간 -->
@@ -40,15 +60,23 @@
 
 </div>
 
-<div *ngIf="true;" id="pass_confirm_modal_grid">
+
+<!-- 프로필 내용 수정을 위해 패스워드를 다시 입력받는 모달 소환! -->
+<div *ngIf="isModalOpen" id="pass_confirm_modal_grid">
   <div class="empty"></div>
 
   <div></div>
   <div id="modal">
     <div id="title">패스워드를 입력해주세요.</div>
-    <div id="password"><input type="password" placeholder="패스워드"></div>
-    <div id="ok"><i class="material-icons">check</i></div>
-    <div id="cancel"><i class="material-icons">close</i></div>
+    <div id="password">
+      <input type="password" placeholder="패스워드">
+    </div>
+    <div id="ok" (click)="okModal($event)">
+      <i class="material-icons">check</i>
+    </div>
+    <div id="cancel" (click)="cancelModal($event)">
+      <i class="material-icons">close</i>
+    </div>
   </div>
   <div></div>
 
