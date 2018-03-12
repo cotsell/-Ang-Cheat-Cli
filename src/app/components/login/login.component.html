@@ -1,0 +1,115 @@
+<div 
+    id="main_div" 
+    *ngIf="isLoggedIn === false"
+    >
+    <div id="login_div" [ngClass]="{ show_login_div: !signupMode }">
+        <form [formGroup]="loginForm" (ngSubmit)="login($event)">
+            <div id="title_div">
+                <h2>로그인</h2>
+            </div>
+            
+            <div id="id_input_div">
+                <input 
+                    id="id_input" 
+                    type="text" 
+                    placeholder="아이디"
+                    [formControlName]="'id'"
+                    >
+            </div>
+            
+            <div id="pass_input_div">
+                <input 
+                    id="pass_input" 
+                    type="password" 
+                    placeholder="패스워드"
+                    [formControlName]="'password'"
+                    >
+            </div>
+            
+            <br>
+    
+            <div id="submit_button_div">
+                <button type="submit" (click)="$event.stopPropagation();">전송</button>
+            </div>
+        </form>
+        <div id="signup_button_div">
+            <a (click)="show_signup($event)">회원가입</a>
+        </div>
+    </div>
+
+    <!-- 회원가입 페이지 -->
+    <div id="signup_div" [ngClass]="{ show_signup_div: signupMode }">
+        <form [formGroup]="signupForm" (ngSubmit)="signup($event)">
+            <div id="signup_grid">
+
+                <div id="back_button" (click)="show_signup($event)">
+                    <i class="material-icons">arrow_back</i>
+                </div>
+                <div id="signup_title">회원가입</div>
+                <div></div>
+        
+                <div id="signup_id">
+                    <input 
+                        type="text" 
+                        placeholder="ID" 
+                        [formControlName]="'id'"
+                        >
+                </div>
+                <div id="signup_password">
+                    <input 
+                        type="password" 
+                        placeholder="PASSWORD"  
+                        [formControlName]="'password'"
+                        >
+                </div>
+                <div id="signup_confirm">
+                    <input 
+                        type="password" 
+                        placeholder="PASSWORD CONFIRM" 
+                        [formControlName]="'confirm'"
+                        >
+                </div>
+                <div id="signup_nickname">
+                    <input 
+                        type="text" 
+                        placeholder="NICK NAME" 
+                        [formControlName]="'nickName'"
+                        >
+                </div>
+                <div style="grid-column: 1/ 4; height: 1rem;"></div>
+                <div id="signup_button">
+                    <button 
+                        type="submit" 
+                        (click)="$event.stopPropagation();"
+                        >
+                        가입하기
+                    </button>
+                </div>
+            
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- 로그인 되어 있는 상태 출력 -->
+<div id="logged_in_div" *ngIf="isLoggedIn === true">
+    <div>
+        {{ userInfo?.nickName }}님 환영합니다.
+    </div>
+    <div>
+        총 추천 수: {{ userInfo?.totalThumbUp }}
+    </div>
+    <div>
+        총 작성 글 수: {{ userInfo?.myDocumentIdList.length }}
+    </div>
+    <div>
+        요청 리스트
+    </div>
+
+    <br>
+
+    <div id="logout_button_div">
+        <button (click)="logout($event)">로그아웃</button>
+    </div>
+</div>

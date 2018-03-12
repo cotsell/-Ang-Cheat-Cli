@@ -1,0 +1,51 @@
+@mixin default_div {
+    display: inline-block;
+    height: 1.6rem;
+    padding: 0px;
+    margin: 0px;
+}
+
+#main_grid {
+    display: grid;
+    grid-template-columns: auto max-content;
+    grid-template-rows: 2rem;
+    align-items: center;
+    grid-column-gap: 4px;
+}
+
+#search_div {
+    @include default_div;
+    text-align: center;
+
+    input {
+        border: none;
+        border-radius: 3px;
+        width: 100%;
+        height: 1.6rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        font-size: 1.2rem;
+    }
+}
+
+#search_button_div {
+    @include default_div;
+    height: 2rem;
+
+    #search_button {
+        border-radius: 3px;
+        height: 1.6rem;
+        text-align: center;
+        cursor: pointer;
+
+        i {
+            font-size: 2rem;
+            transition-duration: 0.2s;
+
+            &:hover {
+                color: #e6e6e6;
+            }
+        }
+    }
+}
+

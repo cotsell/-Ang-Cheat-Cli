@@ -1,0 +1,39 @@
+@import '../../../styles';
+
+#main_grid {
+    display: grid;
+    grid-template-columns: 2rem auto;
+    grid-template-rows: 2rem auto;
+}
+
+#tag_input {
+    border: none;
+    border-bottom: 1px solid #4d4d4d;
+    &:hover {
+        background-color: #e6e6e6;
+    }
+}
+
+#tag_list_div {
+    overflow: hidden;
+
+    div {
+        display: inline-block;
+    }
+
+    #tag_article_div {
+        border: 0px solid #e6e6e6;
+        border-radius: 3px;
+        background-color: #e6e6e6;
+        padding-left: 2px;
+        padding-right: 2px;
+        margin: 2px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: red;
+            
+        }
+    }
+}
+

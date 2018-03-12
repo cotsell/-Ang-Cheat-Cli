@@ -1,0 +1,131 @@
+@import '../../../styles';
+
+#main_grid {
+    display: grid;
+    grid-template-columns: auto 900px auto;
+    grid-template-rows: 2rem auto;
+    height: 100%;
+    widows: 100%;
+}
+
+#titlebar_div {
+    grid-column: 1 / 4;
+}
+
+@mixin document_grid {
+    display: grid;
+    grid-template-columns: max-content auto max-content;
+    grid-template-rows: 3rem 2rem minmax(min-content, max-content) max-content max-content max-content max-content;
+    background-color: white;
+    grid-row-gap: 1rem;
+}
+
+#document_grid {
+    @include document_grid;
+}
+
+#document_edit_mode_grid {
+    @include document_grid;
+    grid-template-rows: 3rem 2rem minmax(min-content, max-content) max-content max-content max-content max-content max-content;
+}
+
+#document_title_article {
+    grid-column: 1 / 4;
+    align-self: center;
+
+    div {
+        text-align: center;
+    }
+
+    #document_title_div {
+    }
+
+    #document_title_edit_div {
+
+        input[type=text] {
+            border: none;
+            border-bottom: 2px solid #4d4d4d;
+            width: 30rem;
+            height: 2.5rem;
+            font-size: 2rem;
+        }
+    }
+}
+
+#document_time_div {
+    font-size: 12px;
+    @include setPadding(2rem, 0px, 0px, 0px);
+    align-self: center;
+}
+
+#document_ip_div {
+    font-size: 12px;
+    @include setPadding(0px, 0px, 2rem, 0px);
+    text-align: right;
+    align-self: center;
+}
+
+#document_text_article {
+    grid-column: 1 / 4;
+    @include setPadding(2rem, 0px, 2rem, 0px);
+
+    #document_text_div {
+        grid-column: 1 / 4;
+        @include setPadding(2rem, 0px, 2rem, 0px);
+        min-height: 12rem;
+    }
+
+    #document_text_input_div {
+
+        textarea {
+            width: 100%;
+            height: 30rem;
+            resize: none;
+        }
+    }
+}
+
+#document_edit_button_div {
+    grid-column: 1 / 4;
+    @include setPadding(2rem, 0px, 2rem, 0px);
+
+    #button_grid {
+        display: grid;
+        grid-template-columns: auto max-content;
+        grid-column-gap: 1rem;
+
+        #save_button {
+            text-align: right;
+            button {
+                @include setPadding(3rem, 0.4rem, 3rem, 0.4rem);
+                border: none;
+                background-color: cornflowerblue;
+            }
+        }
+
+        #cancel_button {
+            button {
+                @include setPadding(1rem, 0.4rem, 1rem, 0.4rem);
+                border: none;
+                background-color: brown;
+            }
+        }
+    }
+}
+
+#document_taglist_article {
+    grid-column: 1 / 4;
+    @include setPadding(2rem, 0px, 2rem, 0px);
+}
+
+#document_function_button_article {
+    grid-column: 1 / 4;
+    text-align: center;
+    @include setPadding(2rem, 0px, 2rem, 0px);
+}
+
+#document_signature_article {
+    grid-column: 1 / 4;
+    @include setPadding(2rem, 0px, 2rem, 0px);
+}
+

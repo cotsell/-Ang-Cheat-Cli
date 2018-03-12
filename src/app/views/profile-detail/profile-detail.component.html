@@ -1,0 +1,57 @@
+<div id="main_grid">
+  <div id="titlebar_div">
+    <app-titlebar></app-titlebar>
+  </div>
+
+  <!-- profile_div의 윗쪽 빈공간 -->
+  <div style="grid-column: 1 / 4;"></div>
+
+  <!-- profile_div의 좌측 빈공간 -->
+  <div></div>
+
+  <div id="profile_grid">
+    <div id="user_img">
+      <i class="material-icons" style="font-size: 10rem; color: white;">account_circle</i>
+    </div>
+
+    <div>아이디</div>
+    <div>cotsell@gmail.com</div>
+
+    <div>닉네임</div>
+    <div>cotsell</div>
+
+    <div>비밀번호</div>
+    <div>********</div>
+
+    <div id="signature">시그니쳐</div>
+
+    <div id="buttons">
+      <button id="save" type="button">저장</button> 
+      <button id="cancel" type="button">취소</button>
+    </div>
+
+  </div>
+
+  <!-- profile_div의 우측 빈공간 -->
+  <div></div>
+
+  <!-- profile_div의 아랫쪽 빈공간 -->
+  <div style="grid-column: 1 / 4;"></div>
+
+</div>
+
+<div *ngIf="true;" id="pass_confirm_modal_grid">
+  <div class="empty"></div>
+
+  <div></div>
+  <div id="modal">
+    <div id="title">패스워드를 입력해주세요.</div>
+    <div id="password"><input type="password" placeholder="패스워드"></div>
+    <div id="ok"><i class="material-icons">check</i></div>
+    <div id="cancel"><i class="material-icons">close</i></div>
+  </div>
+  <div></div>
+
+  <div class="empty"></div>
+
+</div>

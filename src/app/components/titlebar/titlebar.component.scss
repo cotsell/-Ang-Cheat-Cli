@@ -1,0 +1,48 @@
+@import '../../../styles';
+
+#main_grid {
+    display: grid;
+    grid-template-columns: 2rem auto 700px auto 2rem;
+    grid-template-rows: 2rem;
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    align-content: center;
+    background-color: #4d4d4d;
+}
+
+#menu_div {
+    display: inline-block;
+}
+
+#search_div {
+    display: inline-block;
+}
+
+#account_div {
+    display: inline-block;
+    i {
+        font-size: 2rem;
+        cursor: pointer;
+        transition-duration: 0.2s;
+
+        &:hover {
+            color: #e6e6e6;
+        }
+
+    }
+}
+
+@media (max-width: $g_mediaMobile) {
+}
+
+@media (min-width: $g_mediaTablet) {
+}
+
+// @media (min-width: $g_mediaLaptop) {
+
+// }
+
+// @media (min-width: $g_mediaDesktop) {
+
+// }

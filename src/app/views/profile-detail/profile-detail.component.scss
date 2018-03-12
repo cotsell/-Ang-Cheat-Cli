@@ -1,0 +1,126 @@
+@import '../../../styles';
+
+#main_grid {
+    display: grid;
+    grid-template-columns: auto max-content auto;
+    grid-template-rows: 2rem auto max-content auto;
+    height: 100%;
+}
+
+#titlebar_div {
+    grid-column: 1 / 4;
+}
+
+#profile_grid {
+    display: grid;
+    grid-template-columns: 10rem max-content max-content;
+    grid-gap: 8px;
+
+    border-radius: 5px;
+    background-color: white;
+    padding: 2rem;
+
+    #user_img {
+        height: 10rem;
+        width: 10rem;
+        background-color: #4d4d4d;
+        grid-row: 1 / 4;
+        border-radius: 5px;
+    }
+
+
+
+    #signature {
+        grid-column: 1 / 4;
+    }
+
+    #buttons {
+        grid-column: 1 / 4;
+        // text-align: center;
+
+        #save {
+            background-color: #4d4d4d;
+            border: 0px solid #4d4d4d;
+            height: 3rem;
+            width: 80%;
+            color: white;
+            float: left;
+        }
+
+        #cancel {
+            background-color: red;
+            border: 0px solid red;
+            width: 20%;
+            height: 3rem;
+            float: right;
+        }
+    }
+}
+
+#pass_confirm_modal_grid {
+    display: grid;
+    grid-template-columns: auto max-content auto;
+    grid-template-rows: auto max-content auto;
+
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    transition-duration: 0.2s;
+
+    .empty {
+        grid-column: 1 / 4;
+    }
+
+    #modal {
+        border-radius: 5px;
+        background-color: white;
+        padding: 2rem;
+
+        text-align: center;
+
+        #title {
+            margin-bottom: 2rem;
+        }
+
+        #ok {
+            float: left;
+            font-size: 2rem;
+            color: darkseagreen;
+            cursor: pointer;
+
+            &:hover {
+                color: yellowgreen;
+            }
+        }
+
+        #cancel {
+            float: right;
+            font-size: 2rem;
+            color: red;
+            cursor: pointer;
+
+            &:hover {
+                color: sandybrown;
+            }
+        }
+        #password {
+            margin-bottom: 1rem;
+
+            input[type=password] {
+                border: none;
+                border-bottom: 1px solid #4d4d4d;
+                height: 2rem;
+                width: 100%;
+    
+                &:hover {
+                    background-color: #e6e6e6;
+                }
+            }
+        }
+
+    }
+}

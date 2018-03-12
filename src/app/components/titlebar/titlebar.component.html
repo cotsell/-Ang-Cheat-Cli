@@ -1,0 +1,24 @@
+<div id="main_grid" class="">
+  <div id="menu_div">
+    <app-titlebar-menu></app-titlebar-menu>
+  </div>
+
+  <!-- 정렬을 위한 빈 공간 -->
+  <div></div>
+
+  <div id="search_div">
+    <app-search-bar></app-search-bar>
+  </div>
+
+  <!-- 정렬을 위한 빈 공간 -->
+  <div></div>
+
+  <div 
+    id="account_div"
+    onselectstart="return false"
+    >
+    <div [routerLink]="['/profileDetail']">
+      <i class="material-icons">account_circle</i>
+    </div>
+  </div>
+</div>

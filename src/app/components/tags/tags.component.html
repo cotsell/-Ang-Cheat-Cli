@@ -1,0 +1,22 @@
+<div id="main_grid">
+    <div>
+        <i class="material-icons">label</i>
+    </div>
+
+    <div>
+        <input 
+            id="tag_input"
+            type="text" 
+            placeholder="Tags.."
+            (keypress)="insertNewTag($event)"
+            >
+    </div>
+
+    <div></div>
+
+    <div id="tag_list_div">
+        <div id="tag_article_div" *ngFor="let tag of tagList">
+            {{tag.title}}
+        </div>
+    </div>
+</div>

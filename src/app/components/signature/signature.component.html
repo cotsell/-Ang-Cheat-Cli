@@ -1,0 +1,13 @@
+<div id="main_grid">
+  <div id="signature_img_div">이미지</div>
+
+  <div id="signature_text_div">
+    {{ userInfo?.signature }}
+  </div>
+
+  <div id="signature_profile_div">
+    {{ userInfo?.nickName }}님<br>
+    총 추천 수 : {{ userInfo?.totalThumbUp }}<br>
+    총 작성 글 수: {{ userInfo?.myDocumentIdList.length }}
+  </div>
+</div>

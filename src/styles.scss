@@ -16,6 +16,10 @@ $g_grayPalette: (
 $g_FontColor: map-get($g_grayPalette, 7);
 $g_BackgroundColor: map-get($g_grayPalette, 1);
 
+* {
+    box-sizing: border-box;
+}
+
 html, body {
     height: 100%;
     width: 100%;
@@ -25,10 +29,25 @@ html, body {
 }
 
 
+
 blockquote {
     margin-left: 10px !important;
 }
 
+// 보더의 곡률을 설정하는 믹스인
+@mixin setRadius($top_left, $top_right, $bottom_right, $bottom_left) {
+    border-top-left-radius: $top-left;
+    border-top-right-radius: $top-right;
+    border-bottom-right-radius: $bottom-right;
+    border-bottom-left-radius: $bottom-left;
+}
+
+@mixin setPadding($left, $top, $right, $bottom) {
+    padding-left: $left;
+    padding-top: $top;
+    padding-right: $right;
+    padding-bottom: $bottom;
+}
 
 //---- 반응형 관련 ----
 
