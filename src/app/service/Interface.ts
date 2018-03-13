@@ -5,13 +5,14 @@ export class Account {
 
 export class UserInfo {
     id: string;
-    nickName: string;
-    profileImgUrl: string;
-    myDocumentIdList: string[];
-    myScrapList: string[];
-    totalThumbUp: number;
-    grade: number;
-    signature: string;
+    password?: string;
+    nickName?: string;
+    profileImgUrl?: string;
+    myDocumentIdList?: string[];
+    myScrapList?: string[];
+    totalThumbUp?: number;
+    grade?: number;
+    signature?: string;
 
     constructor() {}
 
@@ -20,14 +21,14 @@ export class UserInfo {
 export class DocumentInfo {
     id: string;
     title: string;
-    text: string;
-    createdTime: Date;
-    modifiedTime: Date;
-    relatedDocuId: string;
-    thumbUp: string[];
-    userInfo: UserInfo;
-    tagList: Tag[];
-    libraryList: Library[];
+    text?: string;
+    createdTime?: Date;
+    modifiedTime?: Date;
+    relatedDocuId?: string;
+    thumbUp?: string[];
+    userInfo?: UserInfo;
+    tagList?: Tag[];
+    libraryList?: Library[];
 
     constructor() {}
 }

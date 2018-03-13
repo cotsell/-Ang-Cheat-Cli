@@ -1,3 +1,9 @@
-<p>
-  document-list-article works!
-</p>
+<div id="main_grid">
+  <div id="title" [routerLink]="['/docuDetail', document.id]">
+    <h3>{{ document?.title }}</h3>
+  </div>
+  <div id="text">
+    {{ document?.text }}
+  </div>
+  <div id="id">{{ document?.userInfo.nickName }}</div>
+</div>

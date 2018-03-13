@@ -1,0 +1,32 @@
+@import '../../../styles';
+
+#main_grid {
+    // display: grid;
+
+    h3 {
+        margin: 0px !important;
+    }
+    
+    #title {
+        // display: inline-block;
+        text-align: center;
+        cursor: pointer;
+        
+        &:hover {
+            color: orange;
+        }
+    }
+
+    #text {
+        display: inline-block;
+        cursor: pointer;
+
+        &:hover {
+            color: orange;
+        }
+    }
+
+    #id {
+        text-align: right;
+    }
+}

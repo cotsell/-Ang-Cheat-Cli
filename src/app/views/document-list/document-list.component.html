@@ -1,11 +1,13 @@
 <div id="main_grid">
-  <div id="titlebar_div">
-    <app-titlebar></app-titlebar>
-  </div>
+    <div id="titlebar_div">
+        <app-titlebar></app-titlebar>
+    </div>
 
-  <div></div>
-  <div id="">
-    sdafsd
-  </div>
-  <div></div>
+    <div></div>
+    <div>
+        <div id="document_article" *ngFor="let doc of docuList">
+            <app-document-list-article [document]="doc"></app-document-list-article>
+        </div>
+    </div>
+    <div></div>
 </div>

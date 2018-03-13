@@ -1,15 +1,86 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxJs';
+
+import * as Redux from '../../service/redux';
+import { Network } from '../../service/Network';
+import Account from '../../service/Account';
+import * as Utils from '../../service/utils';
+import { UserInfo, DocumentInfo } from '../../service/Interface';
+
+// TODO 테스트
+import { NewDocumentList } from '../../service/redux/DocumentListReducer';
 
 @Component({
-  selector: 'app-document-list',
-  templateUrl: './document-list.component.html',
-  styleUrls: ['./document-list.component.scss']
+    selector: 'app-document-list',
+    templateUrl: './document-list.component.html',
+    styleUrls: ['./document-list.component.scss']
 })
-export class DocumentListComponent implements OnInit {
+export class DocumentListComponent implements OnInit, OnDestroy {
+    private isLoggedIn = false;
+    private userInfo: UserInfo;
+    private docuList: DocumentInfo[];
+    private accountSubscription: Subscription;
+    private userInfoSubscription: Subscription;
+    private docuListSubscription: Subscription;
 
-  constructor() { }
+    constructor(
+        private store: Store<Redux.StoreInfo>,
+        private network: Network,
+        private account: Account) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+        this.subscribeAccountAndTryLogin();
+        this.subscribeUserInfo();
+        this.subscribeDocumentList();
+
+        // TODO 테스트 후 지워주세요.
+        const userInfo = {
+            id: 'cotsell@gmail.com',
+            nickName: 'cotsell'
+        };
+        this.store.dispatch(new NewDocumentList(
+            {id: 'testNo1', title: 'TestTitle1', text: 'test', userInfo: userInfo }));
+        this.store.dispatch(new NewDocumentList(
+            {id: 'testNo2', title: 'TestTitle2', text: 'test', userInfo: userInfo }));
+        this.store.dispatch(new NewDocumentList(
+            {id: 'testNo3', title: 'TestTitle3', text: 'test', userInfo: userInfo }));
+        this.store.dispatch(new NewDocumentList(
+            {id: 'testNo4', title: 'TestTitle4', text: 'test', userInfo: userInfo }));
+        this.store.dispatch(new NewDocumentList(
+            {id: 'testNo5', title: 'TestTitle5', text: 'test', userInfo: userInfo }));
+        this.store.dispatch(new NewDocumentList(
+            {id: 'testNo6', title: 'TestTitle6', text: 'test', userInfo: userInfo }));
+    }
+
+    // Account 리덕스를 구독하고, 로그인도 시도해요.
+    private subscribeAccountAndTryLogin() {
+        this.accountSubscription = this.account.loginWithAccessToken(Result => {
+            this.isLoggedIn = Result.loggedIn;
+            // this.accessToken = Result.accessToken;
+        });
+    }
+
+    // UserInfo 리덕스를 구독해요.
+    private subscribeUserInfo() {
+        this.userInfoSubscription = this.store.select(Redux.getUserInfo)
+            .subscribe(Result => {
+                this.userInfo = Result;
+            });
+    }
+
+    // DocumentList 리덕스를 구독해요.
+    private subscribeDocumentList() {
+        this.docuListSubscription = this.store.select(Redux.getDocumentList)
+            .subscribe(Result => {
+                this.docuList = Result;
+            });
+    }
+
+    ngOnDestroy() {
+        Utils.unSubscribe(this.accountSubscription);
+        Utils.unSubscribe(this.userInfoSubscription);
+        Utils.unSubscribe(this.docuListSubscription);
+    }
 
 }
