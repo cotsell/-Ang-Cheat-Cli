@@ -10,7 +10,7 @@
   <div></div>
 
   <div>
-    <form  [formGroup]="profileForm" (ngSubmit)="test()">
+    <form  [formGroup]="profileForm" (ngSubmit)="saveProfile($event)">
       <div id="profile_grid">
         <div id="user_img">
           <i class="material-icons" style="font-size: 10rem; color: white;">account_circle</i>
@@ -35,6 +35,8 @@
         </div>
 
         <div id="signature">시그니쳐</div>
+        <div id="signature" *ngIf="!isEditMode"><pre>{{ userInfo?.signature }}</pre></div>
+        <div id="signature" *ngIf="isEditMode"><textarea [formControlName]="'signature'"></textarea></div>
 
         <div *ngIf="!isEditMode">
           <button type="button" (click)="modalOpen($event)">수정하기</button>

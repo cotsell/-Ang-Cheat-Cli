@@ -28,7 +28,8 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     {
       id: new FormControl(),
       nickName: new FormControl(),
-      password: new FormControl()
+      password: new FormControl(),
+      signature: new FormControl()
     }
   );
 
@@ -64,6 +65,16 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   private modalOpen(event) {
     event.stopPropagation();
     this.isModalOpen = true;
+
+    // 프로필 폼 값 초기 설정
+    this.profileForm.setValue(
+      {
+        id: this.userInfo.id,
+        nickName: this.userInfo.nickName,
+        password: '********',
+        signature: this.userInfo.signature
+      }
+    );
   }
 
   private cancelModal(event) {
@@ -85,7 +96,8 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     this.isEditMode = false;
   }
 
-  test() {
+  saveProfile(event) {
+    event.stopPropagation();
     console.log(JSON.stringify(this.profileForm.value));
   }
 
