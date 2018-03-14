@@ -3,7 +3,7 @@
 #main_grid {
     display: grid;
     grid-template-columns: auto 900px auto;
-    grid-template-rows: 2rem auto;
+    grid-template-rows: 2rem auto max-content;
     height: 100%;
     width: 100%;
 
@@ -20,5 +20,9 @@
         margin-top: 1rem;
         margin-bottom: 1rem;
         padding: 1rem;
+    }
+
+    #pagination {
+        
     }
 }

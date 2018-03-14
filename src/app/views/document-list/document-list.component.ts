@@ -77,6 +77,12 @@ export class DocumentListComponent implements OnInit, OnDestroy {
             });
     }
 
+    // 사용자가 pagination을 사용하면 실행되는 함수에요
+    private clickedPagination(event) {
+        console.log(event);
+        // TODO pagination의 상태가 변경되면 해야 할 코드..
+    }
+
     ngOnDestroy() {
         Utils.unSubscribe(this.accountSubscription);
         Utils.unSubscribe(this.userInfoSubscription);

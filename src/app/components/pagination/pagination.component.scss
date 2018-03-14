@@ -1,0 +1,40 @@
+@import '../../../styles';
+
+#main_grid {
+    display: grid;
+    grid-template-columns: 2rem 2rem max-content 2rem 2rem;
+    grid-gap: 0px;
+
+    // background-color: white;
+    justify-content: center;
+    align-content: center;
+
+    i {
+        font-size: 2rem;
+        cursor: pointer;
+        &:hover {
+            color: yellowgreen;
+        }
+    }
+}
+
+#main_flex {
+    display: flex;
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+    div {
+        width: 2rem;
+        height: 2rem;
+        padding: 4px;
+        text-align: center;
+        cursor: pointer;
+        &:hover {
+            color: orangered;
+        }
+    }
+
+    .selected {
+        background-color: yellowgreen;
+    }
+}

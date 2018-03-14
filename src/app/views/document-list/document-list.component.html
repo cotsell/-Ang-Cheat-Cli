@@ -10,4 +10,16 @@
         </div>
     </div>
     <div></div>
+
+    <div></div>
+    <div id="pagination">
+        <app-pagination
+            [cursor]="4"
+            [totalArticle]="101"
+            [perPage]="10"
+            (output)="clickedPagination($event)"
+            >
+        </app-pagination>
+    </div>
+    <div></div>
 </div>

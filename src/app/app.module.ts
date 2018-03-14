@@ -25,6 +25,7 @@ import Account from './service/Account';
 import { ProfileDetailComponent } from './views/profile-detail/profile-detail.component';
 import { ReplyListComponent } from './components/reply-list/reply-list.component';
 import { ReplyArticleComponent } from './components/reply-article/reply-article.component';
+import { PaginationComponent } from './components/pagination/pagination.component';
 
 const route: Routes = [
   { path: '', component: MainComponent },
@@ -48,7 +49,8 @@ const route: Routes = [
     SignatureComponent,
     ProfileDetailComponent,
     ReplyListComponent,
-    ReplyArticleComponent
+    ReplyArticleComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule,

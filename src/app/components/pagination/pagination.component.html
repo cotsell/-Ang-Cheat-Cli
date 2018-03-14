@@ -1,0 +1,26 @@
+<div id="main_grid">
+    <div (click)="outputCursor(1, $event)">
+        <i class="material-icons">first_page</i>
+    </div>
+    <div (click)="leftCursor($event)">
+        <i class="material-icons">keyboard_arrow_left</i>
+    </div>
+
+    <div id="main_flex">
+        <div 
+            *ngFor="let count of pages" 
+            [ngClass]="{ selected: count?.selected }"
+            (click)="outputCursor(count.num, $event)"
+            >
+            {{ count?.num }}
+        </div>
+    </div>
+
+    <div (click)="rightCursor($event)">
+        <i class="material-icons">keyboard_arrow_right</i>
+    </div>
+
+    <div (click)="rightCursor($event)">
+        <i class="material-icons">last_page</i>
+    </div>
+</div>
