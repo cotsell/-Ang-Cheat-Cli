@@ -1,3 +1,36 @@
-<p>
-  reply-list works!
-</p>
+<div id="main_grid">
+  <div id="icon"><i class="material-icons">comment</i></div>
+  <div id="title">Reply</div>
+  <div id="reply_button" (click)="changeReplyEditMode($event)">
+    답글달기
+  </div>
+
+  <div id="write_grid" [ngClass]="{ show_write_grid: isReplyEditMode }">
+    <div id="id">
+      <input type="text" placeholder="아이디">
+    </div>
+    <div id="password">
+      <input type="password" placeholder="패스워드">
+    </div>
+    <div id="text">
+      <textarea></textarea>
+    </div>
+    <div id="buttons">
+      <div>
+        <button type="submit">전송</button>
+      </div>
+      <div>
+        <button type="button">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="reply_list">
+    <div>
+      <app-reply-article></app-reply-article>
+    </div>
+    <div>
+      <app-reply-article [isReReply]="true"></app-reply-article>
+    </div>
+  </div>
+</div>

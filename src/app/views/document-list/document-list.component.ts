@@ -9,7 +9,7 @@ import * as Utils from '../../service/utils';
 import { UserInfo, DocumentInfo } from '../../service/Interface';
 
 // TODO 테스트
-import { NewDocumentList } from '../../service/redux/DocumentListReducer';
+import { NewDocumentList, RemoveAllDocumentList } from '../../service/redux/DocumentListReducer';
 
 @Component({
     selector: 'app-document-list',
@@ -87,6 +87,8 @@ export class DocumentListComponent implements OnInit, OnDestroy {
         Utils.unSubscribe(this.accountSubscription);
         Utils.unSubscribe(this.userInfoSubscription);
         Utils.unSubscribe(this.docuListSubscription);
+
+        this.store.dispatch(new RemoveAllDocumentList());
     }
 
 }

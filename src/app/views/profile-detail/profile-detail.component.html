@@ -38,7 +38,7 @@
         <div id="signature" *ngIf="!isEditMode"><pre>{{ userInfo?.signature }}</pre></div>
         <div id="signature" *ngIf="isEditMode"><textarea [formControlName]="'signature'"></textarea></div>
 
-        <div *ngIf="!isEditMode">
+        <div *ngIf="isEditMode === false && isEditable === true">
           <button type="button" (click)="modalOpen($event)">수정하기</button>
         </div>
 

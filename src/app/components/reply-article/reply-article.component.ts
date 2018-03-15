@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-reply-article',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./reply-article.component.scss']
 })
 export class ReplyArticleComponent implements OnInit {
+  @Input() isReReply = false;
 
   constructor() { }
 

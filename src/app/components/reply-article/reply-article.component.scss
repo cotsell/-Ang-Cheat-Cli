@@ -1,0 +1,40 @@
+#main_grid {
+    display: grid;
+    grid-template-columns: 16rem auto max-content max-content;
+    grid-template-rows: 2rem max-content;
+}
+
+#rereply_main_grid {
+    display: grid;
+    grid-template-columns: 2rem 16rem auto max-content max-content;
+    grid-template-rows: 2rem max-content;
+}
+
+#rereply_icon {
+    height: 2rem;
+    width: 2rem;
+}
+
+#nick_name {
+    height: 2rem;
+    i {
+        font-size: 2rem;
+    }
+
+}
+
+#created_time {
+    height: 2rem;
+    text-align: right;
+    i {
+        font-size: 2rem;
+    }
+}
+
+#text {
+    grid-column: 1 / 5;
+}
+
+#rereply_text {
+    grid-column: 2 / 6;
+}

@@ -68,7 +68,7 @@ export default class Account {
         }
 
         function getUserInfo(network, store, accessToken: string, userId: string) {
-            network.getUserInfo(accessToken, userId)
+            network.getUserInfo(userId)
                 .subscribe(resultUserInfo => {
                     // 리덕스에 유저정보 입력.
                     // TODO 유저정보 결과 내용이 달라질 수 있음.

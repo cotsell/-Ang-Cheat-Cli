@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxJs';
 
-import { DocumentInfo } from '../service/Interface';
+import { DocumentInfo, UserInfo } from '../service/Interface';
 import * as SysConf from '../service/SysConf';
 import * as Redux from './redux';
 
@@ -32,9 +32,9 @@ export class Network {
         return this.http.post(SysConf.CHECK_ACCESS_TOKEN, { access_token: accessToken, id: userId });
     }
 
-    getUserInfo(accessToken: string, userId: string) {
+    getUserInfo(userId: string) {
         // TODO 서버에서 응답내용이 다를 가능성이 있어요.
-        return this.http.post(SysConf.GET_USER, { access_token: accessToken, id: userId });
+        return this.http.post<UserInfo>(SysConf.GET_USER, { id: userId });
     }
 
     getDocument(documentId: string): Observable<Respond> {

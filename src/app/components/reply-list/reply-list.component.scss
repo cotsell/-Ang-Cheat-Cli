@@ -1,0 +1,74 @@
+@import '../../../styles';
+
+#main_grid {
+    display: grid;
+    grid-template-columns: 2rem auto 6rem;
+    grid-template-rows: 2rem max-content max-content;
+    grid-gap: 6px;
+
+    #icon {
+        height: 2rem;
+        i {
+            font-size: 2rem;
+        }
+    }
+    
+    #title {
+        height: 2rem;
+        text-align: left;
+    }
+
+    #reply_button {
+        cursor: pointer;
+        text-align: right;
+        &:hover {
+            color: yellowgreen;
+        }
+    }
+
+}
+
+.show_write_grid {
+    height: 14rem !important;
+}
+
+#write_grid {
+    grid-column: 1 / 4;
+
+    display: grid;
+    grid-template-columns: 16rem auto;
+    grid-template-rows: 2rem max-content max-content;
+
+    height: 0px;
+    overflow: hidden;
+    transition: height 0.5s;
+
+    #id {
+        height: 2rem;
+        width: 100%;
+    }
+
+    #password {
+        height: 2rem;
+        width: 100%;
+    }
+
+    #text {
+        grid-column: 1 / 3;
+        min-height: max-content;
+        width: 100%;
+
+        textarea {
+            width: 100%;
+            min-height: 10rem;
+        }
+    }
+
+    #buttons {
+        height: 2rem;
+    }
+}
+
+#reply_list {
+    grid-column: 1 / 4;
+}

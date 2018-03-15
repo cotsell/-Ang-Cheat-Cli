@@ -129,3 +129,8 @@
     @include setPadding(2rem, 0px, 2rem, 0px);
 }
 
+#document_reply_article {
+    grid-column: 1 / 4;
+    @include setPadding(2rem, 0px, 2rem, 0px);
+}
+

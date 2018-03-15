@@ -67,7 +67,7 @@ export class PaginationComponent implements OnInit, OnChanges {
             }
             // for (let i = start; i < (start + 9); i++) {
             console.log(`start: ${start}, end: ${end}, cursor: ${this.cursor}, max-page: ${this.MAX_PAGE}`);
-                
+
             for (let i = start; i <= end; i++) {
                 draw(i, this.cursor, this.pages);
             }

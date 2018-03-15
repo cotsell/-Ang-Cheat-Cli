@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                         }));
 
                     // TODO 아마도 로그인 하면 유저정보도 같이 받게 될 가능성이 큼. 삭제하게 될 듯.
-                    this.network.getUserInfo(access_token, userId)
+                    this.network.getUserInfo(userId)
                         .subscribe(userInfoResult => {
                             this.store.dispatch(new NewUserInfo(userInfoResult));
                         });
@@ -128,7 +128,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                         }));
 
                     // TODO 아마도 로그인 하면 유저정보도 같이 받게 될 가능성이 큼. 삭제하게 될 듯.
-                    this.network.getUserInfo(access_token, userId)
+                    this.network.getUserInfo(userId)
                         .subscribe(userInfoResult => {
                             this.store.dispatch(new NewUserInfo(userInfoResult));
                         });

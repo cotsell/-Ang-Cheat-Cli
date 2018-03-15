@@ -31,7 +31,8 @@ const route: Routes = [
   { path: '', component: MainComponent },
   { path: 'docuDetail/:id', component: DocumentDetailComponent },
   { path: 'docuList/:subject', component: DocumentListComponent },
-  { path: 'profileDetail', component: ProfileDetailComponent }
+  { path: 'profileDetail', component: ProfileDetailComponent },
+  { path: 'profileDetail/:id', component: ProfileDetailComponent }
 ];
 
 @NgModule({
