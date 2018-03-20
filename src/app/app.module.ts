@@ -26,9 +26,13 @@ import { ProfileDetailComponent } from './views/profile-detail/profile-detail.co
 import { ReplyListComponent } from './components/reply-list/reply-list.component';
 import { ReplyArticleComponent } from './components/reply-article/reply-article.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
+import { DocumentEditComponent } from './views/document-edit/document-edit.component';
 
 const route: Routes = [
   { path: '', component: MainComponent },
+  // { path: 'writeDocu', component: DocumentEditComponent, data: { writeMode: true }},
+  { path: 'writeDocu', component: DocumentEditComponent },
+  { path: 'writeDocu/:relatedId', component: DocumentEditComponent },
   { path: 'docuDetail/:id', component: DocumentDetailComponent },
   { path: 'docuList/:subject', component: DocumentListComponent },
   { path: 'profileDetail', component: ProfileDetailComponent },
@@ -51,7 +55,8 @@ const route: Routes = [
     ProfileDetailComponent,
     ReplyListComponent,
     ReplyArticleComponent,
-    PaginationComponent
+    PaginationComponent,
+    DocumentEditComponent
   ],
   imports: [
     BrowserModule,

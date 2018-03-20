@@ -19,8 +19,8 @@ export class UserInfo {
 }
 
 export class DocumentInfo {
-    id: string;
-    title: string;
+    id?: string;
+    title?: string;
     text?: string;
     createdTime?: Date;
     modifiedTime?: Date;

@@ -54,6 +54,12 @@ export class Network {
         return this.http.post(SysConf.REMOVE_DOCUMENT, document);
     }
 
+    newDocument(accessToken: string, document: DocumentInfo): Observable<any> {
+        // TODO 서버에서 응답할때 DocumentInfo형태로 돌려주지 않을 가능성이 있어요.
+        // TODO 테스트 중이라 AccessToken은 보내고 있지 않아요.
+        return this.http.post(SysConf.NEW_DOCUMENT, document);
+    }
+
     searchDocument(subject: string) {
         // TODO 서버에서 응답할때 DocumentInfo형태로 돌려주지 않을 가능성이 있어요.
         // TODO 미완성이에요. 서버로 데이터를 전송하는 방식도 달라질 것 같아요.
