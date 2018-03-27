@@ -7,10 +7,16 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ReplyArticleComponent implements OnInit {
   @Input() isReReply = false;
+  private isCommentShowed = false;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  private changeCommentShowed(event) {
+    event.stopPropagation();
+    this.isCommentShowed = !this.isCommentShowed;
   }
 
 }

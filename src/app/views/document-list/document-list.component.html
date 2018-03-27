@@ -1,4 +1,27 @@
-<div id="main_grid">
+<div id="main-div">
+    <div id="titlebar-div">
+        <app-titlebar></app-titlebar>
+    </div>
+
+    <div id="list-flex">
+        <div id="document-article" *ngFor="let doc of docuList">
+            <app-document-list-article [document]="doc"></app-document-list-article>
+        </div>
+    </div>
+
+    <div id="pagination">
+        <app-pagination
+            [cursor]="4"
+            [totalArticle]="101"
+            [perPage]="10"
+            (output)="clickedPagination($event)"
+            >
+        </app-pagination>
+    </div>
+</div>
+
+
+<!-- <div id="main_grid">
     <div id="titlebar_div">
         <app-titlebar></app-titlebar>
     </div>
@@ -22,4 +45,4 @@
         </app-pagination>
     </div>
     <div></div>
-</div>
+</div> -->

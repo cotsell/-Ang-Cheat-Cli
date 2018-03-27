@@ -1,10 +1,76 @@
-<form [formGroup]="textForm" (ngSubmit)="sendNewText($event)">
-  <div id="main_grid">
-    <div id="titlebar_div">
-      <app-titlebar></app-titlebar>
+<div id="main-div">
+    <div id="titlebar-div">
+        <app-titlebar></app-titlebar>
+    </div>
+    <div id="main-flex">
+        <form 
+            id="main-form-grid-div"
+            [formGroup]="textForm" 
+            (ngSubmit)="sendNewText($event)"
+            >
+            <!-- 타이틀 -->
+            <div id="title">
+                <input 
+                    type="text"
+                    [formControlName]="'title'" 
+                    placeholder="제목.."
+                    >
+            </div>
+            <!-- 본문 -->
+            <div id="text-grid">
+                <div 
+                    id="edit" 
+                    [ngClass]="{ edit_div: isPreviewMode, edit_no_div: !isPreviewMode }">
+                    <textarea
+                        [formControlName]="'text'"
+                        (keyup)="copyTextToPreview($event)"
+                        ></textarea>
+                </div>
+                  
+                <div id="preview" [ngClass]="{ show_preview: isPreviewMode }">
+                    <div #target id="target"></div>
+                </div>
+            </div>
+            <!-- 버튼들 -->
+            <div id="buttons">
+                <div id="ok">
+                    <button 
+                        type="submit"
+                        (click)="$event.stopPropagation();"
+                        >저장</button>
+                </div>
+              
+                <div id="show-preview">
+                    <button 
+                        type="button"
+                        (click)="isPreviewMode=!isPreviewMode;"
+                        >
+                        프리뷰 보기
+                      </button>
+                </div>
+              
+                <div id="cancel">
+                    <button type="button" (click)="$event.stopPropagation();">
+                        취소
+                    </button>
+                </div>
+            </div>
+
+        </form>
     </div>
 
-    <div></div>
+</div>
+
+
+
+
+<!-- <form [formGroup]="textForm" (ngSubmit)="sendNewText($event)">
+  <div id="main_grid"> -->
+    <!-- <div id="titlebar_div">
+      <app-titlebar></app-titlebar>
+    </div> -->
+
+    <!-- <div></div>
     <div id="title">
       <input 
         type="text"
@@ -12,10 +78,10 @@
         placeholder="제목.."
         >
     </div>
-    <div></div>
+    <div></div> -->
 
-    <div></div>
-    <div id="text_grid">
+    <!-- <div></div> -->
+    <!-- <div id="text_grid">
       <div id="edit" [ngClass]="{ edit_cut: isPreviewMode }">
         <textarea
           [formControlName]="'text'"
@@ -26,11 +92,11 @@
       <div id="preview" [ngClass]="{ show_preview: isPreviewMode }">
         <div id="target"><pre>{{ previewText }}</pre></div>
       </div>
-    </div>
-    <div></div>
+    </div> -->
+    <!-- <div></div> -->
 
-    <div></div>
-    <div id="buttons">
+    <!-- <div></div> -->
+    <!-- <div id="buttons">
       <div id="ok">
         <button 
           type="submit"
@@ -52,7 +118,7 @@
           취소
         </button>
       </div>
-    </div>
-    <div></div>
-  </div>
-</form>
+    </div> -->
+    <!-- <div></div> -->
+  <!-- </div>
+</form> -->

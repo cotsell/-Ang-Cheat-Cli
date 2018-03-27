@@ -1,7 +1,7 @@
 #main_grid {
     display: grid;
     grid-template-columns: 16rem auto max-content max-content;
-    grid-template-rows: 2rem max-content;
+    grid-template-rows: 2rem max-content max-content;
 }
 
 #rereply_main_grid {
@@ -16,18 +16,32 @@
 }
 
 #nick_name {
+    display: flex;
+    align-items: center;
     height: 2rem;
     i {
-        font-size: 2rem;
+        font-size: 1rem;
     }
 
 }
 
+#write_comment {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+        color: yellowgreen;
+    }
+}
+
 #created_time {
+    display: flex;
+    align-items: center;
+    // justify-content: center;
     height: 2rem;
     text-align: right;
     i {
-        font-size: 2rem;
+        font-size: 1rem;
     }
 }
 
@@ -37,4 +51,20 @@
 
 #rereply_text {
     grid-column: 2 / 6;
+}
+
+#comment {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    height: 0px;
+    overflow: hidden;
+    transition-duration: 0.3s;
+}
+
+.show_comment {
+    height: 5rem !important;
+    textarea {
+        height: 100%;
+        width: 100%;
+    }
 }

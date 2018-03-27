@@ -2,31 +2,39 @@
 
 #main_grid {
     display: grid;
-    grid-template-columns: auto 900px auto;
     grid-template-rows: 2rem auto;
     height: 100%;
     widows: 100%;
 }
 
 #titlebar_div {
-    grid-column: 1 / 4;
+    // grid-column: 1 / 4;
 }
 
-@mixin document_grid {
+#document_main_flex {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+#document_form_grid {
     display: grid;
     grid-template-columns: max-content auto max-content;
-    grid-template-rows: 3rem 2rem minmax(min-content, max-content) max-content max-content max-content max-content;
-    background-color: white;
-    grid-row-gap: 1rem;
+    grid-template-rows: 3rem 2rem minmax(min-content, max-content);
+}
+
+#document_edit_form_grid {
+    display: grid;
+    grid-template-columns: max-content auto max-content;
+    grid-template-rows: 3rem 2rem minmax(min-content, max-content);
 }
 
 #document_grid {
-    @include document_grid;
-}
-
-#document_edit_mode_grid {
-    @include document_grid;
-    grid-template-rows: 3rem 2rem minmax(min-content, max-content) max-content max-content max-content max-content max-content;
+    display: grid;
+    grid-template-rows: max-content max-content max-content max-content max-content;
+    background-color: white;
+    grid-row-gap: 1rem;
+    width: 900px;
 }
 
 #document_title_article {
@@ -114,23 +122,23 @@
 }
 
 #document_taglist_article {
-    grid-column: 1 / 4;
+    // grid-column: 1 / 4;
     @include setPadding(2rem, 0px, 2rem, 0px);
 }
 
 #document_function_button_article {
-    grid-column: 1 / 4;
+    // grid-column: 1 / 4;
     text-align: center;
     @include setPadding(2rem, 0px, 2rem, 0px);
 }
 
 #document_signature_article {
-    grid-column: 1 / 4;
+    // grid-column: 1 / 4;
     @include setPadding(2rem, 0px, 2rem, 0px);
 }
 
 #document_reply_article {
-    grid-column: 1 / 4;
+    // grid-column: 1 / 4;
     @include setPadding(2rem, 0px, 2rem, 0px);
 }
 

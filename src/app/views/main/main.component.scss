@@ -3,13 +3,11 @@
 #main_grid {
     display: grid;
     grid-template-rows: 2rem auto;
-    grid-template-columns: 800px 300px auto;
     height: 100%;
     width: 100%;
 }
 
 #titlebar_div {
-    grid-column: 1 / 4;
 }
 
 #main_div {
@@ -17,9 +15,43 @@
 }
 
 #login_div {
-    align-self: center;
+    position: fixed;
+    width: 300px;
+    height: max-content;
+    top: 20%;
+    left: calc(90% - 300px);
+    z-index: 1;
 }
 
-#empty_div {
+// 미디어 쿼리
+@media (max-width: $g_mediaMiddle - 1px) {
+    #main_grid {
+        grid-template-rows: 2rem max-content auto;
+    }
+    #login_div {
+        position: static;
+        width: 100%;
+    }
+}
+
+@media (min-width: $g_mediaMiddle) and (max-width: $g_mediaTablet - 1px) {
+    #main_grid {
+        grid-template-rows: 2rem max-content auto;
+    }
+    #login_div {
+        position: static;
+        width: 100%;
+    }
+}
+
+@media (min-width: $g_mediaTablet) {
 
 }
+
+@media (min-width: $g_mediaLaptop) {
+
+}
+
+// @media (min-width: $g_mediaDesktop) {
+
+// }

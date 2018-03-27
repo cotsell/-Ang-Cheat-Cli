@@ -1,95 +1,97 @@
-<form [formGroup]="documentForm" (ngSubmit)="saveDocumentToServer($event)">
-    <div id="main_grid" (click)="clickEvent($event)">
-        <div id="titlebar_div">
-            <app-titlebar></app-titlebar>
-        </div>
+<div id="main_grid" (click)="clickEvent($event)">
+    <!-- 타이틀바 -->
+    <div id="titlebar_div">
+        <app-titlebar></app-titlebar>
+    </div>
 
-        <!-- Document의 양쪽 빈 공간용 -->
-        <div></div>
-
-        <div [id]="isEditMode ? 'document_edit_mode_grid' : 'document_grid'">
-            
-            <!-- 타이틀 -->
-            <div id="document_title_article">
-                <div 
-                    id="document_title_div"
-                    *ngIf="isEditMode === false"
-                    >
-                    <h2>{{ documentInfo?.title }}</h2>
-                </div>
-                <div
-                    id="document_title_edit_div"
-                    *ngIf="isEditMode === true"
-                    >
-                    <input 
-                        type="text" 
-                        placeholder="title.."
-                        [value]="documentInfo?.title"
-                        [formControlName]="'title'"
-                        >
-                </div>
-            </div>
-
-            <!-- 작성 시작 -->
-            <div id="document_time_div">
-                <i class="material-icons" style="font-size: 12px;">access_time</i>
-                {{ documentInfo?.createdTime }}
-            </div>
-
-            <!-- 지금은 빈 공간 -->
-            <div></div>
-
-            <!-- 아이피주소 -->
-            <div id="document_ip_div">
-                <i class="material-icons" style="font-size: 12px;">wifi</i>
-                127.0.0.1
-            </div>
-
-            <!-- 문서 내용 -->
-            <div id="document_text_article">
-                <div 
-                    id="document_text_div"
-                    *ngIf="isEditMode === false"
-                    >
-                    {{ documentInfo?.text }}
-                </div>
-
-                <div
-                    id="document_text_input_div"
-                    *ngIf="isEditMode === true"
-                    >
-                    <textarea 
-                        [value]="documentInfo?.text"
-                        [formControlName]="'text'"
-                        ></textarea>
-                </div>
-            </div>
-
-            <!-- 문서 수정 내용 저장 버튼. isEditMode가 true일때만 나타납니다. -->
-            <div 
-                id="document_edit_button_div" 
-                *ngIf="isEditMode === true"
+    <div id="document_main_flex">
+        <div id="document_grid">
+            <form
+                [id]="isEditMode ? 'document_edit_form_grid' : 'document_form_grid'" 
+                [formGroup]="documentForm" 
+                (ngSubmit)="saveDocumentToServer($event)"
                 >
-                <div id="button_grid">
-                    <div id="save_button">
-                        <button 
-                            type="submit" 
-                            (click)="$event.stopPropagation();"
-                            >
-                            저장
-                        </button>
+                <!-- 타이틀 -->
+                <div id="document_title_article">
+                    <div 
+                        id="document_title_div"
+                        *ngIf="isEditMode === false"
+                        >
+                        <h2>{{ documentInfo?.title }}</h2>
                     </div>
-                    <div id="cancel_button">
-                        <button 
-                            type="button"
-                            (click)="cancelSavingDocument($event)"    
+                    <div
+                        id="document_title_edit_div"
+                        *ngIf="isEditMode === true"
+                        >
+                        <input 
+                            type="text" 
+                            placeholder="title.."
+                            [value]="documentInfo?.title"
+                            [formControlName]="'title'"
                             >
-                            취소
-                        </button>
                     </div>
                 </div>
-            </div>
 
+                <!-- 작성 시작 -->
+                <div id="document_time_div">
+                    <i class="material-icons" style="font-size: 12px;">access_time</i>
+                    {{ documentInfo?.createdTime }}
+                </div>
+
+                <!-- 지금은 빈 공간 -->
+                <div></div>
+
+                <!-- 아이피주소 -->
+                <div id="document_ip_div">
+                    <i class="material-icons" style="font-size: 12px;">wifi</i>
+                    127.0.0.1
+                </div>
+
+                <!-- 문서 내용 -->
+                <div id="document_text_article">
+                    <div 
+                        id="document_text_div"
+                        *ngIf="isEditMode === false"
+                        >
+                        {{ documentInfo?.text }}
+                    </div>
+
+                    <div
+                        id="document_text_input_div"
+                        *ngIf="isEditMode === true"
+                        >
+                        <textarea 
+                            [value]="documentInfo?.text"
+                            [formControlName]="'text'"
+                            ></textarea>
+                    </div>
+                </div>
+
+                <!-- 문서 수정 내용 저장 버튼. isEditMode가 true일때만 나타납니다. -->
+                <div 
+                    id="document_edit_button_div" 
+                    *ngIf="isEditMode === true"
+                    >
+                    <div id="button_grid">
+                        <div id="save_button">
+                            <button 
+                                type="submit" 
+                                (click)="$event.stopPropagation();"
+                                >
+                                저장
+                            </button>
+                        </div>
+                        <div id="cancel_button">
+                            <button 
+                                type="button"
+                                (click)="cancelSavingDocument($event)"    
+                                >
+                                취소
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
             <!-- 태그리스트 -->
             <div id="document_taglist_article">
                 <app-tags [tagList]="documentInfo?.tagList"></app-tags>
@@ -124,8 +126,5 @@
             </div>
 
         </div>
-
-        <!-- Document의 양쪽 빈 공간용 -->
-        <div></div>
     </div>
-</form>
+</div>

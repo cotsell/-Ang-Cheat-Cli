@@ -52,6 +52,7 @@ blockquote {
 //---- 반응형 관련 ----
 
 $g_mediaMobile: 320px;
+$g_mediaMiddle: 544px;
 $g_mediaTablet: 768px;
 $g_mediaLaptop: 900px;
 $g_mediaDesktop: 1200px;
@@ -61,8 +62,12 @@ $g_mediaDesktop: 1200px;
     display: none;
 }
 
-// @media (max-width: $g_mediaMobile) {
+// @media (max-width: $g_mediaMiddle - 1px) {
     
+// }
+
+// @media (min-width: $g_mediaMiddle) {
+
 // }
 
 // @media (min-width: $g_mediaTablet) {

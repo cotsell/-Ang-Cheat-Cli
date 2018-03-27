@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Network } from '../../service/Network';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxJs';
+import * as marked from 'marked';
+import * as prism from 'prismjs';
 
 import * as Redux from '../../service/redux';
 import Account from '../../service/Account';
@@ -24,6 +26,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   private userInfo: UserInfo;
   private accountSubscription: Subscription;
   private userInfoSubscription: Subscription;
+
+  @ViewChild('target') preview_target: ElementRef;
 
   textForm: FormGroup = new FormGroup(
     {
@@ -52,6 +56,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       // TODO 입력된 연관아이디가 없음.
       console.log(this.relatedId);
     }
+
+    this.settingMakred();
 
   }
 
@@ -90,6 +96,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   // 에디터 화면에 작성주인 내용을 우측의 프리뷰 화면에 출력하기 위한
   private copyTextToPreview(event) {
     this.previewText = this.textForm.value.text;
+    this.preview_target.nativeElement.innerHTML = marked(this.textForm.value.text);
+    prism.highlightAllUnder(this.preview_target.nativeElement);
     // this.previewText = event.target.value;
   }
 
@@ -97,5 +105,24 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     Utils.unSubscribe(this.accountSubscription);
     Utils.unSubscribe(this.userInfoSubscription);
   }
+
+  // -----------------------------------------------------------------------
+  // MarkDown Setting
+  // -----------------------------------------------------------------------
+  private settingMakred() {
+    marked.setOptions({
+      renderer: new marked.Renderer(),
+      gfm: true,
+      tables: true,
+      breaks: true,
+      pedantic: false,
+      sanitize: true,
+      smartLists: true,
+      smartypants: false,
+      xhtml: true
+    });
+  }
+
+
 
 }

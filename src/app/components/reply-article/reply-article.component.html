@@ -6,7 +6,10 @@
     <!-- 빈공간 -->
     <div></div>
 
-    <div>
+    <div 
+        id="write_comment"
+        (click)="changeCommentShowed($event)"
+        >
         답글달기
     </div>
     <div id="created_time">
@@ -14,6 +17,9 @@
       22:40
     </div>
     <div id="text">리플 내용은 이렇게 나올꺼에요.</div>
+    <div id="comment" [ngClass]="{ show_comment: isCommentShowed }">
+        <textarea></textarea>
+    </div>
 </div>
 
 <div *ngIf="isReReply === true" id="rereply_main_grid">
@@ -25,11 +31,11 @@
     <!-- 빈공간 -->
     <div></div>
 
-    <div>
+    <div id="write_comment">
         답글달기
     </div>
     <div id="created_time">
-        <i class="material-icons">access_time</i>
+        <i class="material-icons">access_time</i> 
         22:40
     </div>
     <div id="rereply_text">리플 내용은 이렇게 나올꺼에요.</div>

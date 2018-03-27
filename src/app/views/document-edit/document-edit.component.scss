@@ -4,91 +4,178 @@ form {
     height: 100%;
 }
 
-#main_grid {
+#main-div {
     display: grid;
-    grid-template-columns: auto 768px auto; // 768px 이후 사이즈부터는 minmax(768px 1600px)로..
-    grid-template-rows: 2rem 3rem auto 2rem;
+    grid-template-rows: 2rem auto;
     height: 100%;
     width: 100%;
-
-    #titlebar_div {
-        grid-column: 1 / 4;
-    }
     
-    #title {
-        background-color: white;
-        text-align: center;
-        input {
-            border: none;
-            border-bottom: 2px solid #4d4d4d;
-            height: 2.5rem;
-            font-size: 1.6rem;
-            padding-left: 1rem;
-            padding-right: 1rem;
+    #titlebar-div {
+        height: 2rem;
+    }
+
+    #main-flex {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+
+        #main-form-grid-div {
+            display: grid;
+            grid-template-rows: 3rem auto 2rem;
+            height: 100%;
+            width: 100% ;
+
+            #title {
+                background-color: white;
+                text-align: center;
+                height: 3rem;
+
+                input {
+                    border: none;
+                    border-bottom: 2px solid #4d4d4d;
+                    height: 2.5rem;
+                    font-size: 1.6rem;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                }
+            }
+
+            #text-grid {
+                display: grid;
+                grid-template-columns: 50% 50%;
+                grid-template-rows: 100%;
+                height: 100%;
+                width: 100%;
+            
+                #edit {
+                    // grid-column: 1 / 3;
+                    background-color: #4d4d4d;
+                    color: #e6e6e6;
+                    textarea {
+                        border: none;
+                        background-color: #4d4d4d;
+                        color: #e6e6e6;
+                        resize: none;
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                // 프리뷰가 활성화 된 상태
+                .edit_div {
+                    grid-column: 1;
+                    grid-row: 1;
+
+                }
+                // 프리뷰가 활성화 되지 않은 상태
+                .edit_no_div {
+                    grid-column: 1 / 3;
+                    grid-row: 1 / 3;
+                }
+
+                #preview {
+                    display: none;
+                    position: relative;
+                    background-color: white;
+                    width: 100%;
+                    height: 100%;
+                    
+                    #target {
+                        position: absolute;
+                        top: 0px;
+                        left: 0px;
+                        right: 0px;
+                        bottom: 0px;
+                        word-wrap: break-word;
+                        overflow: auto;
+                        // width: 100%;
+                        // height: 100%;
+                    }
+                }
+
+                .show_preview {
+                    display: block !important;
+                }
+            }
+
+            #buttons {
+                background-color: white;
+                #ok {
+                    float: left;
+                    cursor: pointer;
+                    background-color: white;
+                    button[type=submit] {
+                        border: none;
+                        font-weight: bold;
+                        color: #4d4d4d;
+                        cursor: pointer;
+                        background-color: white;
+                    }
+                }
+                #show-preview {
+                    float: left;
+                }
+                #cancel {
+                    float: right;
+                    cursor: pointer;
+                    background-color: white;
+                    button[type=button] {
+                        border: none;
+                        font-weight: bold;
+                        color: tomato;
+                        cursor: pointer;
+                        background-color: white;
+                    }
+                }
+            }
+
         }
     }
 
-    #buttons {
-        background-color: white;
-        #ok {
-            float: left;
-            cursor: pointer;
-            background-color: white;
-            button[type=submit] {
-                border: none;
-                font-weight: bold;
-                color: #4d4d4d;
-                cursor: pointer;
-                background-color: white;
-            }
-        }
-        #show_preview {
-            float: left;
-        }
-        #cancel {
-            float: right;
-            cursor: pointer;
-            background-color: white;
-            button[type=button] {
-                border: none;
-                font-weight: bold;
-                color: tomato;
-                cursor: pointer;
-                background-color: white;
-            }
-        }
+}
+
+// 미디어 쿼리
+@media (max-width: $g_mediaMiddle - 1px) {
+    #edit {
+        grid-column: 1 / 3 !important;
+    }
+    #preview {
+        grid-column: 1 / 3 !important;
+    }
+    #text-grid {
+        grid-template-rows: 50% 50% !important;
     }
 }
 
-#text_grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    height: 100%;
-
+@media (min-width: $g_mediaMiddle) and (max-width: $g_mediaTablet - 1px) {
     #edit {
-        grid-column: 1 / 3;
-        background-color: #4d4d4d;
-        color: #e6e6e6;
-        textarea {
-            border: none;
-            background-color: #4d4d4d;
-            color: #e6e6e6;
-            resize: none;
-            width: 100%;
-            height: 100%;
-        }
-    }
-    .edit_cut {
-        grid-column: 1 !important;
+        grid-column: 1 / 3 !important;
     }
     #preview {
-        display: none;
-        background-color: white;
-        pre {
-            margin: 0px;
-        }
+        grid-column: 1 / 3 !important;
     }
-    .show_preview {
-        display: block !important;
+    #text-grid {
+        grid-template-rows: 50% 50% !important;
+    }
+}
+
+@media (min-width: $g_mediaTablet) {
+    // #main-form-grid-div {
+    //     width: 768px !important;
+    // }
+}
+
+@media (min-width: $g_mediaLaptop) {
+
+}
+
+@media (min-width: $g_mediaDesktop) {
+
+}
+
+@media (min-width: 1536px) {
+    #main-form-grid-div {
+        width: 1536px !important;
     }
 }

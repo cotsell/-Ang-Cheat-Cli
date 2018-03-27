@@ -1,65 +1,59 @@
 <div id="main_grid">
-  <div id="titlebar_div">
-    <app-titlebar></app-titlebar>
-  </div>
+    <!-- 타이틀바 -->
+    <div id="titlebar_div">
+        <app-titlebar></app-titlebar>
+    </div>
 
-  <!-- profile_div의 윗쪽 빈공간 -->
-  <div style="grid-column: 1 / 4;"></div>
+    <!-- 프로필 정렬용 flex -->
+    <div id="profile_flex">
+        <form  id="profile_form" 
+            [formGroup]="profileForm" 
+            (ngSubmit)="saveProfile($event)"
+            >
+            <div id="profile_grid">
+                <div id="user_img">
+                    <i class="material-icons" style="font-size: 10rem; color: white;">account_circle</i>
+                </div>
 
-  <!-- profile_div의 좌측 빈공간 -->
-  <div></div>
+                <div id="right_grid">
+                    <div>아이디</div>
+                    <div>
+                        <div *ngIf="!isEditMode">{{ userInfo?.id }}</div>
+                        <div *ngIf="isEditMode"><input type="text" [formControlName]="'id'"></div>
+                    </div>
+    
+                    <div>닉네임</div>
+                    <div>
+                        <div *ngIf="!isEditMode">{{ userInfo?.nickName }}</div>
+                        <div *ngIf="isEditMode"><input type="text" [formControlName]="'nickName'"></div>
+                    </div>
+    
+                    <div>비밀번호</div>
+                    <div>
+                        <div *ngIf="!isEditMode">********</div>
+                        <div *ngIf="isEditMode"><input type="password" [formControlName]="'password'"></div>
+                    </div>
+                </div>
+            </div>
 
-  <div>
-    <form  [formGroup]="profileForm" (ngSubmit)="saveProfile($event)">
-      <div id="profile_grid">
-        <div id="user_img">
-          <i class="material-icons" style="font-size: 10rem; color: white;">account_circle</i>
-        </div>
+            <div id="signature">시그니쳐</div>
+            <div id="signature" *ngIf="!isEditMode"><pre>{{ userInfo?.signature }}</pre></div>
+            <div id="signature" *ngIf="isEditMode"><textarea [formControlName]="'signature'"></textarea></div>
 
-        <div>아이디</div>
-        <div>
-          <div *ngIf="!isEditMode">{{ userInfo?.id }}</div>
-          <div *ngIf="isEditMode"><input type="text" [formControlName]="'id'"></div>
-        </div>
+            <div *ngIf="isEditMode === false && isEditable === true">
+                <button type="button" (click)="modalOpen($event)">수정하기</button>
+            </div>
 
-        <div>닉네임</div>
-        <div>
-          <div *ngIf="!isEditMode">{{ userInfo?.nickName }}</div>
-          <div *ngIf="isEditMode"><input type="text" [formControlName]="'nickName'"></div>
-        </div>
+            <div 
+                *ngIf="isEditMode"
+                id="buttons"
+                >
+                <button id="save" type="submit" (click)="$event.stopPropagation();">저장</button> 
+                <button id="cancel" type="button" (click)="cancelEditProfile($event)">취소</button>
+            </div>
 
-        <div>비밀번호</div>
-        <div>
-          <div *ngIf="!isEditMode">********</div>
-          <div *ngIf="isEditMode"><input type="password" [formControlName]="'password'"></div>
-        </div>
-
-        <div id="signature">시그니쳐</div>
-        <div id="signature" *ngIf="!isEditMode"><pre>{{ userInfo?.signature }}</pre></div>
-        <div id="signature" *ngIf="isEditMode"><textarea [formControlName]="'signature'"></textarea></div>
-
-        <div *ngIf="isEditMode === false && isEditable === true">
-          <button type="button" (click)="modalOpen($event)">수정하기</button>
-        </div>
-
-        <div 
-          *ngIf="isEditMode"
-          id="buttons"
-          >
-          <button id="save" type="submit" (click)="$event.stopPropagation();">저장</button> 
-          <button id="cancel" type="button" (click)="cancelEditProfile($event)">취소</button>
-        </div>
-
-      </div>
-    </form>
-  </div>
-
-  <!-- profile_div의 우측 빈공간 -->
-  <div></div>
-
-  <!-- profile_div의 아랫쪽 빈공간 -->
-  <div style="grid-column: 1 / 4;"></div>
-
+        </form>
+    </div>
 </div>
 
 
