@@ -3,9 +3,7 @@
         <i class="material-icons">face</i>
         cotsell
     </div>
-    <!-- 빈공간 -->
-    <div></div>
-
+    
     <div 
         id="write_comment"
         (click)="changeCommentShowed($event)"
@@ -17,21 +15,45 @@
       22:40
     </div>
     <div id="text">리플 내용은 이렇게 나올꺼에요.</div>
+    <!-- 숨겨진 글작성 영역 -->
     <div id="comment" [ngClass]="{ show_comment: isCommentShowed }">
-        <textarea></textarea>
+        <form
+            id="reply_comment_form" 
+            [formGroup]="commentForm" 
+            (ngSubmit)="sendReply($event)"
+            >
+            <div id="textarea">
+                <textarea [formControlName]="'comment'"></textarea>
+            </div>
+            <div id="buttons">
+                <button 
+                    type="submit" 
+                    (click)="$event.stopPropagation()">
+                    저장
+                </button>
+                <button 
+                    type="reset" 
+                    (click)="isCommentShowed=false; $event.stopPropagation();">
+                    취소
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
 <div *ngIf="isReReply === true" id="rereply_main_grid">
-    <div><i class="material-icons">subdirectory_arrow_right</i></div>
+    <div id="rereply_icon">
+        <i class="material-icons">subdirectory_arrow_right</i>
+    </div>
     <div id="nick_name">
         <i class="material-icons">face</i>
         cotsell
     </div>
-    <!-- 빈공간 -->
-    <div></div>
 
-    <div id="write_comment">
+    <div 
+        id="write_comment"
+        (click)="changeCommentShowed($event)"
+        >
         답글달기
     </div>
     <div id="created_time">
@@ -39,4 +61,28 @@
         22:40
     </div>
     <div id="rereply_text">리플 내용은 이렇게 나올꺼에요.</div>
+    <!-- 숨겨진 글작성 영역 -->
+    <div id="rereply_comment" [ngClass]="{ show_comment: isCommentShowed }">
+            <form
+                id="reply_comment_form" 
+                [formGroup]="commentForm" 
+                (ngSubmit)="sendReply($event)"
+                >
+                <div id="textarea">
+                    <textarea [formControlName]="'comment'"></textarea>
+                </div>
+                <div id="buttons">
+                    <button 
+                        type="submit" 
+                        (click)="$event.stopPropagation()">
+                        저장
+                    </button>
+                    <button 
+                        type="reset" 
+                        (click)="isCommentShowed=false; $event.stopPropagation();">
+                        취소
+                    </button>
+                </div>
+            </form>
+        </div>
 </div>

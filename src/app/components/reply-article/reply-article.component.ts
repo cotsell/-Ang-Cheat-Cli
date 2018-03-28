@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-reply-article',
@@ -9,6 +10,10 @@ export class ReplyArticleComponent implements OnInit {
   @Input() isReReply = false;
   private isCommentShowed = false;
 
+  private commentForm = new FormGroup({
+    comment: new FormControl()
+  });
+
   constructor() { }
 
   ngOnInit() {
@@ -17,6 +22,11 @@ export class ReplyArticleComponent implements OnInit {
   private changeCommentShowed(event) {
     event.stopPropagation();
     this.isCommentShowed = !this.isCommentShowed;
+  }
+
+  private sendReply(event) {
+    event.stopPropagation();
+    
   }
 
 }

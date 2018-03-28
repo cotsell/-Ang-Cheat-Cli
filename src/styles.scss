@@ -26,6 +26,7 @@ html, body {
     margin: 0;
     padding: 0;
     background-color: $g_BackgroundColor;
+    // font-size: 16px;
 }
 
 
@@ -56,15 +57,18 @@ $g_mediaMiddle: 544px;
 $g_mediaTablet: 768px;
 $g_mediaLaptop: 900px;
 $g_mediaDesktop: 1200px;
+$g_mediaDoubleTablet: $g_mediaTablet * 2;
 
 // 미디어 쿼리 용도의 전체 클래스에요.
 .g_mobile, .g_tablet, .g_laptop, .g_desktop {
     display: none;
 }
 
-// @media (max-width: $g_mediaMiddle - 1px) {
-    
-// }
+@media (max-width: $g_mediaMiddle - 1px) {
+    html, body {
+        font-size: 14px;
+    }
+}
 
 // @media (min-width: $g_mediaMiddle) {
 
@@ -79,5 +83,9 @@ $g_mediaDesktop: 1200px;
 // }
 
 // @media (min-width: $g_mediaDesktop) {
+
+// }
+
+// @media (min-width: $g_mediaDoubleTablet) {
 
 // }

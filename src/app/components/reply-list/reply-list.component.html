@@ -1,10 +1,12 @@
 <div id="main_grid">
+  <!-- 댓글 리스트의 타이틀 -->
   <div id="icon"><i class="material-icons">comment</i></div>
   <div id="title">Reply</div>
   <div id="reply_button" (click)="changeReplyEditMode($event)">
     답글달기
   </div>
 
+  <!-- 숨겨져 있는 댓글달기 화면. -->
   <div id="write_grid" [ngClass]="{ show_write_grid: isReplyEditMode }">
     <div id="id">
       <input type="text" placeholder="아이디">
