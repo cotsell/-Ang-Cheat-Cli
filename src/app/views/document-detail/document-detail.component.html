@@ -94,7 +94,11 @@
             </form>
             <!-- 태그리스트 -->
             <div id="document_taglist_article">
-                <app-tags [tagList]="documentInfo?.tagList"></app-tags>
+                <app-tags 
+                    [tagList]="documentInfo?.tagList"
+                    (output)="sendNewTag($event)"
+                    (remove)="removeTagArticle($event)"
+                    ></app-tags>
             </div>
 
             <!-- 기타 기능 버튼들 -->

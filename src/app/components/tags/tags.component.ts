@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Tag } from '../../service/Interface';
 
 @Component({
   selector: 'app-tags',
@@ -7,7 +8,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class TagsComponent implements OnInit {
   @Input() tagList = [];
-  @Output() output;
+  @Output() output: EventEmitter<Tag> = new EventEmitter();
+  @Output() remove: EventEmitter<Tag> = new EventEmitter();
 
   constructor() { }
 
@@ -17,9 +19,20 @@ export class TagsComponent implements OnInit {
   private insertNewTag(event) {
     event.stopPropagation();
     if (event.key === 'Enter') {
-      this.tagList.push({title: event.target.value});
-      event.target.value = '';
+      // this.tagList.push({title: event.target.value});
+      const value = event.target.value;
+      if (value !== '') {
+        this.output.emit({ title: value });
+        event.target.value = '';
+      }
     }
+  }
+
+  private removeTag(event) {
+    event.stopPropagation();
+    const title = event.target.innerText;
+    console.log(event.target.innerText);
+    this.remove.emit({ title: title });
   }
 
 }

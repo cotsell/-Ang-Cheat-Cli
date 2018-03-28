@@ -109,7 +109,15 @@
     }
 }
 
-#reply_comment_form {
+@mixin reply_comment_form {
     height: 9rem !important;
     width: 100%;
+}
+
+#reply_comment_form {
+    @include reply_comment_form;
+}
+
+#rereply_comment_form {
+    @include reply_comment_form;
 }

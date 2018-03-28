@@ -15,8 +15,13 @@
     <div></div>
 
     <div id="tag_list_div">
-        <div id="tag_article_div" *ngFor="let tag of tagList">
-            {{tag.title}}
+        <div *ngFor="let tag of tagList">
+            <div
+                class="tag_article_div" 
+                (click)="removeTag($event)"
+                >
+                {{ tag.title }}
+            </div>
         </div>
     </div>
 </div>

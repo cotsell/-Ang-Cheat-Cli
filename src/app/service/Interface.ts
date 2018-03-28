@@ -39,8 +39,8 @@ export class Library {
 }
 
 export class Tag {
-    id: string;
-    title: string;
+    id?: string;
+    title?: string;
     constructor(TagName?: string) {
         if (TagName !== undefined) {
             this.title = TagName;

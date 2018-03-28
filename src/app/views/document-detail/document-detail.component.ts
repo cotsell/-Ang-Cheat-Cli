@@ -10,7 +10,7 @@ import * as Utils from '../../service/utils';
 import { Store } from '@ngrx/store';
 import * as Redux from '../../service/redux';
 import Account from '../../service/Account';
-import { NewDocumentDetail, ModifyDocumentDetail, RemoveDocumentDetail } from '../../service/redux/DocumentDetailReducer';
+import * as DocuDetail from '../../service/redux/DocumentDetailReducer';
 
 @Component({
     selector: 'app-document-detail',
@@ -67,10 +67,10 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
                 if (obs.result === true) {
                     this.changeEditMode();
                     // TODO 수정 후 내용을 디스패치 해야 하는데, 아직은 대충 해놓음.
-                    this.store.dispatch(new ModifyDocumentDetail(editedDoc));
+                    this.store.dispatch(new DocuDetail.ModifyDocumentDetail(editedDoc));
                 } else {
                     // TODO 문서 저장 실패시 대응 코딩 필요.
-                    this.store.dispatch(new ModifyDocumentDetail(this.documentInfo));
+                    this.store.dispatch(new DocuDetail.ModifyDocumentDetail(this.documentInfo));
                 }
             });
     }
@@ -95,7 +95,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
         this.network.getDocument(this.documentId)
             .subscribe(doc => {
                 if (doc.result === true) {
-                    this.store.dispatch(new NewDocumentDetail(Object.assign({}, doc).payload));
+                    this.store.dispatch(new DocuDetail.NewDocumentDetail(Object.assign({}, doc).payload));
                 } else {
                     // TODO 문서 전송 실패 대응 코딩 필요.
                     console.log('문서를 받아오는데 실패 했어요.');
@@ -149,11 +149,28 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
             });
     }
 
+    // Tags 컴포넌트에서 새로운 태그가 입력되면 이게 실행돼요.
+    private sendNewTag(event) {
+        console.log(event);
+        // TODO 네트워크로 새로운 태그 전송.
+        // TODO 문서 태그 리스트를 조사해서 중복 방지 필요.
+        // TODO 결과값은 성공 실패. 그리고 메세지.
+        this.store.dispatch(new DocuDetail.AddNewTagArticle(event));
+    }
+
+    // Tags 컴포넌트에서 태그 삭제가 요청되면 이게 실행돼요.
+    private removeTagArticle(event) {
+        console.log(event);
+        // TODO 네트워크로 새로운 태그 전송.
+        // TODO 결과값은 성공 실패. 그리고 메세지.
+        this.store.dispatch(new DocuDetail.RemoveTagArticle(event));
+    }
+
     ngOnDestroy() {
         Utils.unSubscribe(this.accountSubscription);
         Utils.unSubscribe(this.userInfoSubscription);
         Utils.unSubscribe(this.documentSubscription);
-        this.store.dispatch(new RemoveDocumentDetail());
+        this.store.dispatch(new DocuDetail.RemoveDocumentDetail());
     }
 
 }

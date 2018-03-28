@@ -75,6 +75,25 @@
         display: flex;
         justify-content: flex-end;
         height: 2rem;
+        button {
+            font-weight: bold;
+            font-size: 1rem;
+            border: none;
+            background-color: white;
+            cursor: pointer;
+        }
+        button[type=submit] {
+            color: yellowgreen;
+            &:hover {
+                color: olivedrab;
+            }
+        }
+        button[type=reset] {
+            color: firebrick;
+            &:hover {
+                color: red;
+            }
+        }
     }
 }
 
