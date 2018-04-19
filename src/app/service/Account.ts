@@ -5,11 +5,13 @@ import { Store } from '@ngrx/store';
 import * as Redux from './redux';
 import * as SysConf from './SysConf';
 import { Network } from './Network';
+import * as Utils from '../service/utils';
 import * as UserInfoRedux from './redux/UserInfoReducer';
 import * as AccountRedux from './redux/AccountReducer';
 
 @Injectable()
 export default class Account {
+
     constructor(
         private network: Network,
         private store: Store<Redux.StoreInfo>) {}
@@ -35,20 +37,17 @@ export default class Account {
 
         function login (network, store) {
             const accessToken = localStorage.getItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN);
-            const userId = localStorage.getItem(SysConf.LOCAL_STORAGE_USER_ID);
 
-            if (accessToken !== undefined && accessToken !== null && accessToken !== '' &&
-                userId !== undefined && userId !== null && userId !== '') {
+            if (accessToken !== undefined && accessToken !== null && accessToken !== '') {
                 // 엑세스토큰이 로컬저장소에 존재하면..
-                network.checkAccessToken(accessToken, userId)
+                network.checkAccessToken(accessToken)
                     .subscribe(result => {
-                        // TODO obs의 응답 내용이 달라질 수 있음.
                         if (result['result'] === true) { // 엑세스토큰이 유효하다면..
-                            getUserInfo(network, store, accessToken, userId);
+                            const userId = Utils.jwtDecode(accessToken)['userId'];
+                            getUserInfo(network, store, userId);
                             changeLoginState(store, accessToken);
                         } else { // 유요한 엑세스토큰이 아니므로, 로컬 저장소 정리.
                             localStorage.removeItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN);
-                            localStorage.removeItem(SysConf.LOCAL_STORAGE_USER_ID);
 
                             // 로그인 실패하면 실행할 함수가 입력되었다면, 시행.
                             if (cbFailLoginFunc !== undefined && cbFailLoginFunc !== null) {
@@ -67,12 +66,15 @@ export default class Account {
             }
         }
 
-        function getUserInfo(network, store, accessToken: string, userId: string) {
+        function getUserInfo(network, store, userId: string) {
             network.getUserInfo(userId)
                 .subscribe(resultUserInfo => {
                     // 리덕스에 유저정보 입력.
-                    // TODO 유저정보 결과 내용이 달라질 수 있음.
-                    store.dispatch(new UserInfoRedux.NewUserInfo(resultUserInfo));
+                    if (resultUserInfo.result === true) {
+                        store.dispatch(new UserInfoRedux.NewUserInfo(resultUserInfo.payload));
+                    } else {
+                        // TODO 실패하면 뭘 해줘야 하지?
+                    }
                 });
         }
 

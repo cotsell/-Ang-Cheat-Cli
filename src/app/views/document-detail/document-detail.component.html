@@ -41,10 +41,23 @@
                 <!-- 지금은 빈 공간 -->
                 <div></div>
 
-                <!-- 아이피주소 -->
-                <div id="document_ip_div">
-                    <i class="material-icons" style="font-size: 12px;">wifi</i>
-                    127.0.0.1
+                <!-- 문서 컨트롤 버튼 -->
+                <div id="documentControlButtonsDiv">
+                    <div *ngIf="canUserControlDocument">
+                        <button 
+                            id="edit"
+                            type="button"
+                            (click)="changeEditMode($event)"
+                            >
+                            글 수정
+                        </button> 
+                        <button 
+                            id="delete"
+                            type="button"
+                            (click)="deleteDocument($event)"
+                            >글 삭제
+                        </button>
+                    </div>
                 </div>
 
                 <!-- 문서 내용 -->
@@ -96,7 +109,7 @@
             <div id="document_taglist_article">
                 <app-tags 
                     [tagList]="documentInfo?.tagList"
-                    (output)="sendNewTag($event)"
+                    (insert)="sendNewTag($event)"
                     (remove)="removeTagArticle($event)"
                     ></app-tags>
             </div>
@@ -106,22 +119,11 @@
                 <i class="material-icons" style="font-size: 1rem; color:steelblue;">thumb_up</i>
                 {{ documentInfo?.thumbUp?.length }} 
                 <button type="button">스크랩</button> 
-                <button 
-                    type="button"
-                    (click)="changeEditMode($event)"
-                    >
-                    글 수정
-                </button> 
-                <button 
-                    type="button"
-                    (click)="deleteDocument($event)"
-                    >글 삭제
-                </button>
             </div>
 
             <!-- 시그니처 -->
             <div id="document_signature_article">
-                <app-signature [userInfo]="userInfo"></app-signature>
+                <app-signature [userInfo]="documentInfo.userInfo"></app-signature>
             </div>
 
             <!-- 댓글 리스트 -->
@@ -130,5 +132,13 @@
             </div>
 
         </div>
+    </div>
+</div>
+
+<div id="modal" *ngIf="isModalOpen">
+    <div id="mainDiv">
+        <div id="icon"><i class="material-icons">error_outline</i></div>
+        <div id="text">{{ modalComment }}</div>
+        <div id="buttons"><button (click)="modalFunction($event)">확인</button></div>
     </div>
 </div>

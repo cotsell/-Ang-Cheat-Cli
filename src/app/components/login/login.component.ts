@@ -68,23 +68,25 @@ export class LoginComponent implements OnInit, OnDestroy {
         event.stopPropagation();
         this.network.login(this.loginForm.value['id'], this.loginForm.value['password'])
             .subscribe(loginResult => {
-                const result = loginResult['result'];
-                const access_token = loginResult['access_token'];
-                const userId = loginResult['userId'];
+                const result = loginResult.result;
+                const accessToken = loginResult.payload.accessToken;
+                const userId = Utils.jwtDecode(accessToken)['userId'];
 
                 if (result === true) { // 로그인 성공 시..
-                    localStorage.setItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN, access_token);
-                    localStorage.setItem(SysConf.LOCAL_STORAGE_USER_ID, userId);
+                    localStorage.setItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN, accessToken);
                     this.store.dispatch(new NewAccount(
                         {
-                            accessToken: access_token,
+                            accessToken: accessToken,
                             loggedIn: true
                         }));
 
-                    // TODO 아마도 로그인 하면 유저정보도 같이 받게 될 가능성이 큼. 삭제하게 될 듯.
                     this.network.getUserInfo(userId)
                         .subscribe(userInfoResult => {
-                            this.store.dispatch(new NewUserInfo(userInfoResult));
+                            if (userInfoResult.result === true) {
+                                this.store.dispatch(new NewUserInfo(userInfoResult.payload));
+                            } else {
+                                // TODO 유저정보 가져오기 실패시에는??
+                            }
                         });
                 } else {
                     // TODO ID, PASSWORD 로그인 실패시 대응 코딩.
@@ -98,7 +100,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     private logout(event) {
         event.stopPropagation();
         localStorage.removeItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN);
-        localStorage.removeItem(SysConf.LOCAL_STORAGE_USER_ID);
         this.store.dispatch(new ModifyAccount({ accessToken: undefined, loggedIn: false }));
         this.store.dispatch(new RemoveUserInfo());
     }
@@ -113,24 +114,29 @@ export class LoginComponent implements OnInit, OnDestroy {
         const { id, password, nickName } = this.signupForm.value;
         this.network.signup(id, password, nickName)
             .subscribe(Result => {
-                if (Result['result'] === true) { // 가입 성공하면, 로그인 시도.
-                    const result = Result['result'];
-                    const access_token = Result['access_token'];
-                    const userId = Result['userId'];
+                if (Result.result === true) { // 가입 성공하면, 로그인 시도.
+                    const {result, payload } = Result;
+                    const accessToken = payload.accessToken;
+                    const userId = Utils.jwtDecode(accessToken)['userId'];
 
-                    localStorage.setItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN, access_token);
-                    localStorage.setItem(SysConf.LOCAL_STORAGE_USER_ID, userId);
+                    // 가입 성공 후 받아온 accessToken과 userID를 로컬저장소에 저장.
+                    localStorage.setItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN, accessToken);
 
-                    this.store.dispatch(new NewAccount(
-                        {
-                            accessToken: access_token,
+                    // 리덕스에 access token과 로그인 상태 true를 갱신.
+                    // 로그인 한거로 간주합니다.
+                    this.store.dispatch(new NewAccount({
+                            accessToken: accessToken,
                             loggedIn: true
                         }));
 
-                    // TODO 아마도 로그인 하면 유저정보도 같이 받게 될 가능성이 큼. 삭제하게 될 듯.
+                    // 로그인 된 유저 정보를 요청합니다.
                     this.network.getUserInfo(userId)
                         .subscribe(userInfoResult => {
-                            this.store.dispatch(new NewUserInfo(userInfoResult));
+                            if (userInfoResult.result === true) {
+                                this.store.dispatch(new NewUserInfo(userInfoResult.payload));
+                            } else {
+                                // TODO 유저 정보 조회 실패시의 대응??
+                            }
                         });
                 } else {
                     // TODO 가입 실패 하면, 어떻게 할지 코딩 필요.

@@ -40,17 +40,17 @@ export class DocumentListComponent implements OnInit, OnDestroy {
             nickName: 'cotsell'
         };
         this.store.dispatch(new NewDocumentList(
-            {id: 'testNo1', title: 'TestTitle1', text: 'test', userInfo: userInfo }));
+            { _id: 'testNo1', title: 'TestTitle1', text: 'test', userId: 'cotsell@gmail.com' }));
         this.store.dispatch(new NewDocumentList(
-            {id: 'testNo2', title: 'TestTitle2', text: 'test', userInfo: userInfo }));
+            { _id: 'testNo2', title: 'TestTitle2', text: 'test', userId: 'cotsell@gmail.com' }));
         this.store.dispatch(new NewDocumentList(
-            {id: 'testNo3', title: 'TestTitle3', text: 'test', userInfo: userInfo }));
+            { _id: 'testNo3', title: 'TestTitle3', text: 'test', userId: 'cotsell@gmail.com' }));
         this.store.dispatch(new NewDocumentList(
-            {id: 'testNo4', title: 'TestTitle4', text: 'test', userInfo: userInfo }));
+            { _id: 'testNo4', title: 'TestTitle4', text: 'test', userId: 'cotsell@gmail.com' }));
         this.store.dispatch(new NewDocumentList(
-            {id: 'testNo5', title: 'TestTitle5', text: 'test', userInfo: userInfo }));
+            { _id: 'testNo5', title: 'TestTitle5', text: 'test', userId: 'cotsell@gmail.com' }));
         this.store.dispatch(new NewDocumentList(
-            {id: 'testNo6', title: 'TestTitle6', text: 'test', userInfo: userInfo }));
+            { _id: 'testNo6', title: 'TestTitle6', text: 'test', userId: 'cotsell@gmail.com' }));
     }
 
     // Account 리덕스를 구독하고, 로그인도 시도해요.

@@ -77,7 +77,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     private getOtherUserInfo() {
         this.network.getUserInfo(this.otherUserId)
             .subscribe(result => {
-                this.userInfo = result;
+                this.userInfo = result.payload;
             });
     }
 

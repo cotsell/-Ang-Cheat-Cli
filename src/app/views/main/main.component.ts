@@ -22,10 +22,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
     constructor(
         private account: Account,
-        private store: Store<Redux.StoreInfo>) {
-            localStorage.setItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN, 'test_access_token');
-            localStorage.setItem(SysConf.LOCAL_STORAGE_USER_ID, 'cotsell@gmail.com');
-         }
+        private store: Store<Redux.StoreInfo>) { }
 
     ngOnInit() {
         this.subscribeAccountAndLogin();
@@ -34,7 +31,6 @@ export class MainComponent implements OnInit, OnDestroy {
 
     private subscribeAccountAndLogin() {
         console.log(localStorage.getItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN));
-        console.log(localStorage.getItem(SysConf.LOCAL_STORAGE_USER_ID));
 
         this.accountSubscription = this.account.loginWithAccessToken(result => {
             this.isLoggedIn = result.loggedIn;

@@ -15,12 +15,12 @@
     <div></div>
 
     <div id="tag_list_div">
-        <div *ngFor="let tag of tagList">
+        <div *ngFor="let tag of _tagList">
             <div
                 class="tag_article_div" 
                 (click)="removeTag($event)"
                 >
-                {{ tag.title }}
+                {{ tag?.title }}
             </div>
         </div>
     </div>

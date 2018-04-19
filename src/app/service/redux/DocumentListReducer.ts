@@ -36,14 +36,14 @@ export function Reducer(state = init, action) {
 
         case MODIFY:
             return state.map(value => {
-                return value.id === action.payload.id ?
+                return value._id === action.payload._id ?
                     Object.assign({}, action.payload) :
                     value;
             });
 
         case REMOVE:
             return state.filter(value => {
-                return value.id !== action.payload.id;
+                return value._id !== action.payload._id;
             });
 
         case REMOVE_ALL:

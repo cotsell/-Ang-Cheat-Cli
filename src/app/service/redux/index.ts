@@ -7,7 +7,7 @@ import { Reducer as documentListReducer } from './DocumentListReducer';
 export interface StoreInfo {
     account: Interface.Account;
     userInfo: Interface.UserInfo;
-    documentDetail: Interface.DocumentInfo;
+    documentDetail: Interface.DocumentInfoForRedux;
     documentList: Interface.DocumentInfo[];
 }
 
@@ -29,7 +29,7 @@ export function getUserInfo(state: StoreInfo): Interface.UserInfo {
     return state.userInfo;
 }
 
-export function getDocumentDetail(state: StoreInfo): Interface.DocumentInfo {
+export function getDocumentDetail(state: StoreInfo): Interface.DocumentInfoForRedux {
     return state.documentDetail;
 }
 

@@ -33,6 +33,7 @@ const route: Routes = [
   // { path: 'writeDocu', component: DocumentEditComponent, data: { writeMode: true }},
   { path: 'writeDocu', component: DocumentEditComponent },
   { path: 'writeDocu/:relatedId', component: DocumentEditComponent },
+  { path: 'writeDocu/:documentId/edit', component: DocumentEditComponent },
   { path: 'docuDetail/:id', component: DocumentDetailComponent },
   { path: 'docuList/:subject', component: DocumentListComponent },
   { path: 'profileDetail', component: ProfileDetailComponent },

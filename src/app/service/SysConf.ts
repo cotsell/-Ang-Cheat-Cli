@@ -1,21 +1,33 @@
 export const SERVER_ADDRESS = 'http://localhost:8010';
 
+// Account
+export const SIGNUP = SERVER_ADDRESS + '/account/signup';
+export const LOGIN = SERVER_ADDRESS + '/account/login';
+export const CHECK_ACCESS_TOKEN = SERVER_ADDRESS + '/account/check';
 
-export const SIGNUP = SERVER_ADDRESS + '/signup';
-export const LOGIN = SERVER_ADDRESS + '/login';
-export const CHECK_ACCESS_TOKEN = SERVER_ADDRESS + '/check';
+// Account
+export const NEW_USER = SERVER_ADDRESS + '/account/user/new';
+export const GET_USER = SERVER_ADDRESS + '/account/user';
+export const MODIFY_USER = SERVER_ADDRESS + '/account/user/modify';
+export const REMOVE_USER = SERVER_ADDRESS + '/account/user/remove';
 
-export const NEW_DOCUMENT = SERVER_ADDRESS + '/document/new';
-export const GET_DOCUMENT = SERVER_ADDRESS + '/document';
-export const MODIFY_DOCUMENT = SERVER_ADDRESS + '/document/modify';
-export const REMOVE_DOCUMENT = SERVER_ADDRESS + '/document/remove';
-
-export const NEW_USER = SERVER_ADDRESS + '/user/new';
-export const GET_USER = SERVER_ADDRESS + '/user';
-export const MODIFY_USER = SERVER_ADDRESS + '/user/modify';
-export const REMOVE_USER = SERVER_ADDRESS + '/user/remove';
+// Document
+const DOCUMENT = '/document';
+export const NEW_DOCUMENT = SERVER_ADDRESS + DOCUMENT + '/new';
+export const GET_DOCUMENT = SERVER_ADDRESS + DOCUMENT;
+export const MODIFY_DOCUMENT = SERVER_ADDRESS + DOCUMENT + '/modify';
+export const REMOVE_DOCUMENT = SERVER_ADDRESS + DOCUMENT + '/remove';
 
 export const SEARCH_DOCUMENT = SERVER_ADDRESS + '/search';
+
+// Tag
+export const NEW_TAG = SERVER_ADDRESS + DOCUMENT + '/tag/new';
+export const REMOVE_TAG = SERVER_ADDRESS + DOCUMENT + '/tag/remove';
+
+// Category
+export const ALL_GRADE1_CATEGORYS = SERVER_ADDRESS + '/category/get';
+export const GET_CATEGORY = SERVER_ADDRESS + '/category';
+export const SET_CATEGORY = SERVER_ADDRESS + '/category';
 
 // 로컬 저장소 키값들
 export const LOCAL_STORAGE_ACCESS_TOKEN = 'access_token';
