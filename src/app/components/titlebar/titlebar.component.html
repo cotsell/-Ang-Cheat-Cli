@@ -1,20 +1,46 @@
 <div id="main_grid" class="">
-  <div id="menu_div">
-    <app-titlebar-menu></app-titlebar-menu>
-  </div>
-
-  <div id="search_div">
-    <div style="width: 80%;">
-      <app-search-bar></app-search-bar>
+    <div id="menuDiv">
+        <app-titlebar-menu></app-titlebar-menu>
     </div>
-  </div>
 
-  <div 
-    id="account_div"
-    onselectstart="return false"
-    >
-    <div [routerLink]="['/profileDetail']">
-      <i class="material-icons">account_circle</i>
+    <div></div>
+
+    <div style="text-align: center;">Project Cheat</div>
+
+    <div>
+        <div id="searchButton" (click)="changeSearchBarState($event)">
+            <i *ngIf="isSearchBarOpen === false" class="material-icons">search</i>
+            <i *ngIf="isSearchBarOpen === true" class="material-icons">close</i>
+        </div>
     </div>
-  </div>
+
+    <div 
+        id="accountDiv"
+        onselectstart="return false"
+        >
+        <div [routerLink]="['/profileDetail']">
+            <i class="material-icons">account_circle</i>
+        </div>
+    </div>
+
+    <div 
+        id="searchBarDiv" 
+        [ngClass]="{ searchBarOpen: isSearchBarOpen, searchBarClose: !isSearchBarOpen }"
+        >
+
+        <div id="searchBox">
+            <input type="text" placeholder="Search here..">
+        </div>
+
+        <div id="language">
+            <select name="test">
+                <option value="0">검색언어</option>
+                <option value="1">Javascript</option>
+                <option value="2">Java</option>
+                <option value="3">Cpp</option>
+            </select>
+        </div>
+
+        <div id="searchIcon"><i class="material-icons">search</i></div>
+    </div>
 </div>

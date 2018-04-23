@@ -21,7 +21,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     private isLoggedIn = false; // 로그인 되어 있는지 구분.
     private isEditMode = false; // 프로필 내용 수정모드로 변환 구분.
     private isEditable = false; // 프로필 수정하기 버튼을 화면에 표시할지 구분.
-    private otherUserId: string; // 타 유저의 닉네임. 타 유저 프로필을 볼 때 사용.
+    private isPasswordModalOpen = false; // 비밀번호 변경 버튼 누를시 출력되는 모달 구분.
     private userInfo: UserInfo;
     private accountSubscription: Subscription;
     private userInfoSubscription: Subscription;
@@ -29,10 +29,15 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     // 프로필 폼 설정.
     private profileForm: FormGroup = new FormGroup(
         {
-            id: new FormControl(),
             nickName: new FormControl(),
-            password: new FormControl(),
             signature: new FormControl()
+        }
+    );
+
+    private changePassForm: FormGroup = new FormGroup(
+        {
+            oldPass: new FormControl(),
+            newPass: new FormControl()
         }
     );
 
@@ -40,14 +45,18 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         private network: Network,
         private store: Store<Redux.StoreInfo>,
         private account: Account,
-        private route: ActivatedRoute) {
-            this.otherUserId = route.snapshot.params['id'];
-        }
+        private route: ActivatedRoute) {  }
 
     ngOnInit() {
         this.subscribeAccountAndTryLogin();
-        if (this.otherUserId !== undefined && this.otherUserId !== null) {
-            this.getOtherUserInfo();
+        this.subscribeSelectedUserInfo();
+    }
+
+    // 컴포넌트가 로그인 유저 정보를 보여줄지, 다른 유저의 정보를 보여줄지 결정.
+    private subscribeSelectedUserInfo() {
+        const userId = this.route.snapshot.params['id'];
+        if (userId !== undefined && userId !== null) {
+            this.getOtherUserInfo(userId);
             this.isEditable = false;
         } else {
             this.subscribeUserInfo();
@@ -67,18 +76,38 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         );
     }
 
+    // 리덕스에서 사용자 정보를 구독하고, 유저가 작성한 문서 리스트도 가져옵니다.
     private subscribeUserInfo() {
         this.userInfoSubscription = this.store.select(Redux.getUserInfo)
-            .subscribe(Result => {
-                this.userInfo = Result;
-            });
+        .subscribe(Result => {
+            this.userInfo = Result;
+            this.getUserDocumentList();
+        });
     }
 
-    private getOtherUserInfo() {
-        this.network.getUserInfo(this.otherUserId)
-            .subscribe(result => {
-                this.userInfo = result.payload;
+    // 서버에 다른 유저 정보를 요청하고, 해당 유저가 작성한 문서 리스트도 가져와요.
+    // 리덕스에 정보를 넣지는 않고, 바로 변수로 넣어요.
+    private getOtherUserInfo(otherUserId: string) {
+        this.network.getUserInfo(otherUserId)
+        .subscribe(result => {
+            this.userInfo = result.payload;
+            this.getUserDocumentList();
+        });
+    }
+
+    // this.userInfo에 저장된 유저의 작성한 문서 리스트를 가져와요.
+    // this.userInfo는 로그인 한 유저일 수도, 다른 유저일 수도 있어요.
+    private getUserDocumentList() {
+        if (this.userInfo !== undefined && this.userInfo !== null) {
+            this.network.getUserDocumentList(this.userInfo.id)
+            .subscribe(value => {
+                if (value.result === true) {
+                    this.userInfo.myDocumentIdList = value.payload;
+                } else {
+                    // 현재 서버에서는 true만 보내요. 없으면 []를 payload로 리턴.
+                }
             });
+        }
     }
 
     private modalOpen(event) {
@@ -88,9 +117,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         // 프로필 폼 값 초기 설정
         this.profileForm.setValue(
             {
-                id: this.userInfo.id,
                 nickName: this.userInfo.nickName,
-                password: '********',
                 signature: this.userInfo.signature
             }
         );
@@ -113,6 +140,16 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     private cancelEditProfile(event) {
         event.stopPropagation();
         this.isEditMode = false;
+    }
+
+    private changePassword($event) {
+        event.stopPropagation();
+        // TODO 패스워드 변경.
+    }
+
+    private passModalCancelButton(event) {
+        event.stopPropagation();
+        this.isPasswordModalOpen = false;
     }
 
     saveProfile(event) {

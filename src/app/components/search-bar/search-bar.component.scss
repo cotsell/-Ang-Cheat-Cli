@@ -1,16 +1,29 @@
 @import '../../../styles';
 
-#main_grid {
-    display: grid;
-    grid-template-columns: auto 2rem;
-    grid-template-rows: 2rem;
-    align-items: center;
-    grid-column-gap: 4px;
-    width: 100%;
+#mainGrid {
+    position: relative;
+
+    // display: grid;
+    // grid-template-columns: auto 2rem;
+    // grid-template-rows: 2rem;
+    // align-items: center;
+    // grid-column-gap: 4px;
+    // width: 100%;
 }
 
-#search_div {
-    height: 1.6rem;
+#searchBarDiv {
+    position: absolute;
+    // left: 
+    top: 2rem;
+    right: -2rem;
+    // bottom: 2rem;
+    z-index: 2;
+
+    width: 768px;
+
+    background-color: tomato;
+
+    height: 2rem;
     padding: 0px;
     margin: 0px;
     text-align: center;
@@ -26,7 +39,7 @@
     }
 }
 
-#search_button_div {
+#searchButtonDiv {
     padding: 0px;
     margin: 0px;
     // height: 1.6rem;

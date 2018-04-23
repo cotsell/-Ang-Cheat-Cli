@@ -21,7 +21,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subscription } from 'rxJs';
 
-import { UserInfo, DocumentInfo, DocumentInfoForRedux, Result } from '../../service/Interface';
+import { UserInfo, DocumentInfo, Result } from '../../service/Interface';
 import { Network } from '../../service/Network';
 import * as Utils from '../../service/utils';
 import { Store } from '@ngrx/store';
@@ -43,7 +43,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     private canUserControlDocument = false;
     private accessToken: string;
     private userInfo: UserInfo;
-    private documentInfo: DocumentInfoForRedux;
+    private documentInfo: DocumentInfo;
 
     private accountSubscription: Subscription;
     private userInfoSubscription: Subscription;
@@ -77,6 +77,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
         };
     }
 
+    // TODO DELETE. 삭제 예정 함수.
     // 문서를 서버에 저장하는 함수에요.
     private saveDocumentToServer(event) {
         console.log(event);
@@ -101,6 +102,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
             });
     }
 
+    // TODO DELETE 삭제 예정 함수.
     // 문서를 수정 중에 취소버튼을 누르면..
     private cancelSavingDocument(event) {
         event.stopPropagation();
@@ -121,6 +123,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     // 서버로부터 문서를 가져옵니다.
     private getDocumentFromServer() {
         const documentId = this.route.snapshot.params['id'];
+
         this.network.getDocument(documentId)
             .subscribe(doc => {
                 if (doc.result === true) {

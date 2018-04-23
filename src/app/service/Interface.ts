@@ -9,19 +9,12 @@ export class UserInfo {
     grade?: number;
     nickName?: string;
     profileImgUrl?: string;
-    // myDocumentIdList?: string[];
+    myDocumentIdList?: string[];
     myScrapIdList?: string[];
     totalThumbUp?: number;
     signature?: string;
     createdTime?: Date;
     updatedTime?: Date;
-
-    constructor() {}
-
-}
-
-export interface DocumentInfoForRedux extends DocumentInfo {
-    userInfo?: UserInfo;
 }
 
 export interface DocumentInfo {
@@ -33,6 +26,7 @@ export interface DocumentInfo {
     relatedDocuId?: string;
     thumbUp?: string[];
     userId?: string;
+    userInfo?: UserInfo;
     tagList?: string[];
     libraryList?: Library[];
 }
@@ -80,32 +74,3 @@ export interface Result {
     code?: number;
     payload?: any;
 }
-
-
-// 더미 데이터
-export const account = new Account();
-account.accessToken = 'abcabcabcd';
-
-export const userInfo = new UserInfo();
-userInfo.id = 'cotsell@gmail.com';
-userInfo.nickName = 'cotsell';
-userInfo.profileImgUrl = 'http://localhost:8000/cotsell/profile/img';
-userInfo.grade = 0;
-userInfo.totalThumbUp = 320;
-userInfo.myScrapIdList = [];
-// userInfo.myDocumentIdList = ['test1', 'test2', 'test3'];
-userInfo.signature = '이 사이트 개발자. 짱짱맨.';
-
-export const docuInfo: DocumentInfo = {
-    _id: 'test2',
-    title: '테스트 문서에요',
-    text: '본문 내용은 일단은 패스.',
-    createdTime: new Date(),
-    modifiedTime: new Date(),
-    relatedDocuId: 'related1',
-    thumbUp: ['12.34.55', '21.43.56', '55.66.77'],
-    userId: 'cotsell@gmail.com',
-    tagList: ['TestTag1', 'TestTag2'],
-    libraryList: [],
-};
-// 더미 데이터 끝

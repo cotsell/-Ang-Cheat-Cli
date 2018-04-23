@@ -2,36 +2,110 @@
 
 #main_grid {
     display: grid;
-    grid-template-columns: 2rem auto 2rem;
+    grid-template-columns: 2rem 2rem auto 2rem 2rem;
     grid-template-rows: 2rem;
     padding: 0px;
     margin: 0px;
     box-sizing: border-box;
     align-content: center;
     background-color: #4d4d4d;
-}
 
-#menu_div {
-}
+    position: relative;
 
-#search_div {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-}
-
-#account_div {
-    i {
-        font-size: 2rem;
+    #searchButton {
+        border-radius: 3px;
+        height: 2rem;
+        width: 2rem;
+        text-align: center;
         cursor: pointer;
-        transition-duration: 0.2s;
 
-        &:hover {
-            color: #e6e6e6;
+        i {
+            font-size: 2rem;
+            transition-duration: 0.2s;
+
+            &:hover {
+                color: #e6e6e6;
+            }
+        }
+    }
+
+    #menuDiv {
+    }
+    
+    #accountDiv {
+        i {
+            font-size: 2rem;
+            cursor: pointer;
+            transition-duration: 0.2s;
+    
+            &:hover {
+                color: #e6e6e6;
+            }
+    
+        }
+    }
+
+    #searchBarDiv {
+        display: grid;
+        grid-template-columns: auto max-content 2rem;
+        grid-template-rows: 2rem;
+        grid-gap: 1rem;
+
+        position: absolute;
+        top: 2rem;
+        width: 100%;
+        overflow: hidden;
+        border: none;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    
+        background-color: #4d4d4d;
+        transition-duration: 0.3s;
+
+        #language {
+            select {
+                height: 2rem;
+                font-size: 1.4rem;
+                border: none;
+                background-color: #4d4d4d;
+            }
         }
 
+        #searchBox {
+            input {
+                width: 100%;
+                height: 2rem;
+                border: none;
+                background-color: #4d4d4d;
+                font-size: 1.4rem;
+                color: darkorange;
+                text-align: center;
+            }
+        }
+
+        #searchIcon {
+            cursor: pointer;
+            i {
+                font-size: 2rem;
+                &:hover {
+                    color: #e6e6e6;
+                }
+            }
+        }
+    }
+    .searchBarOpen {
+        height: 2rem;
+    }
+    .searchBarClose {
+        height: 0rem;
     }
 }
+
+
+
+
 
 // @media (max-width: $g_mediaMobile) {
 // }

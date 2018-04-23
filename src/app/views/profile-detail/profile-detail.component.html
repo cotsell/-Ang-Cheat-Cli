@@ -6,7 +6,8 @@
 
     <!-- 프로필 정렬용 flex -->
     <div id="profile_flex">
-        <form  id="profile_form" 
+        <form  
+            id="profile_form" 
             [formGroup]="profileForm" 
             (ngSubmit)="saveProfile($event)"
             >
@@ -15,33 +16,67 @@
                     <i class="material-icons" style="font-size: 10rem; color: white;">account_circle</i>
                 </div>
 
-                <div id="right_grid">
-                    <div>아이디</div>
-                    <div>
-                        <div *ngIf="!isEditMode">{{ userInfo?.id }}</div>
-                        <div *ngIf="isEditMode"><input type="text" [formControlName]="'id'"></div>
+                <div id="rightDiv">
+                    <div style="text-align: center;">
+                        <div>
+                            <div class="lineDivUp">아이디</div>
+                            <div class="lineDivDown">
+                                <div>{{ userInfo?.id }}</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="lineDivUp">닉네임</div>
+                            <div class="lineDivDown">
+                                <div *ngIf="!isEditMode" style="text-align: center;">
+                                    {{ userInfo?.nickName }}
+                                </div>
+                                <div *ngIf="isEditMode">
+                                    <input type="text" [formControlName]="'nickName'">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="lineDivUp">작성한 글</div>
+                            <div class="lineDivDown">
+                                {{ userInfo?.myDocumentIdList?.length }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="lineDivUp">받은 요청</div>
+                            <div style="border: none; text-align: center;"></div>
+                        </div>
                     </div>
     
-                    <div>닉네임</div>
-                    <div>
-                        <div *ngIf="!isEditMode">{{ userInfo?.nickName }}</div>
-                        <div *ngIf="isEditMode"><input type="text" [formControlName]="'nickName'"></div>
-                    </div>
-    
-                    <div>비밀번호</div>
-                    <div>
-                        <div *ngIf="!isEditMode">********</div>
-                        <div *ngIf="isEditMode"><input type="password" [formControlName]="'password'"></div>
-                    </div>
                 </div>
             </div>
 
-            <div id="signature">시그니쳐</div>
-            <div id="signature" *ngIf="!isEditMode"><pre>{{ userInfo?.signature }}</pre></div>
-            <div id="signature" *ngIf="isEditMode"><textarea [formControlName]="'signature'"></textarea></div>
+            <div id="signatureTitle">시그니쳐</div>
+            <div id="signature" *ngIf="!isEditMode">
+                <pre>{{ userInfo?.signature }}</pre>
+            </div>
+            <div id="signature" *ngIf="isEditMode">
+                <textarea [formControlName]="'signature'"></textarea>
+            </div>
 
-            <div *ngIf="isEditMode === false && isEditable === true">
-                <button type="button" (click)="modalOpen($event)">수정하기</button>
+            <div 
+                id="changeBtns"
+                *ngIf="isEditMode === false && isEditable === true"
+                >
+                <div style="float: left;">
+                    <button type="button" (click)="modalOpen($event)">
+                        수정하기
+                    </button>
+                </div>
+                <div style="float: right;">
+                    <button 
+                        type="button" 
+                        (click)="$event.stopPropagation(); isPasswordModalOpen = true;">
+                        비밀번호 변경하기
+                    </button>
+                </div>
             </div>
 
             <div 
@@ -78,4 +113,33 @@
 
   <div class="empty"></div>
 
+</div>
+
+<!-- 패스워드 변경을 위한 모달 소환 -->
+<div id="passModalFlex" *ngIf="isPasswordModalOpen">
+    <form id="FormGrid" [formGroup]="changePassForm" (ngSubmit)="changePassword($event)">
+        <div id="icon"><i class="material-icons">priority_high</i></div>
+        <div id="oldPass">
+            <div class="lineDivUp">
+                <label for="oldPassInput">기존 비밀번호</label>
+            </div>
+            <div>
+                <input id="oldPassInput" type="password" >
+            </div>
+        </div>
+        <div id="newPass">
+            <div class="lineDivUp">
+                <label for="newPassInput">새 비밀번호</label>
+            </div>
+            <div>
+                <input id="newPassInput" type="password">
+            </div>
+        </div>
+        <div id="okBtn">
+            <button type="submit" (click)="$event.stopPropagation();">변경</button>
+        </div>
+        <div id="cancelBtn">
+            <button type="reset" (click)="passModalCancelButton($event)">취소</button>
+        </div>
+    </form>
 </div>

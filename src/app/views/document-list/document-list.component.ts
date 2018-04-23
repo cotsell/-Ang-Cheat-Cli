@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxJs';
 
@@ -7,9 +8,8 @@ import { Network } from '../../service/Network';
 import Account from '../../service/Account';
 import * as Utils from '../../service/utils';
 import { UserInfo, DocumentInfo } from '../../service/Interface';
+import { NewDocumentList, RemoveAllDocumentList, FillUserInfo } from '../../service/redux/DocumentListReducer';
 
-// TODO 테스트
-import { NewDocumentList, RemoveAllDocumentList } from '../../service/redux/DocumentListReducer';
 
 @Component({
     selector: 'app-document-list',
@@ -18,6 +18,7 @@ import { NewDocumentList, RemoveAllDocumentList } from '../../service/redux/Docu
 })
 export class DocumentListComponent implements OnInit, OnDestroy {
     private isLoggedIn = false;
+    private isNoResult = false;
     private userInfo: UserInfo;
     private docuList: DocumentInfo[];
     private accountSubscription: Subscription;
@@ -25,6 +26,7 @@ export class DocumentListComponent implements OnInit, OnDestroy {
     private docuListSubscription: Subscription;
 
     constructor(
+        private route: ActivatedRoute,
         private store: Store<Redux.StoreInfo>,
         private network: Network,
         private account: Account) { }
@@ -34,23 +36,7 @@ export class DocumentListComponent implements OnInit, OnDestroy {
         this.subscribeUserInfo();
         this.subscribeDocumentList();
 
-        // TODO 테스트 후 지워주세요.
-        const userInfo = {
-            id: 'cotsell@gmail.com',
-            nickName: 'cotsell'
-        };
-        this.store.dispatch(new NewDocumentList(
-            { _id: 'testNo1', title: 'TestTitle1', text: 'test', userId: 'cotsell@gmail.com' }));
-        this.store.dispatch(new NewDocumentList(
-            { _id: 'testNo2', title: 'TestTitle2', text: 'test', userId: 'cotsell@gmail.com' }));
-        this.store.dispatch(new NewDocumentList(
-            { _id: 'testNo3', title: 'TestTitle3', text: 'test', userId: 'cotsell@gmail.com' }));
-        this.store.dispatch(new NewDocumentList(
-            { _id: 'testNo4', title: 'TestTitle4', text: 'test', userId: 'cotsell@gmail.com' }));
-        this.store.dispatch(new NewDocumentList(
-            { _id: 'testNo5', title: 'TestTitle5', text: 'test', userId: 'cotsell@gmail.com' }));
-        this.store.dispatch(new NewDocumentList(
-            { _id: 'testNo6', title: 'TestTitle6', text: 'test', userId: 'cotsell@gmail.com' }));
+        this.searchDocument();
     }
 
     // Account 리덕스를 구독하고, 로그인도 시도해요.
@@ -75,6 +61,55 @@ export class DocumentListComponent implements OnInit, OnDestroy {
             .subscribe(Result => {
                 this.docuList = Result;
             });
+    }
+
+    // 문서를 검색해서 리덕스에 집어 넣어줘요.
+    private searchDocument() {
+        const lang = this.route.snapshot.queryParams['lang'];
+        const type = this.route.snapshot.queryParams['type'];
+        const subj = this.route.snapshot.queryParams['subj'];
+
+        this.network.searchDocument(lang, type, subj)
+        .subscribe(value => {
+            if (value.result === true) {
+                this.isNoResult = false;
+                this.store.dispatch(new NewDocumentList(value.payload));
+
+                const ids = this.takeUserIds(value.payload);
+                this.getUserInfos(ids);
+            } else {
+                console.log(value.msg);
+                this.isNoResult = true;
+            }
+        });
+    }
+
+    private getUserInfos(ids: string[]) {
+        this.network.getUserInfos(ids)
+        .subscribe(value => {
+            if (value.result === true) {
+                this.store.dispatch(new FillUserInfo(value.payload));
+            } else {
+                // TODO UserInfo를 가져오는데 실패를 하면.. 뭘 해줘야 하지?
+                console.log('해당 문서들의 유저정보를 가져오는데 실패했어요.');
+            }
+        });
+    }
+
+    // 서버로부터 받아온 문서에서 userId를 추출하고, 중복된 userId를 제거해줘요.
+    // 추출한 id들은 userInfo를 서버에 요청하는데 사용해요.
+    private takeUserIds(doc: DocumentInfo[]): string[] {
+        const ids: string[] = [];
+        for (const document of doc) {
+            const result = ids.find(article => {
+                return article === document.userId ? true : false;
+            });
+
+            if (result === undefined) {
+                ids.push(document.userId);
+            }
+        }
+        return ids;
     }
 
     // 사용자가 pagination을 사용하면 실행되는 함수에요
