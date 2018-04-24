@@ -15,7 +15,6 @@ import { DocumentDetailComponent } from './views/document-detail/document-detail
 import { TitlebarMenuComponent } from './components/titlebar-menu/titlebar-menu.component';
 import { DocumentListComponent } from './views/document-list/document-list.component';
 import { DocumentListArticleComponent } from './components/document-list-article/document-list-article.component';
-import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { TagsComponent } from './components/tags/tags.component';
 import { SignatureComponent } from './components/signature/signature.component';
 
@@ -50,7 +49,6 @@ const route: Routes = [
     TitlebarMenuComponent,
     DocumentListComponent,
     DocumentListArticleComponent,
-    SearchBarComponent,
     TagsComponent,
     SignatureComponent,
     ProfileDetailComponent,

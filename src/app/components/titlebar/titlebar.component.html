@@ -35,9 +35,9 @@
         <div id="language">
             <select name="test">
                 <option value="0">검색언어</option>
-                <option value="1">Javascript</option>
-                <option value="2">Java</option>
-                <option value="3">Cpp</option>
+                <option *ngFor="let category of categoryList" [value]="category?.tag">
+                    {{ category?.title }}
+                </option>
             </select>
         </div>
 

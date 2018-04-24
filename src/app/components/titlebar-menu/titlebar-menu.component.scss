@@ -12,8 +12,6 @@
     }
 }
 
-
-
 #menu_detail {
     position: fixed;
     top: 2rem;
@@ -24,10 +22,44 @@
     z-index: 2;
     overflow-x: hidden;
 
-    #menu_detail_grid {
+    #menuDetailGrid {
         display: grid;
-        grid-template-rows: auto auto max-content;
+        grid-template-rows: max-content max-content auto max-content;
         height: 100%;
+
+        #selectLanguage {
+            display: grid;
+            grid-template-columns: auto 4rem;
+    
+            select {
+                border: none;
+            }
+    
+            #modify {
+                text-align: right;
+                font-size: 0.8rem;
+            }
+        }
+    
+        #categoryTree {
+            
+            #title {
+            }
+            .grade2 {
+                margin-left: 1rem;
+                cursor: pointer;
+                &:hover {
+                    color: yellowgreen;
+                }
+            }
+            .grade3 {
+                margin-left: 1rem;
+                cursor: pointer;
+                &:hover {
+                    color: yellowgreen;
+                }
+            }
+        }
 
         #button {
             text-align: center;

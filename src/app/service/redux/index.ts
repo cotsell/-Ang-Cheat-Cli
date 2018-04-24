@@ -3,12 +3,14 @@ import { Reducer as accountReducer } from './AccountReducer';
 import { Reducer as userInfoReducer } from './UserInfoReducer';
 import { Reducer as documentDetailReducer } from './DocumentDetailReducer';
 import { Reducer as documentListReducer } from './DocumentListReducer';
+import { Reducer as categoryListReducer } from './categoryListReducer';
 
 export interface StoreInfo {
     account: Interface.Account;
     userInfo: Interface.UserInfo;
     documentDetail: Interface.DocumentInfo;
     documentList: Interface.DocumentInfo[];
+    categoryList: Interface.Category[];
 }
 
 
@@ -17,7 +19,8 @@ export function getReducers() {
         account: accountReducer,
         userInfo: userInfoReducer,
         documentDetail: documentDetailReducer,
-        documentList: documentListReducer
+        documentList: documentListReducer,
+        categoryList: categoryListReducer,
     };
 }
 
@@ -35,4 +38,8 @@ export function getDocumentDetail(state: StoreInfo): Interface.DocumentInfo {
 
 export function getDocumentList(state: StoreInfo): Interface.DocumentInfo[] {
     return state.documentList;
+}
+
+export function getCategoryList(state: StoreInfo): Interface.Category[] {
+    return state.categoryList;
 }

@@ -111,7 +111,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(this.documentInfo);
-        
+
         if (whatMode === NEW) {
             console.log('새로운 문서를 서버에 전송합니다.');
             this.network.newDocument(this.accessToken, this.documentInfo)

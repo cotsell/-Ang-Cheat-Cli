@@ -12,11 +12,47 @@
     [ngClass]="{ show_menu: !isMenuHidden }"
     >
 
-    <div id="menu_detail_grid">
-        <div style="width: 20rem;">
+    <div id="menuDetailGrid">
+
+        <!-- 언어선택 및 트리 수정 -->
+        <div id="selectLanguage">
+            <select (change)="selectedLanguage($event)">
+                <option>언어선택</option>
+                <option 
+                    *ngFor="let category of categoryList" 
+                    [value]="category?.tag"
+                    [selected]="category?.tag === selectedCategory ? true : false"
+                    >
+                    {{ category?.title }}
+                </option>
+            </select>
+            <span id="modify">수정하기</span>
+        </div>
+
+        <!-- 카테고리 트리 -->
+        <div id="categoryTree">
+            <div id="title">{{ category?.title }}</div>
+            <div 
+                class="grade2" 
+                *ngFor="let grade2 of category?.subCategory"
+                [routerLink]="['/docuList']"
+                [queryParams]="{ lang: category.tag, type: 3, subj: grade2.tag }"
+                >
+                {{ grade2?.title }}
+                <div 
+                    class="grade3" 
+                    *ngFor="let grade3 of grade2?.subCategory"
+                    [routerLink]="['/docuList']"
+                    [queryParams]="{ lang: category.tag, type: 3, subj: grade3.tag }"
+                    >
+                    {{ grade3?.title }}
+                </div>
+            </div>
+        </div>
+
+        <div>
             <a [routerLink]="['/']">메인으로</a><br>
             <a [routerLink]="['/docuDetail', '5ad4cd750ea7de3044c500e4']">자세한 문서</a><br>
-            <a [routerLink]="['/profileDetail']">프로필 화면</a><br>
             <a [routerLink]="['/profileDetail/hohosang']">타유저 프로필 화면</a><br>
             <a 
                 [routerLink]="['/docuList']" 
@@ -25,8 +61,6 @@
                 문서 리스트
             </a><br>
         </div>
-
-        <div></div>
 
         <div id="button">
             <button type="button" (click)="writeDocument($event)">글 작성</button>

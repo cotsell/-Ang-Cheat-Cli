@@ -86,15 +86,14 @@ export class Network {
         );
     }
 
+    // type의 값은 서버의 DB/document.ts의 searchDocument()에서 확인 가능해요.
     searchDocument(lang: string, type: number, subject: string): Observable<Result> {
-        // TODO 서버에서 응답할때 DocumentInfo형태로 돌려주지 않을 가능성이 있어요.
-        // TODO 미완성이에요. 서버로 데이터를 전송하는 방식도 달라질 것 같아요.
         const query = `?lang=${lang}&type=${type}&subj=${subject}`;
         return this.http.get<Result>(SysConf.SEARCH_DOCUMENT + query);
     }
 
     // Grade 1인 모든 카테고리의 grade 1 뎁스만 가지고 와요.
-    getAllGrade1Categorys(): Observable<Result> {
+    getAllGradeOneCategorys(): Observable<Result> {
         return this.http.get<Result>(SysConf.ALL_GRADE1_CATEGORYS);
     }
 
