@@ -1,12 +1,20 @@
+/*
+    isModalOpen: 패스워드 확인 모달을 화면에 띄운 상태인지?
+    isPasswordModalOpen: 패스워드 변경 모달을 화면에 띄운 사태인지?
+    isLoggedId: 로그인 된 상태인지?
+    accessToken: 리덕스로부터 가져온 accessToken
+    isEditMode: 수정될지도 모름. 프로필의 내용을 수정모드로 변환 구분 상태.
+    idEditable
+ */
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxJs';
 
 import { Network } from '../../service/Network';
 import * as Redux from '../../service/redux';
-import {  } from '../../service/redux/UserInfoReducer';
 import Account from '../../service/Account';
 import * as Utils from '../../service/utils';
 import { UserInfo } from '../../service/Interface';
@@ -18,10 +26,11 @@ import { UserInfo } from '../../service/Interface';
 })
 export class ProfileDetailComponent implements OnInit, OnDestroy {
     private isModalOpen = false; // Modal을 화면에 띄운 상태인지 구분.
+    private isPasswordModalOpen = false; // 비밀번호 변경 버튼 누를시 출력되는 모달 구분.
     private isLoggedIn = false; // 로그인 되어 있는지 구분.
+    private accessToken: string;
     private isEditMode = false; // 프로필 내용 수정모드로 변환 구분.
     private isEditable = false; // 프로필 수정하기 버튼을 화면에 표시할지 구분.
-    private isPasswordModalOpen = false; // 비밀번호 변경 버튼 누를시 출력되는 모달 구분.
     private userInfo: UserInfo;
     private accountSubscription: Subscription;
     private userInfoSubscription: Subscription;
@@ -34,6 +43,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         }
     );
 
+    // 비밀번호 변경 폼.
     private changePassForm: FormGroup = new FormGroup(
         {
             oldPass: new FormControl(),
@@ -41,10 +51,18 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         }
     );
 
+    // 비밀번호 확인 폼.
+    private checkPassForm: FormGroup = new FormGroup(
+        {
+            password: new FormControl()
+        }
+    );
+
     constructor(
         private network: Network,
         private store: Store<Redux.StoreInfo>,
         private account: Account,
+        private router: Router,
         private route: ActivatedRoute) {  }
 
     ngOnInit() {
@@ -68,10 +86,26 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         this.accountSubscription = this.account.loginWithAccessToken(
             Result => {
                 this.isLoggedIn = Result.loggedIn;
-                // this.accessToken = Result.accessToken;
+                this.accessToken = Result.accessToken;
             },
             () => {
+                // TODO 로그인 실패시 유저에게 뭘 해줘야 할지.
                 console.log('로그인 실패');
+
+                // 다른 유저 정보 보기는 로그인 안해도 가능.
+                // 다른 유저 정보 보기모드가 아닌 경우에는 로그아웃 상태면 메인화면으로 백.
+                const userId = this.route.snapshot.params['id'];
+                if (isMyProfileMode()) {
+                    console.log(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
+                    this.router.navigate(['/']);
+                } else {
+                    // 다른 유저 정보 보기 모드에서는 아무것도 하지 말자..
+                }
+
+                // ---- 정리용도 함수들 ----
+                function isMyProfileMode() {
+                    return (userId === undefined || userId === null || userId === '');
+                }
             }
         );
     }
@@ -110,6 +144,25 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         }
     }
 
+    // -----------------------------
+    // ---- 프로필 수정 화면 관련
+    // -----------------------------
+
+    saveProfile(event) {
+        event.stopPropagation();
+        console.log(JSON.stringify(this.profileForm.value));
+    }
+
+    private cancelEditProfile(event) {
+        event.stopPropagation();
+        this.isEditMode = false;
+    }
+
+    // -------------------------------
+    // ---- 패스워드 확인 모달 관련
+    // -------------------------------
+
+    // 비밀번호 확인 모달을 열어주는 함수.
     private modalOpen(event) {
         event.stopPropagation();
         this.isModalOpen = true;
@@ -123,38 +176,85 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         );
     }
 
+    // 비밀번호 확인 모달을 취소하는 버튼.
     private cancelModal(event) {
         event.stopPropagation();
         this.isModalOpen = false;
         this.isEditMode = false;
     }
 
+    // 유저가 입력한 확인용 비밀번호를 서버로 전송하는 버튼.
     private okModal(event) {
         event.stopPropagation();
-        // TODO 서버에 다시 로그인 과정 거치고..
-        // TODO 맞으면 아래.. 아니면 취소 하도록.
-        this.isModalOpen = false;
-        this.isEditMode = true;
+
+        this.network.checkPassword(this.accessToken, this.checkPassForm.value['password'])
+            .subscribe(value => {
+                if (value.result === true) {
+                    // TODO 비밀번호 확인 완료.
+                    console.log(value.msg);
+                    this.resetCheckPassFormData();
+                    this.isModalOpen = false;
+                    this.isEditMode = true;
+                } else {
+                    // TODO 비밀번호가 틀림.
+                    console.log(value.msg);
+                    alert(value.msg);
+                    this.resetCheckPassFormData();
+                }
+            });
     }
 
-    private cancelEditProfile(event) {
-        event.stopPropagation();
-        this.isEditMode = false;
+    private resetCheckPassFormData() {
+        this.checkPassForm.setValue({ password: '' });
     }
 
+    // ---------------------------
+    // ---- 패스워드 모달 관련
+    // ---------------------------
+
+    // 패스워드 변경 모달에서 Submit을 누르면 실행되는 함수.
     private changePassword($event) {
         event.stopPropagation();
         // TODO 패스워드 변경.
+        this.network.changePassword(
+            this.accessToken,
+            this.changePassForm.value['oldPass'],
+            this.changePassForm.value['newPass']
+        )
+        .subscribe(value => {
+            console.log(value.msg);
+            if (value.result === true) {
+                // TODO 비밀번호 변경 성공했는데.. 뭐 모달 같은거라도 띄워줄까?
+                alert(value.msg);
+                this.resetPasswordFormData();
+                this.isPasswordModalOpen = false;
+            } else {
+                // TODO 비밀번호 변경 실패시
+                alert(value.msg);
+            }
+        });
     }
 
+    // 패스워드 변경 모달에서 reset을 누르면 실행되는 함수.
     private passModalCancelButton(event) {
         event.stopPropagation();
+        this.resetPasswordFormData();
         this.isPasswordModalOpen = false;
     }
 
-    saveProfile(event) {
+    // 패스워드 폼의 데이터를 모두 리셋해요.
+    private resetPasswordFormData() {
+        this.changePassForm.setValue({
+            oldPass: '',
+            newPass: ''
+        });
+    }
+
+    // ---------------------
+    // ---- 기타 범용 함수
+    // ---------------------
+    private stopBubbling(event) {
         event.stopPropagation();
-        console.log(JSON.stringify(this.profileForm.value));
     }
 
     ngOnDestroy() {

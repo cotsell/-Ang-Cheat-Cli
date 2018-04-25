@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { DocumentInfo, Tag, DocumentInfoForRedux, UserInfo } from '../Interface';
+import { DocumentInfo, Tag, UserInfo } from '../Interface';
 
 const NEW = '[DOCUMENT_DETAIL]new';
 const MODIFY = '[DOCUMENT_DETAIL]modify';
@@ -38,7 +38,7 @@ export class InsertUserInfo implements Action {
     constructor(public payload: UserInfo) {}
 }
 
-const init: DocumentInfoForRedux = undefined;
+const init: DocumentInfo = undefined;
 
 export function Reducer(state = init, action) {
     switch (action.type) {

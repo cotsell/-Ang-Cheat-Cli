@@ -8,7 +8,7 @@ import { ModifyAccount, NewAccount } from '../../service/redux/AccountReducer';
 import { NewUserInfo, RemoveUserInfo } from '../../service/redux/UserInfoReducer';
 import * as Utils from '../../service/utils';
 import * as SysConf from '../../service/SysConf';
-import { UserInfo, userInfo } from '../../service/Interface';
+import { UserInfo } from '../../service/Interface';
 import { Network } from '../../service/Network';
 
 
@@ -69,11 +69,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.network.login(this.loginForm.value['id'], this.loginForm.value['password'])
             .subscribe(loginResult => {
                 const result = loginResult.result;
-                const accessToken = loginResult.payload.accessToken;
-                const userId = Utils.jwtDecode(accessToken)['userId'];
 
                 if (result === true) { // 로그인 성공 시..
+                    const accessToken = loginResult.payload.accessToken;
+                    const userId = Utils.jwtDecode(accessToken)['userId'];
+
                     localStorage.setItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN, accessToken);
+
                     this.store.dispatch(new NewAccount(
                         {
                             accessToken: accessToken,

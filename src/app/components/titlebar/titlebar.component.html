@@ -23,24 +23,30 @@
         </div>
     </div>
 
+    <!-- 툴바 아래에 숨겨져 있는 검색 바 -->
     <div 
         id="searchBarDiv" 
         [ngClass]="{ searchBarOpen: isSearchBarOpen, searchBarClose: !isSearchBarOpen }"
         >
 
         <div id="searchBox">
-            <input type="text" placeholder="Search here..">
+            <input #searchBox type="text" placeholder="Search here..">
         </div>
 
         <div id="language">
-            <select name="test">
-                <option value="0">검색언어</option>
+            <select name="test" (change)="changedLanguage($event)">
+                <option [value]="ALL_CATEGORY">검색언어</option>
                 <option *ngFor="let category of categoryList" [value]="category?.tag">
                     {{ category?.title }}
                 </option>
             </select>
         </div>
 
-        <div id="searchIcon"><i class="material-icons">search</i></div>
+        <div 
+            id="searchIcon" 
+            (click)="searchDocument($event)"
+            >
+            <i class="material-icons">search</i>
+        </div>
     </div>
 </div>

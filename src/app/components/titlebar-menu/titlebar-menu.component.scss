@@ -26,6 +26,7 @@
         display: grid;
         grid-template-rows: max-content max-content auto max-content;
         height: 100%;
+        padding: 1rem;
 
         #selectLanguage {
             display: grid;
@@ -33,6 +34,8 @@
     
             select {
                 border: none;
+                text-align: center;
+                height: 2rem;
             }
     
             #modify {
@@ -42,18 +45,19 @@
         }
     
         #categoryTree {
-            
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+
             #title {
+                
             }
             .grade2 {
                 margin-left: 1rem;
-                cursor: pointer;
-                &:hover {
-                    color: yellowgreen;
-                }
             }
             .grade3 {
                 margin-left: 1rem;
+            }
+            .gradeStyle {
                 cursor: pointer;
                 &:hover {
                     color: yellowgreen;

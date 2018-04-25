@@ -35,8 +35,17 @@ export class DocumentListComponent implements OnInit, OnDestroy {
         this.subscribeAccountAndTryLogin();
         this.subscribeUserInfo();
         this.subscribeDocumentList();
+        this.subscribeRouter();
+    }
 
-        this.searchDocument();
+    // 같은 페이지를 queryParams만 바꿔가면서 리프레쉬 하기 위해서는,
+    // activatedRoute를 구독해서 변화를 감지해야 함.
+    private subscribeRouter() {
+        this.route.queryParams
+        .subscribe(value => {
+            console.log(value);
+            this.searchDocument();
+        });
     }
 
     // Account 리덕스를 구독하고, 로그인도 시도해요.
@@ -68,6 +77,9 @@ export class DocumentListComponent implements OnInit, OnDestroy {
         const lang = this.route.snapshot.queryParams['lang'];
         const type = this.route.snapshot.queryParams['type'];
         const subj = this.route.snapshot.queryParams['subj'];
+
+        // console.log(`검색어 확인`);
+        // console.log(`${lang}, ${type}, ${subj}`);
 
         this.network.searchDocument(lang, type, subj)
         .subscribe(value => {

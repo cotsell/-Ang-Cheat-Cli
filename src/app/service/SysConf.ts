@@ -11,6 +11,8 @@ export const GET_USER = SERVER_ADDRESS + '/account/user';
 export const GET_USERS = SERVER_ADDRESS + '/account/users';
 export const MODIFY_USER = SERVER_ADDRESS + '/account/user/modify';
 export const REMOVE_USER = SERVER_ADDRESS + '/account/user/remove';
+export const CHANGE_PASSWORD = SERVER_ADDRESS + '/account/user/changePassword';
+export const CHECK_PASSWORD = SERVER_ADDRESS + '/account/user/checkPassword';
 
 // Document
 const DOCUMENT = '/document';
@@ -30,6 +32,7 @@ export const REMOVE_TAG = SERVER_ADDRESS + DOCUMENT + '/tag/remove';
 export const ALL_GRADE1_CATEGORYS = SERVER_ADDRESS + '/category/get';
 export const GET_CATEGORY = SERVER_ADDRESS + '/category';
 export const SET_CATEGORY = SERVER_ADDRESS + '/category';
+export const VALUE_ALL_CATEGORY = 'category-all';
 
 // 로컬 저장소 키값들
 export const LOCAL_STORAGE_ACCESS_TOKEN = 'access_token';

@@ -36,6 +36,22 @@ export class Network {
         return this.http.post<Result>(SysConf.GET_USERS, { ids });
     }
 
+    // 비밀번호 변경 요청.
+    changePassword(accessToken: string, oldPass: string, newPass: string): Observable<Result> {
+        return this.http.post<Result>(SysConf.CHANGE_PASSWORD,
+            { oldPass, newPass },
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
+    // 비밀번호 확인 요청.
+    checkPassword(accessToken: string, password: string): Observable<Result> {
+        return this.http.post<Result>(SysConf.CHECK_PASSWORD,
+            { password },
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
     getUserDocumentList(userId: string): Observable<Result> {
         return this.http.get<Result>(SysConf.GET_USER_DOCUMENT_LIST + '?id=' + userId);
     }

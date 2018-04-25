@@ -120,6 +120,15 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
         }
     }
 
+    private closeHideMenu(event) {
+        event.stopPropagation();
+        this.isMenuHidden = true;
+    }
+
+    private stopBubbling(event) {
+        event.stopPropagation();
+    }
+
     ngOnDestroy() {
         unSubscribe(this.docSubscription);
         unSubscribe(this.cateSubscription);

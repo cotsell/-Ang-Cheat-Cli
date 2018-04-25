@@ -76,6 +76,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             },
             () => {
                 // TODO 로그인 실패시 내용 코딩
+                this.router.navigate(['/']);
             }
         );
     }
