@@ -30,6 +30,7 @@ export const REMOVE_TAG = SERVER_ADDRESS + DOCUMENT + '/tag/remove';
 
 // Category
 export const ALL_GRADE1_CATEGORYS = SERVER_ADDRESS + '/category/get';
+export const ALL_CATEGORY = SERVER_ADDRESS + '/category/all';
 export const GET_CATEGORY = SERVER_ADDRESS + '/category';
 export const SET_CATEGORY = SERVER_ADDRESS + '/category';
 export const VALUE_ALL_CATEGORY = 'category-all';

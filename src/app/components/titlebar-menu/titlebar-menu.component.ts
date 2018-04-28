@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { Category, Result } from '../../service/Interface';
 import { Network } from '../../service/Network';
 import { Modify } from '../../service/redux/categoryListReducer';
+import { FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'app-titlebar-menu',
@@ -23,6 +24,7 @@ import { Modify } from '../../service/redux/categoryListReducer';
 })
 export class TitlebarMenuComponent implements OnInit, OnDestroy {
     private isMenuHidden = true;
+    private isCategoryModalOpen = false;
     private relatedId: string;
     private categoryList: Category[] = [];
     private category: Category;
@@ -127,6 +129,12 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
 
     private stopBubbling(event) {
         event.stopPropagation();
+    }
+
+    // 카테고리 모달의 열림, 닫힘 상태를 변경하고 있어요.
+    private changeCategoryModalState(event) {
+        event.stopPropagation();
+        this.isCategoryModalOpen = !this.isCategoryModalOpen;
     }
 
     ngOnDestroy() {

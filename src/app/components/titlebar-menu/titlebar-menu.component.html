@@ -27,7 +27,12 @@
                     {{ category?.title }}
                 </option>
             </select>
-            <span id="modify">수정하기</span>
+            <span 
+                id="modify"
+                (click)="changeCategoryModalState($event)"
+                >
+                카테고리 관리
+            </span>
         </div>
 
         <!-- 카테고리 트리 -->
@@ -84,4 +89,13 @@
         </div>
     </div>
 
+</div>
+
+<div 
+    id="categoryModalFlex"
+    *ngIf="isCategoryModalOpen"
+    >
+    <div id="mainDiv">
+        <app-category-maker (cancel)="changeCategoryModalState($event)"></app-category-maker>
+    </div>
 </div>

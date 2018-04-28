@@ -124,6 +124,10 @@ export class Network {
         return this.http.get<Result>(SysConf.ALL_GRADE1_CATEGORYS);
     }
 
+    getAllCategory(): Observable<Result> {
+        return this.http.get<Result>(SysConf.ALL_CATEGORY);
+    }
+
     // 해당 ID의 카테고리의 전체 내용을 가져와요.
     getCategory(id: string): Observable<Result> {
         return this.http.get<Result>(SysConf.GET_CATEGORY + '/' + id + '/get');

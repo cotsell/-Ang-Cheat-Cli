@@ -2,12 +2,9 @@
 
 #main_grid {
     display: grid;
-    grid-template-rows: 2rem auto;
-    height: 100%;
-    widows: 100%;
-}
-
-#titlebar_div {
+    grid-template-rows: auto;
+    height: calc(100% - 2rem);
+    width: 100%;
 }
 
 #document_main_flex {

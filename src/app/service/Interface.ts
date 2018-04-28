@@ -49,19 +49,19 @@ export class Tag {
 }
 
 // ---- 카테고리 인터페이스 ----
-interface CategoryGrade3 {
+export interface CategoryGrade3 {
     _id?: string;
     title?: string;
     tag?: string;
     grade?: number;
+    createdTime?: Date;
 }
 
-interface CategoryGrade2 extends CategoryGrade3 {
+export interface CategoryGrade2 extends CategoryGrade3 {
     subCategory?: CategoryGrade3[];
 }
 
 export interface Category extends CategoryGrade2 {
-    createdTime?: Date;
     deleted?: boolean;
     historyId?: string;
     subCategory?: CategoryGrade2[];

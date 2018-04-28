@@ -1,0 +1,87 @@
+<div>
+    <div id="menuGrid">
+        <div id="title">카테고리 관리</div>
+        <div id="new" (click)="newCategory($event)">New</div>
+        <div id="select">
+            <select (change)="selectedCategory($event)">
+                <option value="all">언어 선택</option>
+                <option 
+                    *ngFor="let cate of categoryList" 
+                    [value]="cate?.tag"
+                    >
+                    {{ cate?.title }}
+                </option>
+            </select>
+        </div>
+        <div id="delete">Delete</div>
+    </div>
+
+    <div>
+        <div id="tree" *ngIf="category !== undefined">
+
+            <div class="root">
+                <input 
+                    type="text" 
+                    class="title" 
+                    [value]="category?.title"
+                    (keyup)="updateCategory($event, category._id, 'title')">
+                <input 
+                    type="text" 
+                    class="tag"
+                    [value]="category?.tag"
+                    (keyup)="updateCategory($event, category._id, 'tag')">
+
+                <div 
+                    class="grade2" 
+                    *ngFor="let cate2 of category?.subCategory;">
+                    <i class="material-icons">
+                        keyboard_arrow_right
+                    </i>
+                    <input 
+                        type="text" 
+                        class="title"
+                        [value]="cate2?.title"
+                        (keyup)="updateTitle($event, cate2._id, 'title')">
+                    <input 
+                        type="text" 
+                        class="tag"
+                        [value]="cate2?.tag"
+                        (keyup)="updateCategory($event, cate2._id, 'tag')">
+
+                    <div 
+                        class="grade3" 
+                        *ngFor="let cate3 of cate2?.subCategory">
+                        <i class="material-icons">
+                            keyboard_arrow_right
+                        </i>
+                        <input 
+                            type="text" 
+                            class="title"
+                            [value]="cate3?.title"
+                            (keyup)="updateCategory($event, cate3._id, 'title')">
+                        <input 
+                            type="text" 
+                            class="tag"
+                            [value]="cate3?.tag"
+                            (keyup)="updateCategory($event, cate3._id, 'tag')"
+                            >
+                    </div>
+                    <div class="grade3">+</div>
+                </div>
+                <div class="grade2">+</div>
+            </div>
+
+
+        </div>
+        <div id="buttons">
+            <button type="button" id="ok">확인</button>
+            <button 
+                type="button" 
+                id="cancel" 
+                (click)="closeModal($event)"
+                >
+                취소
+            </button>
+        </div>
+    </div>
+</div>

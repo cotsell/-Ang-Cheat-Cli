@@ -6,8 +6,8 @@ form {
 
 #main-div {
     display: grid;
-    grid-template-rows: 2rem auto;
-    height: 100%;
+    grid-template-rows: auto;
+    height: calc(100% - 2rem);
     width: 100%;
     
     #titlebar-div {

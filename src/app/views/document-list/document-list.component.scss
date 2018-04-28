@@ -4,14 +4,10 @@ $article-width: 80%;
 
 #mainDiv {
     display: grid;
-    grid-template-rows: 2rem auto;
+    grid-template-rows: auto;
 
     width: 100%;
-    height: 100%;
-
-    #titlebarDiv {
-        // grid-column: 1 / 4;
-    }
+    height: calc(100% - 2rem);
 
     #listFlex {
         display: flex;

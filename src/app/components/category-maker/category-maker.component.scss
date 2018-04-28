@@ -1,0 +1,91 @@
+#menuGrid {
+	display: grid;
+	grid-template-columns: 3rem auto 4rem;
+	grid-template-rows: 4rem 2rem;
+
+	border: none;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	background-color: darkolivegreen;
+	padding: 1rem;
+
+	#title {
+    	grid-column: 1 / 4;
+	}
+
+	#new {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&:hover {
+			color: white;
+		}
+	}
+
+	#select {
+		select {
+			width: 100%;
+			height: 2rem;
+			border: none;
+			background-color: darkolivegreen;
+		}
+	}
+
+	#delete {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&:hover {
+			color: white;
+		}
+	}
+}
+
+#tree {
+	padding: 1rem;
+
+	input {
+		width: 6rem;
+	}
+
+	i {
+		font-size: 0.8rem;
+	}
+
+	.root {
+		.title {
+			
+		}
+		.tag {
+			float: right;
+		}
+
+		.grade2 {
+			margin-left: 1rem;
+	
+			.grade3 {
+				margin-left: 2rem;
+			}
+		}
+	}
+
+
+}
+
+#buttons {
+	button {
+		border: none;
+		background-color: white;
+		cursor: pointer;
+	}
+
+  	#ok {
+     	float: left;
+  	}
+
+  	#cancel {
+      	float: right;
+  	}
+}

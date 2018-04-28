@@ -26,6 +26,7 @@ import { ReplyListComponent } from './components/reply-list/reply-list.component
 import { ReplyArticleComponent } from './components/reply-article/reply-article.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { DocumentEditComponent } from './views/document-edit/document-edit.component';
+import { CategoryMakerComponent } from './components/category-maker/category-maker.component';
 
 const route: Routes = [
   { path: '', component: MainComponent },
@@ -55,7 +56,8 @@ const route: Routes = [
     ReplyListComponent,
     ReplyArticleComponent,
     PaginationComponent,
-    DocumentEditComponent
+    DocumentEditComponent,
+    CategoryMakerComponent
   ],
   imports: [
     BrowserModule,
