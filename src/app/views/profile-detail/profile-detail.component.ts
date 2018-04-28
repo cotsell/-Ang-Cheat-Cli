@@ -17,7 +17,9 @@ import { Network } from '../../service/Network';
 import * as Redux from '../../service/redux';
 import Account from '../../service/Account';
 import * as Utils from '../../service/utils';
-import { UserInfo } from '../../service/Interface';
+import { UserInfo, Result } from '../../service/Interface';
+import { ModifyUserInfo } from '../../service/redux/UserInfoReducer';
+import * as conf from '../../service/SysConf';
 
 @Component({
     selector: 'app-profile-detail',
@@ -84,9 +86,9 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
     private subscribeAccountAndTryLogin() {
         this.accountSubscription = this.account.loginWithAccessToken(
-            Result => {
-                this.isLoggedIn = Result.loggedIn;
-                this.accessToken = Result.accessToken;
+            result => {
+                this.isLoggedIn = result.loggedIn;
+                this.accessToken = result.accessToken;
             },
             () => {
                 // TODO 로그인 실패시 유저에게 뭘 해줘야 할지.
@@ -113,8 +115,8 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     // 리덕스에서 사용자 정보를 구독하고, 유저가 작성한 문서 리스트도 가져옵니다.
     private subscribeUserInfo() {
         this.userInfoSubscription = this.store.select(Redux.getUserInfo)
-        .subscribe(Result => {
-            this.userInfo = Result;
+            .subscribe(result => {
+            this.userInfo = result;
             this.getUserDocumentList();
         });
     }
@@ -150,7 +152,23 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
     saveProfile(event) {
         event.stopPropagation();
-        console.log(JSON.stringify(this.profileForm.value));
+
+        const userInfo: UserInfo = {
+                nickName:  this.profileForm.value['nickName'],
+                signature: this.profileForm.value['signature']
+        };
+
+        this.network.updateProfile(this.accessToken, userInfo)
+            .subscribe(value => {
+                if (value.result === true) {
+                    console.log(`업데이트 성공:\n` + value.msg);
+                    this.store.dispatch(new ModifyUserInfo(userInfo));
+                    this.isEditMode = false;
+                } else {
+                    // TODO update실패시 대응..
+                    alert(conf.MSG_PROFILE_DETAIL_UPDATE_ERROR);
+                }
+            });
     }
 
     private cancelEditProfile(event) {
@@ -198,7 +216,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
                 } else {
                     // TODO 비밀번호가 틀림.
                     console.log(value.msg);
-                    alert(value.msg);
+                    alert(conf.MSG_PROFILE_DETAIL_PASS_ERROR);
                     this.resetCheckPassFormData();
                 }
             });
@@ -225,12 +243,12 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
             console.log(value.msg);
             if (value.result === true) {
                 // TODO 비밀번호 변경 성공했는데.. 뭐 모달 같은거라도 띄워줄까?
-                alert(value.msg);
+                alert(conf.MSG_PROFILE_DETAIL_PASS_OK);
                 this.resetPasswordFormData();
                 this.isPasswordModalOpen = false;
             } else {
                 // TODO 비밀번호 변경 실패시
-                alert(value.msg);
+                alert(conf.MSG_PROFILE_DETAIL_PASS_ERROR2);
             }
         });
     }

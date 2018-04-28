@@ -28,12 +28,23 @@ export class Network {
         );
     }
 
+    // 사용자 정보 한개를 가져와요.
     getUserInfo(userId: string): Observable<Result> {
         return this.http.post<Result>(SysConf.GET_USER, { id: userId });
     }
 
+    // 사용자 정보 여러개를 가져와요.
     getUserInfos(ids: string[]): Observable<Result> {
         return this.http.post<Result>(SysConf.GET_USERS, { ids });
+    }
+
+    // 사용자 프로필 변경 요청.
+    updateProfile(accessToken: string, userInfo: UserInfo): Observable<Result> {
+        return this.http.post<Result>(
+            SysConf.UPDATE_USER,
+            userInfo,
+            { headers: { 'c-access-token': accessToken } }
+        );
     }
 
     // 비밀번호 변경 요청.

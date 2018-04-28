@@ -28,6 +28,7 @@ import { Store } from '@ngrx/store';
 import * as Redux from '../../service/redux';
 import Account from '../../service/Account';
 import * as DocuDetail from '../../service/redux/DocumentDetailReducer';
+import * as conf from '../../service/SysConf';
 
 @Component({
     selector: 'app-document-detail',
@@ -223,7 +224,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
             } else {
                 if (value.code === 1) {
                     console.log('엑세스토큰에 문제가 생겼어요.');
-                    alert('엑세스토큰 문제 발생');
+                    alert(conf.MSG_DOCUMENT_DETAIL_ACCESS_TOKEN_ERROR);
                     // TODO 엑세스토큰 만료 요류라면 로그아웃 처리 필요.
                 } else {
                     // TODO 삭제 실패시 처리...
@@ -245,7 +246,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
             } else {
                 if (value.code === 1) {
                     console.log('엑세스토큰에 문제가 생겼어요.');
-                    alert('엑세스토큰 문제 발생');
+                    alert(conf.MSG_DOCUMENT_DETAIL_ACCESS_TOKEN_ERROR);
                     // TODO 엑세스토큰 만료 요류라면 로그아웃 처리 필요.
                 } else {
                     // TODO 삭제 실패시 처리...

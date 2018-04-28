@@ -9,7 +9,7 @@ export const CHECK_ACCESS_TOKEN = SERVER_ADDRESS + '/account/check';
 export const NEW_USER = SERVER_ADDRESS + '/account/user/new';
 export const GET_USER = SERVER_ADDRESS + '/account/user';
 export const GET_USERS = SERVER_ADDRESS + '/account/users';
-export const MODIFY_USER = SERVER_ADDRESS + '/account/user/modify';
+export const UPDATE_USER = SERVER_ADDRESS + '/account/user/update';
 export const REMOVE_USER = SERVER_ADDRESS + '/account/user/remove';
 export const CHANGE_PASSWORD = SERVER_ADDRESS + '/account/user/changePassword';
 export const CHECK_PASSWORD = SERVER_ADDRESS + '/account/user/checkPassword';
@@ -37,3 +37,11 @@ export const VALUE_ALL_CATEGORY = 'category-all';
 // 로컬 저장소 키값들
 export const LOCAL_STORAGE_ACCESS_TOKEN = 'access_token';
 export const LOCAL_STORAGE_USER_ID = 'user_id';
+
+// 출력 메세지들.
+export const MSG_PROFILE_DETAIL_UPDATE_ERROR = '업데이트 실패했어요.';
+export const MSG_PROFILE_DETAIL_PASS_ERROR = '비밀번호가 틀려요.';
+export const MSG_PROFILE_DETAIL_PASS_ERROR2 = '비밀번호 변경에 실패했어요..';
+export const MSG_PROFILE_DETAIL_PASS_OK = '비밀번호 변경 완료했어요.';
+
+export const MSG_DOCUMENT_DETAIL_ACCESS_TOKEN_ERROR = '엑세스토큰 문제 발생';

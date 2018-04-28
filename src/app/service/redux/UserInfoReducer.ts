@@ -13,7 +13,7 @@ export class NewUserInfo implements Action {
 
 export class ModifyUserInfo implements Action {
     type = MODIFY;
-    constructor(public payload) {}
+    constructor(public payload: UserInfo) {}
 }
 
 export class RemoveUserInfo implements Action {
@@ -27,7 +27,7 @@ export function Reducer(state = init, action) {
         case NEW:
 
         case MODIFY:
-            return Object.assign({}, action.payload);
+            return Object.assign({}, state, { ...action.payload });
 
         case REMOVE:
             return init;

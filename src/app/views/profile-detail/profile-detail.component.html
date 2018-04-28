@@ -83,8 +83,20 @@
                 *ngIf="isEditMode"
                 id="buttons"
                 >
-                <button id="save" type="submit" (click)="$event.stopPropagation();">저장</button> 
-                <button id="cancel" type="button" (click)="cancelEditProfile($event)">취소</button>
+                <button 
+                    id="save" 
+                    type="submit" 
+                    (click)="stopBubbling($event)"
+                    >
+                    저장
+                </button> 
+                <button 
+                    id="cancel" 
+                    type="button" 
+                    (click)="cancelEditProfile($event)"
+                    >
+                    취소
+                </button>
             </div>
 
         </form>
