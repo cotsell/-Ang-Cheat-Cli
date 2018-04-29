@@ -31,8 +31,9 @@ export const REMOVE_TAG = SERVER_ADDRESS + DOCUMENT + '/tag/remove';
 // Category
 export const ALL_GRADE1_CATEGORYS = SERVER_ADDRESS + '/category/get';
 export const ALL_CATEGORY = SERVER_ADDRESS + '/category/all';
-export const GET_CATEGORY = SERVER_ADDRESS + '/category';
+export const GET_CATEGORY = SERVER_ADDRESS + '/category/get';
 export const SET_CATEGORY = SERVER_ADDRESS + '/category';
+export const REMOVE_CATEGORY = SERVER_ADDRESS + '/category/remove';
 export const VALUE_ALL_CATEGORY = 'category-all';
 
 // 로컬 저장소 키값들
@@ -46,3 +47,6 @@ export const MSG_PROFILE_DETAIL_PASS_ERROR2 = '비밀번호 변경에 실패했�
 export const MSG_PROFILE_DETAIL_PASS_OK = '비밀번호 변경 완료했어요.';
 
 export const MSG_DOCUMENT_DETAIL_ACCESS_TOKEN_ERROR = '엑세스토큰 문제 발생';
+export const MSG_CATEGORY_MAKER_SAVE_OK = '카테고리 변경 완료.';
+export const MSG_CATEGORY_MAKER_EMPTY_VALUE_ERR = '카테고리 이름이나 태그를 입력 해 주세요.';
+export const MSG_CATEGORY_MAKER_NOT_SELECT = '카테고리를 선택 해 주세요.';

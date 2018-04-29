@@ -90,16 +90,14 @@
 
 
 #categoryModalFlex {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 3;
-
     position: fixed;
     left: 0px;
-    top: 0px;
+    top: 2rem;
     right: 0px;
     bottom: 0px;
+    
+    overflow: auto;
+    z-index: 3;
 
     background-color: rgba(0, 0, 0, 0.5);
 
@@ -108,8 +106,9 @@
         height: max-content;
         background-color: white;
 
+        margin: 5% auto;
+
         border: none;
         border-radius: 5px;
-        // padding: 1rem;
     }
 }

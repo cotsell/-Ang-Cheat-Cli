@@ -17,6 +17,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		cursor: pointer;
 
 		&:hover {
 			color: white;
@@ -36,6 +37,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		cursor: pointer;
 
 		&:hover {
 			color: white;
@@ -48,10 +50,8 @@
 
 	input {
 		width: 6rem;
-	}
-
-	i {
-		font-size: 0.8rem;
+		border: none;
+		border-bottom: 1px solid #4d4d4d;
 	}
 
 	.root {
@@ -64,9 +64,29 @@
 
 		.grade2 {
 			margin-left: 1rem;
+			input {
+				border-bottom: 1px solid yellowgreen;
+			}
 	
 			.grade3 {
-				margin-left: 2rem;
+				margin-left: 1rem;
+				input {
+					border-bottom: 1px solid tomato;
+				}
+			}
+
+			.grid {
+				display: grid;
+				grid-template-columns: 1rem 6rem auto 6rem;
+				grid-template-rows: 2rem;
+			}
+		}
+
+		.selector {
+			cursor: pointer;
+			&:hover {
+				background-color: tomato;
+				color: white;
 			}
 		}
 	}
@@ -75,6 +95,11 @@
 }
 
 #buttons {
+	display: grid;
+	grid-template-columns:  50% 50%;
+
+	padding: 1rem;
+
 	button {
 		border: none;
 		background-color: white;
@@ -82,10 +107,23 @@
 	}
 
   	#ok {
-     	float: left;
+
+		#btn {
+			cursor: pointer;
+			&:hover {
+				color: yellowgreen;
+			}
+		}
   	}
 
   	#cancel {
-      	float: right;
+		  justify-self: end;
+
+		  #btn {
+			  cursor: pointer;
+			&:hover {
+				color: tomato;
+			}
+		  }
   	}
 }

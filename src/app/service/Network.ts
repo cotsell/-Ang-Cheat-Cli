@@ -130,14 +130,24 @@ export class Network {
 
     // 해당 ID의 카테고리의 전체 내용을 가져와요.
     getCategory(id: string): Observable<Result> {
-        return this.http.get<Result>(SysConf.GET_CATEGORY + '/' + id + '/get');
+        return this.http.get<Result>(SysConf.GET_CATEGORY + '/' + id);
     }
 
     // 변경하고자 하는 카테고리 전체 내용(하나의 전체 트리)를 인자로 넣어주세요.
     // grade 1의 '_id'값이 포함되어 있는지로, 새로운 카테고리인지, 기존 카테고리인지를 판단해요.
-    setCategory(category: Category): Observable<Result> {
-        // TODO access token needs to be inserted.
-        return this.http.post<Result>(SysConf.SET_CATEGORY, category);
+    setCategory(accessToken: string, category: Category): Observable<Result> {
+        return this.http.post<Result>(
+            SysConf.SET_CATEGORY,
+            category,
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
+    removeCategory(accessToken: string, categoryId: string): Observable<Result> {
+        return this.http.get<Result>(
+            SysConf.REMOVE_CATEGORY + '/' + categoryId,
+            { headers: { 'c-access-token': accessToken } }
+        );
     }
 
 }

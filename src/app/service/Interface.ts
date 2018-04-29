@@ -63,6 +63,8 @@ export interface CategoryGrade2 extends CategoryGrade3 {
 
 export interface Category extends CategoryGrade2 {
     deleted?: boolean;
+    deletedBy?: string;
+    updatedBy?: string;
     historyId?: string;
     subCategory?: CategoryGrade2[];
 }

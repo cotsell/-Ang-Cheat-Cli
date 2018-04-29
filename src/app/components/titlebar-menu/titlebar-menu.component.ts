@@ -133,7 +133,10 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
 
     // 카테고리 모달의 열림, 닫힘 상태를 변경하고 있어요.
     private changeCategoryModalState(event) {
-        event.stopPropagation();
+        if (event !== undefined) {
+            event.stopPropagation();
+        }
+
         this.isCategoryModalOpen = !this.isCategoryModalOpen;
     }
 
