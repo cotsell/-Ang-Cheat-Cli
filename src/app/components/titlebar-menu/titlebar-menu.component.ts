@@ -138,6 +138,7 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
         }
 
         this.isCategoryModalOpen = !this.isCategoryModalOpen;
+        this.isMenuHidden = true;
     }
 
     ngOnDestroy() {

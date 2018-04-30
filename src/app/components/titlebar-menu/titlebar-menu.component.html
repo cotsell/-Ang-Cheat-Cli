@@ -73,9 +73,15 @@
         </div>
 
         <div>
-            <a [routerLink]="['/']">메인으로</a><br>
-            <a [routerLink]="['/docuDetail', '5ad4cd750ea7de3044c500e4']">자세한 문서</a><br>
-            <a [routerLink]="['/profileDetail/hohosang']">타유저 프로필 화면</a><br>
+            <a [routerLink]="['/']">
+                메인으로
+            </a><br>
+            <a [routerLink]="['/docuDetail', '5ad4cd750ea7de3044c500e4']">
+                자세한 문서
+            </a><br>
+            <a [routerLink]="['/profileDetail/hohosang']">
+                타유저 프로필 화면
+            </a><br>
             <a 
                 [routerLink]="['/docuList']"
                 [queryParams]="{ lang: 'javascript', type: 1, subj: 'cotsell' }"

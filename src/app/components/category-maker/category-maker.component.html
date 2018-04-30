@@ -56,7 +56,11 @@
                             (click)="moveArticle($event, 'down', cate2._id)">
                             keyboard_arrow_down
                         </i> 
-                        <i class="material-icons">close</i> 
+                        <i 
+                            class="material-icons"
+                            (click)="removeArticle($event, cate2._id)">
+                            close
+                        </i> 
                     </div>
 
                     <!-- 2단계 타이틀, 태그 입력 폼 -->
@@ -96,7 +100,11 @@
                                 (click)="moveArticle($event, 'down', cate3._id)">
                                 keyboard_arrow_down
                             </i> 
-                            <i class="material-icons">close</i> 
+                            <i 
+                                class="material-icons"
+                                (click)="removeArticle($event, cate3._id)">
+                                close
+                            </i> 
                         </div>
 
                         <!-- 타이틀과 태그 수정 폼 -->

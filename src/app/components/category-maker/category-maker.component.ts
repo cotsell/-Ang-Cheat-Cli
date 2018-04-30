@@ -61,7 +61,9 @@ export class CategoryMakerComponent implements OnInit {
 
      // New 버튼을 누르면 호출. this.category를 새로운 값으로 초기화해요.
      private newCategory(event) {
-        event.stopPropagation();
+        if (event) { event.stopPropagation(); }
+        this.select.nativeElement.children[0][0].selected = true;
+
         this.category = {
             _id: 'new' + this.tempId,
             title: '',
@@ -234,28 +236,37 @@ export class CategoryMakerComponent implements OnInit {
             });
     }
 
+    // 카테고리 삭제해요.
     private deleteCategory(event) {
-        if (event) {
-            event.stopPropagation();
-        }
+        if (event) { event.stopPropagation(); }
 
-        // 아무것도 선택되지 않았을 시
         if (this.category === undefined) {
+
+            // 아무것도 선택되지 않았을 시
             alert(conf.MSG_CATEGORY_MAKER_NOT_SELECT);
-            return;
+
+        } else if (this.category._id.indexOf('new') === 0) {
+
+            // 아직 서버에 만들지 않은 것 삭제시..
+            console.log(`서버에 저장하지 않은 카테고리여서, 메모리에서만 삭제할께요.`);
+            this.select.nativeElement.children[0][0].selected = true;
+            this.category = undefined;
+
+        } else {
+
+            this.network.removeCategory(this.account.accessToken, this.category._id)
+                .subscribe(result => {
+                    if (result.result === true) {
+                        console.log(result.msg);
+                        this.select.nativeElement.children[0][0].selected = true;
+                        this.category = undefined;
+                    }
+                });
+
         }
-
-        // 아직 서버에 만들지 않은 것 삭제시..
-
-        this.network.removeCategory(this.account.accessToken, this.category._id)
-            .subscribe(result => {
-                if (result.result === true) {
-                    console.log(result.msg);
-                }
-            });
-
     }
 
+    // 카테고리 메이커 내의 항목을 이동시켜줘요. 위 아래 위 위 아래.
     private moveArticle(event, type: string, id: string) {
         if (event) { event.stopPropagation(); }
 
@@ -292,21 +303,23 @@ export class CategoryMakerComponent implements OnInit {
         }
         // ---- 정리용도 함수 모음 끝 -------------------------------
 
-        if (hasMoreSubCategory(this.category)) {
-            const grade2Index = this.category.subCategory.findIndex(grade2 => {
+        const dummy = Object.assign({}, this.category);
+
+        if (hasMoreSubCategory(dummy)) {
+            const grade2Index = dummy.subCategory.findIndex(grade2 => {
                 return grade2._id === id ? true : false;
             });
             console.log(`grade2 Index: ${grade2Index}`);
 
             if (grade2Index !== -1 && type === 'up') {
-                this.category.subCategory = up(this.category.subCategory, grade2Index);
+                dummy.subCategory = up(dummy.subCategory, grade2Index);
             } else if (grade2Index !== -1 && type === 'down') {
-                this.category.subCategory =
-                    down(this.category.subCategory, grade2Index);
+                dummy.subCategory =
+                    down(dummy.subCategory, grade2Index);
             } else if (grade2Index === -1) {
 
                 // grade1에 없으니까, grade2로 이동 해서 검색..
-                this.category.subCategory.forEach(grade2 => {
+                dummy.subCategory.forEach(grade2 => {
                     if (hasMoreSubCategory(grade2)) {
                         const grade3Index = grade2.subCategory.findIndex(grade3 => {
                             return grade3._id === id ? true : false;
@@ -321,15 +334,59 @@ export class CategoryMakerComponent implements OnInit {
                 });
             }
         }
+        this.category = Object.assign({}, dummy);
+        console.log(this.category);
+    }
 
-    console.log(this.category);
+    // 카테고리 메이커 내의 항목을 삭제시켜줘요.
+    private removeArticle(event, id: string) {
+        if (event) { event.stopPropagation(); }
+
+        // ---- 정리용도 함수 모음 -----------------------------------
+        function hasMoreSubCategory(obj: any) {
+            if (obj.subCategory !== undefined &&
+                obj.subCategory.length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // ---- 정리용도 함수 모음 끝 -------------------------------
+
+        const dummy = Object.assign({}, this.category);
+
+        if (dummy._id === id) {
+            // Root 삭제. 지원 안해줄것임.
+        } else {
+            if (hasMoreSubCategory(dummy)) {
+
+                const lengthBefore = dummy.subCategory.length;
+                dummy.subCategory = dummy.subCategory.filter(grade2 => {
+                    return grade2._id === id ? false : true;
+                });
+
+                if (lengthBefore === dummy.subCategory.length) {
+                    // grade3 고고
+                    dummy.subCategory =
+                        dummy.subCategory.map(value2 => {
+                        if (hasMoreSubCategory(value2)) {
+                            value2.subCategory = value2.subCategory.filter(value3 => {
+                                return value3._id === id ? false : true;
+                            });
+                        }
+                        return value2;
+                    });
+                }
+            }
+        }
+        this.category = Object.assign({}, dummy); // 바인딩 문제 때문에 이렇게 처리해야 해요.
+        console.log(this.category);
     }
 
     // 모달 닫기
     private closeModal(event) {
-        if (event !== undefined) {
-            event.stopPropagation();
-        }
+        if (event) { event.stopPropagation(); }
 
         this.cancel.emit(event);
     }
