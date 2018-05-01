@@ -29,7 +29,7 @@
 }
 
 .show_write_grid {
-    height: 16rem !important;
+    height: 14rem !important;
 }
 
 // 숨겨져 있는 댓글달기 화면 그리드
@@ -38,7 +38,7 @@
 
     display: grid;
     grid-template-columns: 10rem auto;
-    grid-template-rows: 2rem max-content max-content;
+    grid-template-rows: max-content max-content;
     grid-gap: 4px;
 
     height: 0px;

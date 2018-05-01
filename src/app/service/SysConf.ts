@@ -36,6 +36,14 @@ export const SET_CATEGORY = SERVER_ADDRESS + '/category';
 export const REMOVE_CATEGORY = SERVER_ADDRESS + '/category/remove';
 export const VALUE_ALL_CATEGORY = 'category-all';
 
+// Reply
+export const GET_REPLY = SERVER_ADDRESS + '/reply/get';
+export const MAKE_REPLY = SERVER_ADDRESS + '/reply';
+export const MAKE_REREPLY = SERVER_ADDRESS + '/reply/rereply';
+export const UPDATE_REPLY = SERVER_ADDRESS + '/reply/update';
+export const REMOVE_REPLY = SERVER_ADDRESS + '/reply/remove';
+export const REMOVE_REREPLY = SERVER_ADDRESS + '/reply/rereply/remove';
+
 // 로컬 저장소 키값들
 export const LOCAL_STORAGE_ACCESS_TOKEN = 'access_token';
 export const LOCAL_STORAGE_USER_ID = 'user_id';
@@ -50,3 +58,6 @@ export const MSG_DOCUMENT_DETAIL_ACCESS_TOKEN_ERROR = '엑세스토큰 문제 �
 export const MSG_CATEGORY_MAKER_SAVE_OK = '카테고리 변경 완료.';
 export const MSG_CATEGORY_MAKER_EMPTY_VALUE_ERR = '카테고리 이름이나 태그를 입력 해 주세요.';
 export const MSG_CATEGORY_MAKER_NOT_SELECT = '카테고리를 선택 해 주세요.';
+export const MSG_REPLY_MAKE_REPLY_ERR = '리플 작성에 실패 했어요.';
+export const MSG_REPLY_GET_ALL_ERR = '리플 가져오기에 실패 했어요.';
+export const MSG_REREPLY_MAKE_REREPLY_ERR = '리리플 작성에 실패 했어요.';

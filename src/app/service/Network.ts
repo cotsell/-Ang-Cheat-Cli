@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxJs';
 
-import { DocumentInfo, UserInfo, Result, Category } from '../service/Interface';
+import { DocumentInfo, UserInfo, Result, Category, Reply } from '../service/Interface';
 import * as SysConf from '../service/SysConf';
 import * as Redux from './redux';
 
@@ -148,6 +148,51 @@ export class Network {
             SysConf.REMOVE_CATEGORY + '/' + categoryId,
             { headers: { 'c-access-token': accessToken } }
         );
+    }
+
+    // 해당 문서의 리플을 가져옵니다.
+    // TODO 일단은 모든 리플을 가져오는데, 페이징을 지원해줘야 할 듯 해요.
+    getReply(documentId: string): Observable<Result> {
+        return this.http.get<Result>(SysConf.GET_REPLY + '/' + documentId);
+    }
+
+    // 새로운 리플을 생성해요.
+    makeReply(accessToken: string, reply: Reply): Observable<Result> {
+        return this.http.post<Result>(SysConf.MAKE_REPLY,
+            reply,
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
+    // 새로운 리리플을 생성해요.
+    makeRereply(accessToken: string, reply: Reply): Observable<Result> {
+        return this.http.post<Result>(
+            SysConf.MAKE_REREPLY,
+            reply,
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
+    // TODO
+    updateReply(accessToken: string, reply: Reply): Observable<Result> {
+        return this.http.post<Result>(SysConf.UPDATE_REPLY,
+            reply,
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
+    // 리플을 삭제 해요.
+    removeReply(accessToken: string, replyId: string): Observable<Result> {
+        return this.http.get<Result>(SysConf.REMOVE_REPLY + '/' + replyId,
+        { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
+    removeRereply(accessToken: string, rereply: Reply ): Observable<Result> {
+        return this.http.post<Result>(
+            SysConf.REMOVE_REREPLY,
+            rereply,
+            { headers: { 'c-access-token': accessToken }});
     }
 
 }

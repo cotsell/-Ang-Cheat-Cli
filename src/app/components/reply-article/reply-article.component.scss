@@ -1,12 +1,12 @@
 #main_grid {
     display: grid;
-    grid-template-columns: auto max-content max-content;
+    grid-template-columns: auto max-content max-content max-content max-content;
     grid-template-rows: 2rem max-content max-content;
 }
 
 #rereply_main_grid {
     display: grid;
-    grid-template-columns: 1rem auto max-content max-content;
+    grid-template-columns: 1rem auto max-content max-content max-content max-content;
     grid-template-rows: 2rem max-content max-content;
     align-items: center;
 }
@@ -33,6 +33,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    font-size: 0.8rem;
     &:hover {
         color: yellowgreen;
     }
@@ -44,8 +45,9 @@
     // justify-content: center;
     height: 2rem;
     text-align: right;
+    font-size: 0.8rem;
     i {
-        font-size: 1rem;
+        font-size: 0.8rem;
     }
 }
 

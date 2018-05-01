@@ -1,32 +1,66 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Reply } from '../../service/Interface';
 
 @Component({
-  selector: 'app-reply-article',
-  templateUrl: './reply-article.component.html',
-  styleUrls: ['./reply-article.component.scss']
+    selector: 'app-reply-article',
+    templateUrl: './reply-article.component.html',
+    styleUrls: ['./reply-article.component.scss']
 })
 export class ReplyArticleComponent implements OnInit {
-  @Input() isReReply = false;
-  private isCommentShowed = false;
+    @ViewChild('textarea') textarea: ElementRef;
+    @Input() isReReply = false;
+    @Input() reply: Reply;
+    @Output() makeRereply = new EventEmitter<Reply>();
+    @Output() deleteReply = new EventEmitter<string>();
+    @Output() deleteRereply = new EventEmitter<Reply>();
+    private isCommentShowed = false;
 
-  private commentForm = new FormGroup({
-    comment: new FormControl()
-  });
+    constructor() { }
 
-  constructor() { }
+    ngOnInit() {
+    }
 
-  ngOnInit() {
-  }
+    private changeCommentShowed(event) {
+        if (event) { event.stopPropagation(); }
 
-  private changeCommentShowed(event) {
-    event.stopPropagation();
-    this.isCommentShowed = !this.isCommentShowed;
-  }
+        this.isCommentShowed = !this.isCommentShowed;
+    }
 
-  private sendReply(event) {
-    event.stopPropagation();
-    
-  }
+    // 댓글 작성 후 보내기
+    private sendRereply(event) {
+        if (event) { event.stopPropagation(); }
+
+        const reply: Reply = {
+            parentId: this.reply._id,
+            text: this.reply.userId + '\n' + this.textarea.nativeElement.value,
+            userId: ''
+        };
+
+        this.textarea.nativeElement.value = '';
+        this.makeRereply.emit(reply);
+    }
+
+    // 리플을 삭제해요.
+    private removeReply(event) {
+        if (event) { event.stopPropagation(); }
+
+        this.deleteReply.emit(this.reply._id);
+    }
+
+    // 리리플을 삭제해요.
+    private removeRereply(event) {
+        if (event) { event.stopPropagation(); }
+
+        this.deleteRereply.emit(this.reply);
+    }
+
+    // 댓글 작성 중 취소 하면 호출
+    private resetWriting(event) {
+        if (event) { event.stopPropagation(); }
+
+        this.textarea.nativeElement.value = '';
+        this.changeCommentShowed(undefined);
+    }
 
 }

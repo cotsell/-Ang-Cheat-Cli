@@ -1,88 +1,94 @@
 <div *ngIf="isReReply === false" id="main_grid">
     <div id="nick_name">
         <i class="material-icons">face</i>
-        cotsell
+        {{ reply.userId }}
     </div>
     
+    <div>수정</div>
+
+    <div 
+        (click)="removeReply($event)">
+        삭제
+    </div>
+
     <div 
         id="write_comment"
         (click)="changeCommentShowed($event)"
         >
-        답글달기
+        댓글
     </div>
+
     <div id="created_time">
       <i class="material-icons">access_time</i>
-      22:40
+      {{ reply.updatedTime }}
     </div>
-    <div id="text">리플 내용은 이렇게 나올꺼에요.</div>
+    <div id="text">{{ reply.text }}</div>
+
     <!-- 숨겨진 글작성 영역 -->
     <div id="comment" [ngClass]="{ show_comment: isCommentShowed }">
-        <form
-            id="reply_comment_form" 
-            [formGroup]="commentForm" 
-            (ngSubmit)="sendReply($event)"
-            >
-            <div id="textarea">
-                <textarea [formControlName]="'comment'"></textarea>
-            </div>
-            <div id="buttons">
-                <button 
-                    type="submit" 
-                    (click)="$event.stopPropagation()">
-                    저장
-                </button>
-                <button 
-                    type="reset" 
-                    (click)="isCommentShowed=false; $event.stopPropagation();">
-                    취소
-                </button>
-            </div>
-        </form>
+        <div id="textarea">
+            <textarea #textarea></textarea>
+        </div>
+        <div id="buttons">
+            <button 
+                type="button" 
+                (click)="sendRereply($event)">
+                저장
+            </button>
+            <button 
+                type="button" 
+                (click)="resetWriting($event)">
+                취소
+            </button>
+        </div>
     </div>
 </div>
 
+<!-- 리리플모드 -->
 <div *ngIf="isReReply === true" id="rereply_main_grid">
     <div id="rereply_icon">
         <i class="material-icons">subdirectory_arrow_right</i>
     </div>
     <div id="nick_name">
         <i class="material-icons">face</i>
-        cotsell
+        {{ reply.userId }}
+    </div>
+
+    <div>수정</div>
+
+    <div
+        (click)="removeRereply($event)">
+        삭제
     </div>
 
     <div 
         id="write_comment"
         (click)="changeCommentShowed($event)"
         >
-        답글달기
+        댓글
     </div>
     <div id="created_time">
         <i class="material-icons">access_time</i> 
-        22:40
+        {{ reply.updatedTime }}
     </div>
-    <div id="rereply_text">리플 내용은 이렇게 나올꺼에요.</div>
+    <div id="rereply_text">{{ reply.text }}</div>
+
     <!-- 숨겨진 글작성 영역 -->
     <div id="rereply_comment" [ngClass]="{ show_comment: isCommentShowed }">
-            <form
-                id="rereply_comment_form" 
-                [formGroup]="commentForm" 
-                (ngSubmit)="sendReply($event)"
-                >
-                <div id="textarea">
-                    <textarea [formControlName]="'comment'"></textarea>
-                </div>
-                <div id="buttons">
-                    <button 
-                        type="submit" 
-                        (click)="$event.stopPropagation()">
-                        저장
-                    </button>
-                    <button 
-                        type="reset" 
-                        (click)="isCommentShowed=false; $event.stopPropagation();">
-                        취소
-                    </button>
-                </div>
-            </form>
+        <div id="textarea">
+            <textarea #textarea></textarea>
         </div>
+        <div id="buttons">
+            <button 
+                type="button" 
+                (click)="sendRereply($event)">
+                저장
+            </button>
+            <button 
+                type="button" 
+                (click)="resetWriting($event)">
+                취소
+            </button>
+        </div>
+    </div>
 </div>
