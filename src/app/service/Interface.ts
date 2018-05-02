@@ -80,6 +80,7 @@ export interface Reply {
     updatedTime?: Date;
     deleted?: boolean;
     updated?: boolean;
+    deletedReply?: boolean;
     rereply?: Reply[];
 }
 

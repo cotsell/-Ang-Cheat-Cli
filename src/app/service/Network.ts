@@ -173,9 +173,18 @@ export class Network {
         );
     }
 
-    // TODO
+    // 리플 수정.
     updateReply(accessToken: string, reply: Reply): Observable<Result> {
         return this.http.post<Result>(SysConf.UPDATE_REPLY,
+            reply,
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
+    // 리리플 수정.
+    updateRereply(accessToken: string, reply: Reply): Observable<Result> {
+        return this.http.post<Result>(
+            SysConf.UPDATE_REREPLY,
             reply,
             { headers: { 'c-access-token': accessToken } }
         );
@@ -188,6 +197,7 @@ export class Network {
         );
     }
 
+    // 리리플을 삭제 해요.
     removeRereply(accessToken: string, rereply: Reply ): Observable<Result> {
         return this.http.post<Result>(
             SysConf.REMOVE_REREPLY,

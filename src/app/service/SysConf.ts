@@ -39,9 +39,10 @@ export const VALUE_ALL_CATEGORY = 'category-all';
 // Reply
 export const GET_REPLY = SERVER_ADDRESS + '/reply/get';
 export const MAKE_REPLY = SERVER_ADDRESS + '/reply';
-export const MAKE_REREPLY = SERVER_ADDRESS + '/reply/rereply';
 export const UPDATE_REPLY = SERVER_ADDRESS + '/reply/update';
 export const REMOVE_REPLY = SERVER_ADDRESS + '/reply/remove';
+export const MAKE_REREPLY = SERVER_ADDRESS + '/reply/rereply';
+export const UPDATE_REREPLY = SERVER_ADDRESS + '/reply/rereply/update';
 export const REMOVE_REREPLY = SERVER_ADDRESS + '/reply/rereply/remove';
 
 // 로컬 저장소 키값들
@@ -61,3 +62,4 @@ export const MSG_CATEGORY_MAKER_NOT_SELECT = '카테고리를 선택 해 주세�
 export const MSG_REPLY_MAKE_REPLY_ERR = '리플 작성에 실패 했어요.';
 export const MSG_REPLY_GET_ALL_ERR = '리플 가져오기에 실패 했어요.';
 export const MSG_REREPLY_MAKE_REREPLY_ERR = '리리플 작성에 실패 했어요.';
+export const MSG_REREPLY_REMOVE_REREPLY_ERR = '리리플 삭제에 실패 했어요.';

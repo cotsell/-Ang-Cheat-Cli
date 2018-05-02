@@ -29,12 +29,14 @@
             <app-reply-article 
                 [reply]="reply"
                 (makeRereply)="submitRereply($event)"
-                (deleteReply)="removeReply($event)"></app-reply-article>
+                (deleteReply)="removeReply($event)"
+                (modifyReply)="updateReply($event)"></app-reply-article>
             <div *ngFor="let rereply of reply.rereply">
                 <app-reply-article 
                     [isReReply]="true" 
                     [reply]="rereply"
-                    (deleteRereply)="removeRereply($event)"></app-reply-article>
+                    (deleteRereply)="removeRereply($event)"
+                    (modifyRereply)="updateRereply($event)"></app-reply-article>
             </div>
         </div>
 </div>

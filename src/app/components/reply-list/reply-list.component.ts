@@ -140,6 +140,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
             });
     }
 
+    // 리플 삭제. TODO 맨 마지막으로 새로운 문서가 push되면 안됨.
     private removeReply(event) {
         const replyId = event;
         this.network.removeReply(this.account.accessToken, replyId)
@@ -160,20 +161,69 @@ export class ReplyListComponent implements OnInit, OnDestroy {
             });
     }
 
+    // 리리플 삭제
     private removeRereply(event) {
         const rereply = event;
 
-        console.log(`reply-list.component에서 받은 reply객체는`);
-        console.log(event);
-        console.log(`입니다.`);
+        // console.log(`reply-list.component에서 받은 reply객체는`);
+        // console.log(event);
+        // console.log(`입니다.`);
 
         this.network.removeRereply(this.account.accessToken, rereply)
             .subscribe(result => {
                 if (result.result === true) {
-                    // TODO
+                    console.log(result.msg);
+                    this.replyList = this.replyList.map(value => {
+                        return value._id === result.payload._id ?
+                            Object.assign({}, result.payload) : value;
+                    });
+                } else {
+                    alert(conf.MSG_REREPLY_REMOVE_REREPLY_ERR);
+                }
+            });
+    }
 
+    // 리플 업데이트
+    private updateReply(event) {
+        console.log(event);
+
+        this.network.updateReply(this.account.accessToken, event)
+            .subscribe(result => {
+                if (result.result === true) {
+                    console.log(result.msg);
+                    console.log(result.payload);
+                    this.replyList = this.replyList.map(value => {
+                        if (value.historyId === result.payload.historyId) {
+                            value = result.payload;
+                        }
+                        return value;
+                    });
+                } else {
+                    // TODO 실패.
+                    console.log(result.msg);
+                }
+            });
+    }
+
+    // 리리플 업데이트
+    private updateRereply(event) {
+        console.log(event);
+
+        this.network.updateRereply(this.account.accessToken, event)
+            .subscribe(result => {
+                if (result.result === true) {
+                    // TODO TEST
+                    console.log(result.msg);
+                    console.log(result.payload);
+                    this.replyList = this.replyList.map(value => {
+                        if (value._id === result.payload._id) {
+                            value = Object.assign({}, result.payload);
+                        }
+                        return value;
+                    });
                 } else {
                     // TODO
+                    console.log(result.msg);
                 }
             });
     }

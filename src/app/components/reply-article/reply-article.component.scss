@@ -1,14 +1,15 @@
 #main_grid {
     display: grid;
-    grid-template-columns: auto max-content max-content max-content max-content;
+    grid-template-columns: auto max-content max-content max-content 5rem;
     grid-template-rows: 2rem max-content max-content;
 }
 
 #rereply_main_grid {
     display: grid;
-    grid-template-columns: 1rem auto max-content max-content max-content max-content;
+    grid-template-columns: 1rem auto max-content max-content max-content 5rem;
     grid-template-rows: 2rem max-content max-content;
     align-items: center;
+    background-color: yellowgreen;
 }
 
 #rereply_icon {
@@ -26,7 +27,26 @@
     i {
         font-size: 1rem;
     }
+}
 
+#modify {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    &:hover {
+        color: yellowgreen;
+    }
+}
+
+#remove {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    &:hover {
+        color: yellowgreen;
+    }
 }
 
 #write_comment {
@@ -44,7 +64,7 @@
     align-items: center;
     // justify-content: center;
     height: 2rem;
-    text-align: right;
+    text-align: center;
     font-size: 0.8rem;
     i {
         font-size: 0.8rem;
@@ -53,6 +73,33 @@
 
 #text {
     grid-column: 1 / 4;
+    
+    #textPrint {
+
+    }
+
+    #textEdit {
+    
+        #textarea {
+            textarea {
+                width: 100%;
+                height: 7rem;
+            }
+        }
+    
+        #buttons {
+            display: flex;
+            // align-items: flex-end;
+            justify-content: flex-end;
+
+            button {
+                cursor: pointer;
+                border: none;
+                background-color: white;
+                margin-left: 1rem;
+            }
+        }
+    }
 }
 
 #rereply_text {
