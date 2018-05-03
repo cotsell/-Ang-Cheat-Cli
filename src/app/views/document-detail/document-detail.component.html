@@ -112,9 +112,17 @@
 
             <!-- 기타 기능 버튼들 -->
             <div id="document_function_button_article">
-                <i class="material-icons" style="font-size: 1rem; color:steelblue;">thumb_up</i>
-                {{ documentInfo?.thumbUp?.length }} 
-                <button type="button">스크랩</button> 
+                <div id="thumbUpDiv">
+                    <i class="material-icons" style="font-size: 1rem; color:steelblue;">thumb_up</i>
+                    {{ documentInfo?.thumbUp?.length }} 
+                </div>
+                <div id="scrapDiv">
+                    <button 
+                        type="button" 
+                        (click)="scrap($event)">
+                        스크랩
+                    </button> 
+                </div>
             </div>
 
             <!-- 시그니처 -->

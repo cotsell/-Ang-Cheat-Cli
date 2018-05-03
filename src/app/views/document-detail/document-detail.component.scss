@@ -139,7 +139,26 @@
 }
 
 #document_function_button_article {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+
+    #thumbUpDiv {
+
+    }
+
+    #scrapDiv {
+        margin-left: 1rem;
+        margin-right: 1rem;
+        button {
+            cursor: pointer;
+            border: none;
+            background-color: white;
+
+            &:hover {
+                color: yellowgreen;
+            }
+        }
+    }
 }
 
 #document_signature_article {

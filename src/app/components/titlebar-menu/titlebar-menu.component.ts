@@ -81,7 +81,8 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
 
     // 메뉴의 상세 내용의 화면 출력 여부를 변경해요.
     private changeMenuState(event) {
-        event.stopPropagation();
+        if (event) { event.stopPropagation(); }
+
         this.isMenuHidden = !this.isMenuHidden;
     }
 
@@ -89,6 +90,7 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
         event.stopPropagation();
         if (this.relatedId === undefined ||
             this.relatedId === null || this.relatedId === '') {
+                this.closeHideMenu(undefined);
                 this.route.navigate(['/writeDocu']);
         } else {
             this.route.navigate(['/writeDocu', this.relatedId]);
@@ -96,7 +98,8 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
     }
 
     private selectedLanguage(event) {
-        event.stopPropagation();
+        if (event) { event.stopPropagation(); }
+
         const store = this.store;
         const selectedCategory = event.target.value;
         this.selectedCategory = event.target.value;
@@ -123,7 +126,8 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
     }
 
     private closeHideMenu(event) {
-        event.stopPropagation();
+        if (event) { event.stopPropagation(); }
+
         this.isMenuHidden = true;
     }
 

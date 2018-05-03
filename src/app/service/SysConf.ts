@@ -28,6 +28,10 @@ export const SEARCH_DOCUMENT = SERVER_ADDRESS + '/search';
 export const NEW_TAG = SERVER_ADDRESS + DOCUMENT + '/tag/new';
 export const REMOVE_TAG = SERVER_ADDRESS + DOCUMENT + '/tag/remove';
 
+// Scrap
+export const SET_SCRAP = SERVER_ADDRESS + '/scrap';
+export const GET_SCRAP = SERVER_ADDRESS + '/scrap/get';
+
 // Category
 export const ALL_GRADE1_CATEGORYS = SERVER_ADDRESS + '/category/get';
 export const ALL_CATEGORY = SERVER_ADDRESS + '/category/all';
@@ -63,3 +67,5 @@ export const MSG_REPLY_MAKE_REPLY_ERR = '리플 작성에 실패 했어요.';
 export const MSG_REPLY_GET_ALL_ERR = '리플 가져오기에 실패 했어요.';
 export const MSG_REREPLY_MAKE_REREPLY_ERR = '리리플 작성에 실패 했어요.';
 export const MSG_REREPLY_REMOVE_REREPLY_ERR = '리리플 삭제에 실패 했어요.';
+export const MSG_SCRAP_OK = '스크랩 했어요.';
+export const MSG_SCRAP_ERROR = '스크랩 하는데 실패했어요.';

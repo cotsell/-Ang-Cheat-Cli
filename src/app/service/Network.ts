@@ -113,6 +113,23 @@ export class Network {
         );
     }
 
+    // 스크랩 하기.
+    setScrap(accessToken: string, documentId: string): Observable<Result> {
+        return this.http.post<Result>(
+            SysConf.SET_SCRAP,
+            { documentId },
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
+    // 스크랩 리스트 가져오기
+    getScrap(accessToken: string): Observable<Result> {
+        return this.http.get<Result>(
+            SysConf.GET_SCRAP,
+            { headers : { 'c-access-token': accessToken }}
+        );
+    }
+
     // type의 값은 서버의 DB/document.ts의 searchDocument()에서 확인 가능해요.
     searchDocument(lang: string, type: number, subject: string): Observable<Result> {
         const query = `?lang=${lang}&type=${type}&subj=${subject}`;

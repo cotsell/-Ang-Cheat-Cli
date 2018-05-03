@@ -255,6 +255,23 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
         });
     }
 
+    private scrap(event) {
+        if (event) { event.stopPropagation(); }
+
+        this.network.setScrap(this.accessToken, this.documentInfo._id)
+            .subscribe(result => {
+                if (result.result === true) {
+                    console.log(result.msg);
+                    console.log(result.payload);
+                    alert(conf.MSG_SCRAP_OK);
+                } else {
+                    // TODO 오류 처리.
+                    console.error(result.msg);
+                    alert(conf.MSG_SCRAP_ERROR);
+                }
+            });
+    }
+
     ngOnDestroy() {
         Utils.unSubscribe(this.accountSubscription);
         Utils.unSubscribe(this.userInfoSubscription);

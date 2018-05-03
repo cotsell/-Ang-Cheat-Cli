@@ -34,6 +34,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     private isEditMode = false; // 프로필 내용 수정모드로 변환 구분.
     private isEditable = false; // 프로필 수정하기 버튼을 화면에 표시할지 구분.
     private userInfo: UserInfo;
+    private userScrapList: string[] = [];
     private accountSubscription: Subscription;
     private userInfoSubscription: Subscription;
 
@@ -116,8 +117,11 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     private subscribeUserInfo() {
         this.userInfoSubscription = this.store.select(Redux.getUserInfo)
             .subscribe(result => {
-            this.userInfo = result;
-            this.getUserDocumentList();
+                if (result !== undefined && result !== null) {
+                    this.userInfo = result;
+                    this.getUserDocumentList();
+                    this.getScrap();
+                }
         });
     }
 
@@ -146,9 +150,23 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         }
     }
 
-    // -----------------------------
+    // 서버로부터 유저의 스크랩 리스트를 가져와요.
+    private getScrap() {
+        this.network.getScrap(this.accessToken)
+            .subscribe(result => {
+                if (result.result === true) {
+                    console.log(result.msg);
+                    this.userScrapList = result.payload;
+                } else {
+                    console.error(result.msg);
+
+                }
+            });
+    }
+
+    // -----------------------------------------------------------
     // ---- 프로필 수정 화면 관련
-    // -----------------------------
+    // -----------------------------------------------------------
 
     saveProfile(event) {
         event.stopPropagation();
