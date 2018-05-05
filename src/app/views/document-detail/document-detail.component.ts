@@ -16,10 +16,12 @@
     documentSubscription: document 리덕스 구독권. 구독 해지하기 위해 필요.
  */
 
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subscription } from 'rxJs';
+import * as marked from 'marked';
+import * as prism from 'prismjs';
 
 import { UserInfo, DocumentInfo, Result } from '../../service/Interface';
 import { Network } from '../../service/Network';
@@ -36,7 +38,7 @@ import * as conf from '../../service/SysConf';
     styleUrls: ['./document-detail.component.scss']
 })
 export class DocumentDetailComponent implements OnInit, OnDestroy {
-    private isEditMode = false;
+    @ViewChild('target') target: ElementRef;
     private isLoggedIn = false;
     private isModalOpen = false;
     private isScrapModalOpen = false;
@@ -53,12 +55,6 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
     // 함수들..
     private changeTimeString;
-
-    // 문서 저장 폼 설정
-    documentForm: FormGroup = new FormGroup({
-        title: new FormControl(),
-        text: new FormControl()
-    });
 
     constructor(
         private route: ActivatedRoute,
@@ -81,44 +77,14 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
             this.isModalOpen = false;
             this.router.navigate(['./']);
         };
-    }
 
-    // TODO DELETE. 삭제 예정 함수.
-    // 문서를 서버에 저장하는 함수에요.
-    private saveDocumentToServer(event) {
-        console.log(event);
-
-        console.log(this.documentForm.value);
-        const title = this.documentForm.value['title'];
-        const text = this.documentForm.value['text'];
-        const editedDoc = Object.assign({}, this.documentInfo, { title: title, text: text });
-        console.log(JSON.stringify(editedDoc));
-
-        // TODO 서버의 응답 내용이 달라질 여지가 있습니다.
-        this.network.modifyDocument(this.accessToken, editedDoc)
-            .subscribe(obs => {
-                if (obs.result === true) {
-                    this.changeEditMode();
-                    // TODO 수정 후 내용을 디스패치 해야 하는데, 아직은 대충 해놓음.
-                    this.store.dispatch(new DocuDetail.ModifyDocumentDetail(editedDoc));
-                } else {
-                    // TODO 문서 저장 실패시 대응 코딩 필요.
-                    this.store.dispatch(new DocuDetail.ModifyDocumentDetail(this.documentInfo));
-                }
-            });
-    }
-
-    // TODO DELETE 삭제 예정 함수.
-    // 문서를 수정 중에 취소버튼을 누르면..
-    private cancelSavingDocument(event) {
-        event.stopPropagation();
-        this.changeEditMode();
+        this.settingMarked();
     }
 
     // 서버에 문서 삭제 요청을 하는 함수에요.
     private deleteDocument(event) {
         event.stopPropagation();
-        // TODO 글 삭제 기능 추가.
+
         this.network.removeDocument(this.accessToken, this.documentInfo)
         .subscribe(value => {
             this.router.navigate(['./']);
@@ -173,25 +139,14 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
 
     private changeEditMode(event?) {
-        if (event !== undefined && event !== null) {
-            event.stopPropagation();
-        }
-        // this.isEditMode = !this.isEditMode;
+        if (event) { event.stopPropagation(); }
 
-        // // isEditMode가 true로 변한 상태라면, document의 form에 데이터를 넣어주죠.
-        // if (this.isEditMode === true) {
-        //     this.documentForm.setValue(
-        //         {
-        //             title: this.documentInfo.title,
-        //             text: this.documentInfo.text
-        //         });
-        // }
         this.router.navigate(['./writeDocu', this.documentInfo._id, 'edit']);
     }
 
+    // TODO 미완성.
     private clickEvent(event) {
         if (event) { event.stopPropagation(); }
-        // TODO 미완성.
     }
 
     // account 리덕스를 구독하고,
@@ -218,6 +173,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
             .subscribe(doc => {
                 this.documentInfo = Object.assign({}, doc);
                 this.changeDocCtrlState();
+                this.renderMarkdownAndPrism();
             });
     }
 
@@ -254,9 +210,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
     // Tags 컴포넌트에서 태그 삭제가 요청되면 이게 실행돼요.
     private removeTagArticle(event) {
-        console.log(event);
-        // TODO 네트워크로 새로운 태그 전송.
-        // TODO 결과값은 성공 실패. 그리고 메세지.
+        // console.log(event);
+
         this.network.removeTag(this.accessToken, this.documentInfo._id, event)
         .subscribe(value => {
             if (value.result === true) {
@@ -278,18 +233,6 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
         if (event) { event.stopPropagation(); }
 
         this.isScrapModalOpen = true;
-        // this.network.setScrap(this.accessToken, this.documentInfo._id)
-        //     .subscribe(result => {
-        //         if (result.result === true) {
-        //             console.log(result.msg);
-        //             console.log(result.payload);
-        //             alert(conf.MSG_SCRAP_OK);
-        //         } else {
-        //             // TODO 오류 처리.
-        //             console.error(result.msg);
-        //             alert(conf.MSG_SCRAP_ERROR);
-        //         }
-        //     });
     }
 
     private thumbUp(event) {
@@ -305,6 +248,31 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
                     console.error(result.msg);
                 }
             });
+    }
+
+    // -----------------------------------------------------------
+    // ---- MarkDown & PrismJS
+    // -----------------------------------------------------------
+    private settingMarked() {
+        marked.setOptions({
+            renderer: new marked.Renderer(),
+            gfm: true,
+            tables: true,
+            breaks: true,
+            pedantic: false,
+            sanitize: true,
+            smartLists: true,
+            smartypants: false,
+            xhtml: true
+        });
+    }
+
+    // 문서내에 있는 마크다운과 코드 하이라이팅을 적용해서 다시 화면 랜더링.
+    private renderMarkdownAndPrism() {
+        if (this.documentInfo.text !== undefined) {
+            this.target.nativeElement.innerHTML = marked(this.documentInfo.text);
+            prism.highlightAllUnder(this.target.nativeElement);
+        }
     }
 
     ngOnDestroy() {

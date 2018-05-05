@@ -2,29 +2,11 @@
 
     <div id="document_main_flex">
         <div id="document_grid">
-            <form
-                [id]="isEditMode ? 'document_edit_form_grid' : 'document_form_grid'" 
-                [formGroup]="documentForm" 
-                (ngSubmit)="saveDocumentToServer($event)"
-                >
+            <div id="documentGrid">
                 <!-- 타이틀 -->
                 <div id="document_title_article">
-                    <div 
-                        id="document_title_div"
-                        *ngIf="isEditMode === false"
-                        >
+                    <div id="document_title_div">
                         <h2>{{ documentInfo?.title }}</h2>
-                    </div>
-                    <div
-                        id="document_title_edit_div"
-                        *ngIf="isEditMode === true"
-                        >
-                        <input 
-                            type="text" 
-                            placeholder="title.."
-                            [value]="documentInfo?.title"
-                            [formControlName]="'title'"
-                            >
                     </div>
                 </div>
 
@@ -58,49 +40,13 @@
 
                 <!-- 문서 내용 -->
                 <div id="document_text_article">
-                    <div 
-                        id="document_text_div"
-                        *ngIf="isEditMode === false"
-                        >
-                        {{ documentInfo?.text }}
-                    </div>
-
-                    <div
-                        id="document_text_input_div"
-                        *ngIf="isEditMode === true"
-                        >
-                        <textarea 
-                            [value]="documentInfo?.text"
-                            [formControlName]="'text'"
-                            ></textarea>
+                    <div #target id="document_text_div">
+                        <!-- {{ documentInfo?.text }} -->
                     </div>
                 </div>
 
-                <!-- 문서 수정 내용 저장 버튼. isEditMode가 true일때만 나타납니다. -->
-                <div 
-                    id="document_edit_button_div" 
-                    *ngIf="isEditMode === true"
-                    >
-                    <div id="button_grid">
-                        <div id="save_button">
-                            <button 
-                                type="submit" 
-                                (click)="$event.stopPropagation();"
-                                >
-                                저장
-                            </button>
-                        </div>
-                        <div id="cancel_button">
-                            <button 
-                                type="button"
-                                (click)="cancelSavingDocument($event)"    
-                                >
-                                취소
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            </div>
+
             <!-- 태그리스트 -->
             <div id="document_taglist_article">
                 <app-tags 

@@ -74,8 +74,10 @@
         height: 10rem;
     }
 
-    pre {
-        white-space: pre;
+    div {
+        font-size: 0.8rem;
+        white-space: pre-wrap;
+        word-break: break-all;
         width: 100%;
         min-height: 4rem;
     }

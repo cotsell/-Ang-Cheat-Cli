@@ -58,7 +58,7 @@
 
             <div id="signatureTitle">시그니쳐</div>
             <div id="signature" *ngIf="!isEditMode">
-                <pre>{{ userInfo?.signature }}</pre>
+                <div>{{ userInfo?.signature }}</div>
             </div>
             <div id="signature" *ngIf="isEditMode">
                 <textarea [formControlName]="'signature'"></textarea>

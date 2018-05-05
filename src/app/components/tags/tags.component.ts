@@ -34,7 +34,8 @@ export class TagsComponent implements OnInit {
     }
 
     private insertNewTag(event) {
-        event.stopPropagation();
+        if (event) { event.stopPropagation(); }
+
         if (event.key === 'Enter') {
             const value = event.target.value;
             if (value !== '') {
@@ -45,9 +46,10 @@ export class TagsComponent implements OnInit {
     }
 
     private removeTag(event) {
-        event.stopPropagation();
+        if (event) { event.stopPropagation(); }
+
         const title = event.target.innerText;
-        console.log(event.target.innerText);
+        // console.log(event.target.innerText);
         this.remove.emit(title);
     }
 }

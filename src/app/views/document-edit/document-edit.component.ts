@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Network } from '../../service/Network';
@@ -22,7 +23,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     private isPreviewMode = false;
     private accessToken: string;
     private relatedId: string;
-    private previewText: string;
+    // private previewText: string;
     private documentInfo: DocumentInfo;
     private userInfo: UserInfo;
     private accountSubscription: Subscription;
@@ -40,6 +41,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
+        private location: Location,
         private account: Account,
         private network: Network,
         private store: Store<Redux.StoreInfo>) { }
@@ -152,7 +154,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
     // 에디터 화면에 작성중인 내용을 우측의 프리뷰 화면에 출력하기 위한
     private copyTextToPreview(event) {
-        this.previewText = this.textForm.value.text;
+        // this.previewText = this.textForm.value.text;
         this.preview_target.nativeElement.innerHTML = marked(this.textForm.value.text);
         prism.highlightAllUnder(this.preview_target.nativeElement);
         // this.previewText = event.target.value;
@@ -179,6 +181,29 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                 }
             }
         });
+    }
+
+    // 이벤트 버블링 방지 함수.
+    private stopBubbling(event) {
+        if (event) { event.stopPropagation(); }
+    }
+
+    // 프리뷰 보여줄건지 아닌지..
+    private changePreviewMode(event) {
+        if (event) { event.stopPropagation(); }
+
+        this.isPreviewMode = !this.isPreviewMode;
+
+        if (this.isPreviewMode === true) {
+            this.copyTextToPreview(undefined);
+        }
+    }
+
+    // 취소 버튼. 이전 페이지로 이동.
+    private cancelBtn(event) {
+        if (event) { event.stopPropagation(); }
+
+        this.location.back();
     }
 
     ngOnDestroy() {

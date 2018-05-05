@@ -15,13 +15,7 @@
     justify-content: center;
 }
 
-#document_form_grid {
-    display: grid;
-    grid-template-columns: max-content auto max-content;
-    grid-template-rows: 3rem 2rem minmax(min-content, max-content);
-}
-
-#document_edit_form_grid {
+#documentGrid {
     display: grid;
     grid-template-columns: max-content auto max-content;
     grid-template-rows: 3rem 2rem minmax(min-content, max-content);

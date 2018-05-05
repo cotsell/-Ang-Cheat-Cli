@@ -87,10 +87,11 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
     }
 
     private writeDocument(event) {
-        event.stopPropagation();
+        if (event) { event.stopPropagation(); }
+
+        this.closeHideMenu(undefined);
         if (this.relatedId === undefined ||
             this.relatedId === null || this.relatedId === '') {
-                this.closeHideMenu(undefined);
                 this.route.navigate(['/writeDocu']);
         } else {
             this.route.navigate(['/writeDocu', this.relatedId]);

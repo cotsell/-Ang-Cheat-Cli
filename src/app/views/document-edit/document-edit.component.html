@@ -32,7 +32,7 @@
             <!-- 버튼들 -->
             <div id="buttons">
                 <div id="ok">
-                    <button type="submit" (click)="$event.stopPropagation();"
+                    <button type="submit" (click)="stopBubbling($event)"
                         >
                         저장
                     </button>
@@ -41,14 +41,14 @@
                 <div id="show-preview">
                     <button 
                         type="button"
-                        (click)="isPreviewMode=!isPreviewMode;"
+                        (click)="changePreviewMode($event)"
                         >
                         프리뷰 보기
                       </button>
                 </div>
               
                 <div id="cancel">
-                    <button type="button" (click)="$event.stopPropagation();">
+                    <button type="button" (click)="cancelBtn($event)">
                         취소
                     </button>
                 </div>
