@@ -114,10 +114,10 @@ export class Network {
     }
 
     // 스크랩 하기.
-    setScrap(accessToken: string, documentId: string): Observable<Result> {
+    setScrap(accessToken: string, label: any): Observable<Result> {
         return this.http.post<Result>(
             SysConf.SET_SCRAP,
-            { documentId },
+            label,
             { headers: { 'c-access-token': accessToken } }
         );
     }
@@ -127,6 +127,21 @@ export class Network {
         return this.http.get<Result>(
             SysConf.GET_SCRAP,
             { headers : { 'c-access-token': accessToken }}
+        );
+    }
+
+    // 엄지척 하기.
+    setThumbUp(accessToken: string, documentId: string): Observable<Result> {
+        return this.http.get<Result>(
+            SysConf.SET_THUMBUP + '/' + documentId,
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
+    // 엄지척 갯수 가져오기.
+    getThumbUpCount(documentId: string): Observable<Result> {
+        return this.http.get<Result>(
+            SysConf.GET_THUMBUP_COUNT + '/' + documentId
         );
     }
 

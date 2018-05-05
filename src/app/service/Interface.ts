@@ -47,6 +47,11 @@ export class Tag {
     }
 }
 
+export interface Scrap {
+    labelList: string[];
+    docuList: { docuId: string, docuTitle: string, label: string, createdTime: Date }[];
+}
+
 // ---- 카테고리 인터페이스 ----
 export interface CategoryGrade3 {
     _id?: string;

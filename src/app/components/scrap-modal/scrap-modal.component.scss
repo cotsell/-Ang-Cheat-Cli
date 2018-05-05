@@ -1,0 +1,77 @@
+#backgroundDiv {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+  left: 0rem;
+  top: 0rem;
+  right: 0rem;
+  bottom: 0rem;
+  z-index: 3;
+
+  #container {
+    width: 320px;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 15% auto;
+
+    #closeIcon {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+
+      i {
+        cursor: pointer;
+      }
+    }
+
+    #list {
+      .listArticle {
+        cursor: pointer;
+        &:hover {
+          color: tomato;
+        }
+      }
+    }
+
+    #category {
+      margin-top: 1rem;
+
+      #makeNewDiv {
+        cursor: pointer;
+        text-align: center;
+        &:hover {
+          color: tomato;
+        }
+      }
+
+
+
+      #title {
+        font-size: 0.8rem;
+      }
+
+      #input {
+        input {
+          border: none;
+          border-bottom: 1px solid #4d4d4d;
+        }
+      }
+
+      #makeBtn {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        button {
+          cursor: pointer;
+          border: none;
+          background-color: white;
+          &:hover {
+            color: steelblue;
+          }
+        }
+      }
+    }
+  }
+}

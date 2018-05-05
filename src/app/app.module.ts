@@ -27,6 +27,7 @@ import { ReplyArticleComponent } from './components/reply-article/reply-article.
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { DocumentEditComponent } from './views/document-edit/document-edit.component';
 import { CategoryMakerComponent } from './components/category-maker/category-maker.component';
+import { ScrapModalComponent } from './components/scrap-modal/scrap-modal.component';
 
 const route: Routes = [
   { path: '', component: MainComponent },
@@ -57,7 +58,8 @@ const route: Routes = [
     ReplyArticleComponent,
     PaginationComponent,
     DocumentEditComponent,
-    CategoryMakerComponent
+    CategoryMakerComponent,
+    ScrapModalComponent
   ],
   imports: [
     BrowserModule,

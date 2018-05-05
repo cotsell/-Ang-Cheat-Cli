@@ -1,4 +1,4 @@
-<div id="main_grid" (click)="clickEvent($event)">
+<div id="main_grid">
 
     <div id="document_main_flex">
         <div id="document_grid">
@@ -31,7 +31,7 @@
                 <!-- 작성 시간 -->
                 <div id="document_time_div">
                     <i class="material-icons" style="font-size: 12px;">access_time</i>
-                    {{ documentInfo?.createdTime }}
+                    {{ changeTimeString(documentInfo?.createdTime, true) }}
                 </div>
 
                 <!-- 지금은 빈 공간 -->
@@ -113,8 +113,11 @@
             <!-- 기타 기능 버튼들 -->
             <div id="document_function_button_article">
                 <div id="thumbUpDiv">
-                    <i class="material-icons" style="font-size: 1rem; color:steelblue;">thumb_up</i>
-                    {{ documentInfo?.thumbUp?.length }} 
+                    <i class="material-icons" 
+                        (click)="thumbUp($event)">
+                        thumb_up
+                    </i>
+                    {{ thumbUpCount }} 
                 </div>
                 <div id="scrapDiv">
                     <button 
@@ -146,3 +149,9 @@
         <div id="buttons"><button (click)="modalFunction($event)">확인</button></div>
     </div>
 </div>
+
+<app-scrap-modal 
+    [on]="isScrapModalOpen" 
+    [document]="documentInfo"
+    (exit)="isScrapModalOpen = false;"
+    ></app-scrap-modal>

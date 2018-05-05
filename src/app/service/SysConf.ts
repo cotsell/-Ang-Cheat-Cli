@@ -32,6 +32,10 @@ export const REMOVE_TAG = SERVER_ADDRESS + DOCUMENT + '/tag/remove';
 export const SET_SCRAP = SERVER_ADDRESS + '/scrap';
 export const GET_SCRAP = SERVER_ADDRESS + '/scrap/get';
 
+// ThumbUp
+export const SET_THUMBUP = SERVER_ADDRESS + '/thumbup';
+export const GET_THUMBUP_COUNT = SERVER_ADDRESS + '/thumbup/getCount';
+
 // Category
 export const ALL_GRADE1_CATEGORYS = SERVER_ADDRESS + '/category/get';
 export const ALL_CATEGORY = SERVER_ADDRESS + '/category/all';

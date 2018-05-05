@@ -31,7 +31,7 @@
 
     <div id="created_time">
         <i class="material-icons">access_time</i>
-        {{ changeTimeString(reply.createdTime) }}
+        {{ changeTimeString(reply?.createdTime, false) }}
     </div>
 
     <div id="text">
@@ -127,7 +127,7 @@
 
     <div id="created_time">
         <i class="material-icons">access_time</i> 
-        {{ changeTimeString(reply.createdTime) }}
+        {{ changeTimeString(reply?.createdTime, false) }}
     </div>
     
     <div id="text">

@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import * as Redux from '../../service/redux';
 import { Subscription } from 'rxJs';
 import { jwtDecode, unSubscribe } from '../../service/utils';
+import * as util from '../../service/utils';
 
 @Component({
     selector: 'app-reply-article',
@@ -26,10 +27,14 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
     private isTextEditMode = false;
     private isAbleToShowEditButtons = false; // 수정, 삭제 버튼 여부
     private isAbleToShowReplyButton = false;
-
     private accountSubsc: Subscription;
 
-    constructor(private store: Store<Redux.StoreInfo>) { }
+    // 함수들..
+    private changeTimeString; // 시간 출력 모드 변환 함수.
+
+    constructor(private store: Store<Redux.StoreInfo>) {
+        this.changeTimeString = util.changeTimeString;
+    }
 
     ngOnInit() {
         this.subscribeAccount();
@@ -109,21 +114,6 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
 
         this.textarea.nativeElement.value = '';
         this.changeCommentShowed(undefined);
-    }
-
-    // 글 작성시간과 오늘 날짜를 비교해서, 같은 날짜면 시간만 출력,
-    // 다른 날짜면 날짜만 출력.
-    private changeTimeString(time: string) {
-        const today = new Date().toLocaleDateString();
-        const date = new Date(time);
-
-        if (today === date.toLocaleDateString()) {
-            return date.getHours() + ':' +
-                        date.getMinutes() + ':' +
-                        date.getSeconds();
-        } else {
-            return date.toLocaleDateString();
-        }
     }
 
     // 댓글 수정버튼을 누르면 수정 모드로 변환.

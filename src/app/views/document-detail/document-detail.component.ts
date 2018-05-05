@@ -39,16 +39,20 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     private isEditMode = false;
     private isLoggedIn = false;
     private isModalOpen = false;
+    private isScrapModalOpen = false;
     private modalComment: string;
     private modalFunction: Function;
     private canUserControlDocument = false;
     private accessToken: string;
     private userInfo: UserInfo;
     private documentInfo: DocumentInfo;
-
+    private thumbUpCount = 0;
     private accountSubscription: Subscription;
     private userInfoSubscription: Subscription;
     private documentSubscription: Subscription;
+
+    // 함수들..
+    private changeTimeString;
 
     // 문서 저장 폼 설정
     documentForm: FormGroup = new FormGroup({
@@ -62,6 +66,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
         private network: Network,
         private store: Store<Redux.StoreInfo>,
         private account: Account) {
+            this.changeTimeString = Utils.changeTimeString;
     }
 
     ngOnInit() {
@@ -133,7 +138,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
                         new DocuDetail.NewDocumentDetail(Object.assign({}, doc).payload));
 
                     this.network.getUserInfo(doc.payload.userId)
-                    .subscribe(userCallback);
+                        .subscribe(userCallback);
+                    this.getThumbUpCount();
                 } else {
                     const comment = '문서를 받아오는데 실패 했어요.\n';
                     console.log(comment);
@@ -151,6 +157,19 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
                 // TODO 실패하면 어떻게 처리해줘야 하지?
             }
         };
+    }
+
+    // 엄지척 갯수를 가져와요.
+    private getThumbUpCount() {
+        this.network.getThumbUpCount(this.documentInfo._id)
+            .subscribe(result => {
+                if (result.result === true) {
+                    console.log(result.msg);
+                    this.thumbUpCount = result.payload;
+                } else {
+                    console.error(result.msg);
+                }
+            });
     }
 
     private changeEditMode(event?) {
@@ -171,7 +190,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
 
     private clickEvent(event) {
-        event.stopPropagation();
+        if (event) { event.stopPropagation(); }
         // TODO 미완성.
     }
 
@@ -258,16 +277,32 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     private scrap(event) {
         if (event) { event.stopPropagation(); }
 
-        this.network.setScrap(this.accessToken, this.documentInfo._id)
+        this.isScrapModalOpen = true;
+        // this.network.setScrap(this.accessToken, this.documentInfo._id)
+        //     .subscribe(result => {
+        //         if (result.result === true) {
+        //             console.log(result.msg);
+        //             console.log(result.payload);
+        //             alert(conf.MSG_SCRAP_OK);
+        //         } else {
+        //             // TODO 오류 처리.
+        //             console.error(result.msg);
+        //             alert(conf.MSG_SCRAP_ERROR);
+        //         }
+        //     });
+    }
+
+    private thumbUp(event) {
+        if (event) { event.stopPropagation(); }
+
+        this.network.setThumbUp(this.accessToken, this.documentInfo._id)
             .subscribe(result => {
                 if (result.result === true) {
                     console.log(result.msg);
-                    console.log(result.payload);
-                    alert(conf.MSG_SCRAP_OK);
+                    this.thumbUpCount = result.payload;
                 } else {
-                    // TODO 오류 처리.
+                    // TODO 실패했을 시..
                     console.error(result.msg);
-                    alert(conf.MSG_SCRAP_ERROR);
                 }
             });
     }

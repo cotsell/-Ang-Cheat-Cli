@@ -1,0 +1,44 @@
+<div id="backgroundDiv"
+    *ngIf="on === true">
+    <div id="container">
+
+        <div id="closeIcon">
+            <i class="material-icons"
+                (click)="closeModal($event)">
+                close
+            </i>
+        </div>
+
+        <div id="list">
+            <div class="listArticle" 
+                *ngFor="let label of scrapList?.labelList"
+                (click)="makeScrapBtn($event, label)">
+                {{ label }}
+            </div>
+
+        </div>
+
+        <div id="category">
+            <div id="makeNewDiv"
+                *ngIf="isMakeNewOpen === false"
+                (click)="changeMakeNewState($event)">
+                라벨 새로 만들어서 추가하기
+            </div>
+
+            <div *ngIf="isMakeNewOpen === true">
+                <div id="title">
+                    이름
+                </div>
+                <div id="input">
+                    <input #labelName
+                        type="text">
+                </div>
+                <div id="makeBtn">
+                    <button 
+                        type="button"
+                        (click)="makeScrapBtn($event)">만들기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
