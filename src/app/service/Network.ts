@@ -130,6 +130,15 @@ export class Network {
         );
     }
 
+    // 스크랩 항목 삭제하기. { label } or { label, docuId }
+    removeScrap(accessToken: string, article: any): Observable<Result> {
+        return this.http.post<Result>(
+            SysConf.REMOVE_SCRAP,
+            article,
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
     // 엄지척 하기.
     setThumbUp(accessToken: string, documentId: string): Observable<Result> {
         return this.http.get<Result>(

@@ -1,109 +1,101 @@
 <div id="main_grid">
 
-    <!-- 프로필 정렬용 flex -->
-    <div id="profile_flex">
-        <form  
-            id="profile_form" 
-            [formGroup]="profileForm" 
-            (ngSubmit)="saveProfile($event)"
-            >
-            <div id="profile_grid">
-                <div id="user_img">
-                    <i class="material-icons" style="font-size: 10rem; color: white;">account_circle</i>
+  <!-- 프로필 정렬용 flex -->
+  <div id="profile_flex">
+    <form id="profile_form" 
+      [formGroup]="profileForm" 
+      (ngSubmit)="saveProfile($event)"
+      >
+      <div id="profile_grid">
+        <div id="user_img">
+          <i class="material-icons" style="font-size: 10rem; color: white;">account_circle</i>
+        </div>
+
+        <div id="rightDiv">
+          <div style="text-align: center;">
+            <div>
+              <div class="lineDivUp">아이디</div>
+              <div class="lineDivDown">
+                <div>{{ userInfo?.id }}</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="lineDivUp">닉네임</div>
+              <div class="lineDivDown">
+                <div *ngIf="!isEditMode" style="text-align: center;">
+                  {{ userInfo?.nickName }}
                 </div>
+                <div *ngIf="isEditMode">
+                  <input type="text" [formControlName]="'nickName'">
+                </div>
+              </div>
+            </div>
 
-                <div id="rightDiv">
-                    <div style="text-align: center;">
-                        <div>
-                            <div class="lineDivUp">아이디</div>
-                            <div class="lineDivDown">
-                                <div>{{ userInfo?.id }}</div>
-                            </div>
-                        </div>
+            <div>
+              <div class="lineDivUp">작성한 글</div>
+              <div class="lineDivDown">
+                {{ userInfo?.myDocumentIdList?.length }}
+              </div>
+            </div>
 
-                        <div>
-                            <div class="lineDivUp">닉네임</div>
-                            <div class="lineDivDown">
-                                <div *ngIf="!isEditMode" style="text-align: center;">
-                                    {{ userInfo?.nickName }}
-                                </div>
-                                <div *ngIf="isEditMode">
-                                    <input type="text" [formControlName]="'nickName'">
-                                </div>
-                            </div>
-                        </div>
+            <div id="scrap">
+              <div class="lineDivUp">스크랩</div>
+              <div id="scrapCount" class="lineDivDown"
+                (click)="changeScrapListModalState($event)">
+                {{ userScrapList?.docuList?.length }}
+              </div>
+            </div>
 
-                        <div>
-                            <div class="lineDivUp">작성한 글</div>
-                            <div class="lineDivDown">
-                                {{ userInfo?.myDocumentIdList?.length }}
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="lineDivUp">스크랩</div>
-                            <div class="lineDivDown">
-                                {{ userScrapList?.length }}
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="lineDivUp">받은 요청</div>
-                            <div style="border: none; text-align: center;"></div>
-                        </div>
-                    </div>
+            <div>
+              <div class="lineDivUp">받은 요청</div>
+              <div style="border: none; text-align: center;"></div>
+            </div>
+          </div>
     
-                </div>
-            </div>
+        </div>
+      </div>
 
-            <div id="signatureTitle">시그니쳐</div>
-            <div id="signature" *ngIf="!isEditMode">
-                <div>{{ userInfo?.signature }}</div>
-            </div>
-            <div id="signature" *ngIf="isEditMode">
-                <textarea [formControlName]="'signature'"></textarea>
-            </div>
+      <div id="signatureTitle">시그니쳐</div>
+      <div id="signature" *ngIf="!isEditMode">
+        <div>{{ userInfo?.signature }}</div>
+      </div>
+      <div id="signature" *ngIf="isEditMode">
+        <textarea [formControlName]="'signature'"></textarea>
+      </div>
 
-            <div 
-                id="changeBtns"
-                *ngIf="isEditMode === false && isEditable === true"
-                >
-                <div style="float: left;">
-                    <button type="button" (click)="modalOpen($event)">
-                        수정하기
-                    </button>
-                </div>
-                <div style="float: right;">
-                    <button 
-                        type="button" 
-                        (click)="$event.stopPropagation(); isPasswordModalOpen = true;">
-                        비밀번호 변경하기
-                    </button>
-                </div>
-            </div>
+      <div id="changeBtns"
+        *ngIf="isEditMode === false && isEditable === true">
+        <div style="float: left;">
+          <button type="button" (click)="modalOpen($event)">
+            수정하기
+          </button>
+        </div>
+        <div style="float: right;">
+          <button 
+            type="button" 
+            (click)="$event.stopPropagation(); isPasswordModalOpen = true;">
+            비밀번호 변경하기
+          </button>
+        </div>
+      </div>
 
-            <div 
-                *ngIf="isEditMode"
-                id="buttons"
-                >
-                <button 
-                    id="save" 
-                    type="submit" 
-                    (click)="stopBubbling($event)"
-                    >
-                    저장
-                </button> 
-                <button 
-                    id="cancel" 
-                    type="button" 
-                    (click)="cancelEditProfile($event)"
-                    >
-                    취소
-                </button>
-            </div>
+      <div id="buttons" 
+        *ngIf="isEditMode">
+        <button id="save" 
+          type="submit" 
+          (click)="stopBubbling($event)">
+          저장
+        </button> 
+        <button id="cancel" 
+          type="button" 
+          (click)="cancelEditProfile($event)">
+          취소
+        </button>
+      </div>
 
-        </form>
-    </div>
+    </form>
+  </div>
 </div>
 
 
@@ -173,3 +165,10 @@
         </div>
     </form>
 </div>
+
+<app-scrap-list-modal 
+  [on]="isScrapListModalOpen" 
+  [userId]="undefined"
+  (exit)="closeScrapListModal($event)"
+  >
+</app-scrap-list-modal>

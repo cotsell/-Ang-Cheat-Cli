@@ -43,6 +43,15 @@
                 // justify-content: center;
                 margin: auto;
 
+                #scrap {
+                    #scrapCount {
+                        cursor: pointer;
+                        &:hover {
+                            color: tomato;
+                        }
+                    }
+                }
+
                 .lineDivUp {
                     border: none;
                     border-bottom: 1px solid tomato;
@@ -67,6 +76,7 @@
 }
 
 #signature {
+    margin-bottom: 1rem;
 
     textarea {
         border: 1px solid #4d4d4d;

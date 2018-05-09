@@ -1,0 +1,50 @@
+<div id="backgroundDiv"
+  *ngIf="on === true">
+
+  <div id="container">
+
+    <div id="closeIcon">
+      <i class="material-icons"
+        (click)="closeModal($event)">
+        close
+      </i>
+    </div>
+
+    <div id="list">
+      <div class="labelList"
+        *ngFor="let label of scrapList?.labelList; let LabelIn = index;"
+        (mouseover)="showCloseBtn($event, label)"
+        (mouseout)="hideCloseBtn($event, label)"
+        >
+        <div>{{ label }}</div>
+        <div>
+          <i [id]="'CLASS' + label"
+            class="material-icons hideIcon"
+            (click)="deleteArticle($event, label)">
+            close
+          </i>
+        </div>
+
+        <div class="docuList"
+          *ngFor="let article of filteringDocuList(label); let docuIn = index;"
+          (click)="showDocument($event, article.docuId)"
+          (mouseover)="showCloseBtn($event, label, docuIn)"
+          (mouseout)="hideCloseBtn($event, label, docuIn)"
+          >
+          <div>{{ article?.docuTitle }}</div>
+          <div>
+            <i [id]="'CLASS' + label + docuIn"
+              class="material-icons hideIcon"
+              (click)="deleteArticle($event, label, article.docuId)"
+              >
+              close
+            </i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -31,6 +31,7 @@ export const REMOVE_TAG = SERVER_ADDRESS + DOCUMENT + '/tag/remove';
 // Scrap
 export const SET_SCRAP = SERVER_ADDRESS + '/scrap';
 export const GET_SCRAP = SERVER_ADDRESS + '/scrap/get';
+export const REMOVE_SCRAP = SERVER_ADDRESS + '/scrap/remove';
 
 // ThumbUp
 export const SET_THUMBUP = SERVER_ADDRESS + '/thumbup';

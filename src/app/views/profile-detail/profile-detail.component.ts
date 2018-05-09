@@ -17,7 +17,7 @@ import { Network } from '../../service/Network';
 import * as Redux from '../../service/redux';
 import Account from '../../service/Account';
 import * as Utils from '../../service/utils';
-import { UserInfo, Result } from '../../service/Interface';
+import { UserInfo, Result, Scrap } from '../../service/Interface';
 import { ModifyUserInfo } from '../../service/redux/UserInfoReducer';
 import * as conf from '../../service/SysConf';
 
@@ -29,12 +29,13 @@ import * as conf from '../../service/SysConf';
 export class ProfileDetailComponent implements OnInit, OnDestroy {
     private isModalOpen = false; // Modal을 화면에 띄운 상태인지 구분.
     private isPasswordModalOpen = false; // 비밀번호 변경 버튼 누를시 출력되는 모달 구분.
+    private isScrapListModalOpen = false; // 스크랩 리스트 모달 오픈 여부
     private isLoggedIn = false; // 로그인 되어 있는지 구분.
     private accessToken: string;
     private isEditMode = false; // 프로필 내용 수정모드로 변환 구분.
     private isEditable = false; // 프로필 수정하기 버튼을 화면에 표시할지 구분.
     private userInfo: UserInfo;
-    private userScrapList: string[] = [];
+    private userScrapList: Scrap[] = [];
     private accountSubscription: Subscription;
     private userInfoSubscription: Subscription;
 
@@ -157,6 +158,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
                 if (result.result === true) {
                     console.log(result.msg);
                     this.userScrapList = result.payload;
+                    // console.log(this.userScrapList);
                 } else {
                     console.error(result.msg);
 
@@ -284,6 +286,21 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
             oldPass: '',
             newPass: ''
         });
+    }
+
+    // -----------------------------------------------------------
+    // ---- 스크랩 리스트 모달 관련
+    // -----------------------------------------------------------
+    changeScrapListModalState(event) {
+      if (event) { event.stopPropagation(); }
+
+      this.isScrapListModalOpen = !this.isScrapListModalOpen;
+    }
+
+    closeScrapListModal(event: boolean) {
+      if (event) {
+        this.isScrapListModalOpen = false;
+      }
     }
 
     // ---------------------

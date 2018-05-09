@@ -1,15 +1,15 @@
 #main_grid {
     display: grid;
-    grid-template-columns: auto max-content max-content max-content 5rem;
+    grid-template-columns: auto 2rem 2rem 2rem 5rem;
     grid-template-rows: 2rem max-content max-content;
 }
 
 #rereply_main_grid {
     display: grid;
-    grid-template-columns: 1rem auto max-content max-content max-content 5rem;
+    grid-template-columns: 1rem auto 2rem 2rem 2rem 5rem;
     grid-template-rows: 2rem max-content max-content;
     align-items: center;
-    background-color: yellowgreen;
+    // background-color: yellowgreen;
 }
 
 #rereply_icon {
@@ -72,7 +72,7 @@
 }
 
 #text {
-    grid-column: 1 / 4;
+    grid-column: 1 / 5;
     
     #textPrint {
 
@@ -102,7 +102,7 @@
     }
 }
 
-#rereply_text {
+#rereplyText {
     grid-column: 2 / 5;
 }
 

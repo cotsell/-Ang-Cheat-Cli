@@ -7,48 +7,48 @@ import { Subscription } from 'rxJs';
 import { unSubscribe } from '../../service/utils';
 
 @Component({
-    selector: 'app-scrap-modal',
-    templateUrl: './scrap-modal.component.html',
-    styleUrls: ['./scrap-modal.component.scss']
+  selector: 'app-scrap-modal',
+  templateUrl: './scrap-modal.component.html',
+  styleUrls: ['./scrap-modal.component.scss']
 })
 export class ScrapModalComponent implements OnInit, OnDestroy, OnChanges {
-    @ViewChild('labelName') labelName: ElementRef;
-    @Input() on: boolean;
-    @Input() document: DocumentInfo;
-    @Output() makeScrap = new EventEmitter<any>();
-    @Output() exit = new EventEmitter<boolean>();
+  @ViewChild('labelName') labelName: ElementRef;
+  @Input() on: boolean;
+  @Input() document: DocumentInfo;
+  @Output() makeScrap = new EventEmitter<any>();
+  @Output() exit = new EventEmitter<boolean>();
 
-    private account =  { logged: false, accessToken: undefined };
-    private scrapList: Scrap;
-    private isMakeNewOpen = false;
+  private account =  { logged: false, accessToken: undefined };
+  private scrapList: Scrap;
+  private isMakeNewOpen = false;
 
-    private accountSubc: Subscription;
+  private accountSubc: Subscription;
 
-    constructor(
-        private network: Network,
-        private store: Store<Redux.StoreInfo>
-    ) { }
+  constructor(
+    private network: Network,
+    private store: Store<Redux.StoreInfo>
+  ) { }
 
-    ngOnInit() {
-        if (this.on) {
-            this.subscribeAccount();
+  ngOnInit() {
+    if (this.on) {
+      this.subscribeAccount();
+    }
+  }
+
+  private subscribeAccount() {
+    this.accountSubc = this.store.select(Redux.getAccount)
+      .subscribe(result => {
+        if (result !== undefined) {
+          this.account = {
+              logged: result.loggedIn,
+              accessToken: result.accessToken
+          };
+          this.afterCheckingAccount();
+        } else {
+          this.exit.emit(true);
         }
-    }
-
-    private subscribeAccount() {
-        this.accountSubc = this.store.select(Redux.getAccount)
-            .subscribe(result => {
-                if (result !== undefined) {
-                    this.account = {
-                        logged: result.loggedIn,
-                        accessToken: result.accessToken
-                    };
-                    this.afterCheckingAccount();
-                } else {
-                    this.exit.emit(true);
-                }
-            });
-    }
+      });
+  }
 
     // 로그인이 된게 확실했을때 다음을 실행하기 위해 사용하는 함수.
     private afterCheckingAccount() {
@@ -112,39 +112,39 @@ export class ScrapModalComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
-    // 새로운 라벨 만들기 항목 화면에 표시하기, 말기.
-    private changeMakeNewState(event) {
-        if (event) { event.stopPropagation(); }
+  // 새로운 라벨 만들기 항목 화면에 표시하기, 말기.
+  private changeMakeNewState(event) {
+    if (event) { event.stopPropagation(); }
 
-        this.isMakeNewOpen = !this.isMakeNewOpen;
+    this.isMakeNewOpen = !this.isMakeNewOpen;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // console.log(`ScrapModal CHANGES 상태..`);
+    // console.log(changes);
+    if (this.on) {
+      this.ngOnInit();
+    } else {
+      this.pause();
     }
+  }
 
-    ngOnChanges(changes: SimpleChanges) {
-        // console.log(`ScrapModal CHANGES 상태..`);
-        // console.log(changes);
-        if (this.on) {
-            this.ngOnInit();
-        } else {
-            this.pause();
-        }
-    }
+  // on 상태가 false면 정지상태이므로
+  private pause() {
+    unSubscribe(this.accountSubc);
+    this.scrapList = undefined;
+    this.account = undefined;
+    this.isMakeNewOpen = false;
+  }
 
-    // on 상태가 false면 정지상태이므로
-    private pause() {
-        unSubscribe(this.accountSubc);
-        this.scrapList = undefined;
-        this.account = undefined;
-        this.isMakeNewOpen = false;
-    }
+  private closeModal(event) {
+    if (event) { event.stopPropagation(); }
 
-    private closeModal(event) {
-        if (event) { event.stopPropagation(); }
+    this.exit.emit(true);
+  }
 
-        this.exit.emit(true);
-    }
-
-    ngOnDestroy() {
-        unSubscribe(this.accountSubc);
-    }
+  ngOnDestroy() {
+    unSubscribe(this.accountSubc);
+  }
 
 }

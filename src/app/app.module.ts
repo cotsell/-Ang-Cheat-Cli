@@ -28,6 +28,7 @@ import { PaginationComponent } from './components/pagination/pagination.componen
 import { DocumentEditComponent } from './views/document-edit/document-edit.component';
 import { CategoryMakerComponent } from './components/category-maker/category-maker.component';
 import { ScrapModalComponent } from './components/scrap-modal/scrap-modal.component';
+import { ScrapListModalComponent } from './components/scrap-list-modal/scrap-list-modal.component';
 
 const route: Routes = [
   { path: '', component: MainComponent },
@@ -59,7 +60,8 @@ const route: Routes = [
     PaginationComponent,
     DocumentEditComponent,
     CategoryMakerComponent,
-    ScrapModalComponent
+    ScrapModalComponent,
+    ScrapListModalComponent
   ],
   imports: [
     BrowserModule,

@@ -23,8 +23,7 @@
     <div>
         <div id="write_comment"
             *ngIf="isAbleToShowReplyButton === true"
-            (click)="changeCommentShowed($event)"
-            >
+            (click)="changeCommentShowed($event)">
             댓글
         </div>
     </div>
@@ -130,7 +129,7 @@
         {{ changeTimeString(reply?.createdTime, false) }}
     </div>
     
-    <div id="text">
+    <div id="rereplyText">
         
         <div id="textPrint"
             *ngIf="isTextEditMode === false">
