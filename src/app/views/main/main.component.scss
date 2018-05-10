@@ -3,7 +3,7 @@
 #main_grid {
     display: grid;
     grid-template-rows: auto;
-    height: calc(100% - 2rem);
+    // height: calc(100% - 2rem);
     width: 100%;
 }
 
@@ -26,7 +26,7 @@
 // 미디어 쿼리
 @media (max-width: $g_mediaMiddle - 1px) {
     #main_grid {
-        grid-template-rows: 2rem max-content auto;
+        grid-template-rows: max-content auto;
     }
     #login_div {
         position: static;
@@ -36,7 +36,7 @@
 
 @media (min-width: $g_mediaMiddle) and (max-width: $g_mediaTablet - 1px) {
     #main_grid {
-        grid-template-rows: 2rem max-content auto;
+        grid-template-rows: max-content auto;
     }
     #login_div {
         position: static;
