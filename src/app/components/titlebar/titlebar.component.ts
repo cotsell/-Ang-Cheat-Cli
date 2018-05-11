@@ -72,7 +72,8 @@ export class TitlebarComponent implements OnInit, OnDestroy {
     }
 
     private searchDocument(event) {
-        event.stopPropagation();
+        if (event) { event.stopPropagation(); }
+        
         const subject = this.searchBox.nativeElement.value;
         // console.log(subject);
         this.isSearchBarOpen = false;

@@ -21,6 +21,7 @@
     transition-duration: 0.2s;
     z-index: 2;
     overflow-x: hidden;
+    box-shadow: 4px 0 8px 0 rgba(0, 0, 0, 0.2);
 
     #menuDetailGrid {
         display: grid;
@@ -48,6 +49,8 @@
             margin-top: 1rem;
             margin-bottom: 1rem;
 
+            font-size: 1.4rem;
+
             #title {
                 
             }
@@ -67,7 +70,7 @@
 
         #button {
             text-align: center;
-
+            
             button[type=button] {
                 min-width: 14rem;
                 width: 80%;

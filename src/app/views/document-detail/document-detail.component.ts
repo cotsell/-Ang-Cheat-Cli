@@ -94,9 +94,9 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   // 서버로부터 문서를 가져옵니다.
   private getDocumentFromServer() {
-    const documentId = this.route.snapshot.params['id'];
+    const docHistoryId = this.route.snapshot.params['id'];
 
-    this.network.getDocument(documentId)
+    this.network.getDocument(docHistoryId)
       .subscribe(doc => {
         if (doc.result === true) {
           console.log('성공적으로 문서를 받았어요.\n');
@@ -127,7 +127,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   // 엄지척 갯수를 가져와요.
   private getThumbUpCount() {
-    this.network.getThumbUpCount(this.documentInfo._id)
+    this.network.getThumbUpCount(this.documentInfo.historyId)
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);
@@ -238,7 +238,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   private thumbUp(event) {
     if (event) { event.stopPropagation(); }
 
-    this.network.setThumbUp(this.accessToken, this.documentInfo._id)
+    this.network.setThumbUp(this.accessToken, this.documentInfo.historyId)
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);

@@ -18,7 +18,7 @@
         <!-- 언어선택 및 트리 수정 -->
         <div id="selectLanguage" (click)="stopBubbling($event)">
             <select (change)="selectedLanguage($event)">
-                <option>언어선택</option>
+                <option value="-1">언어선택</option>
                 <option 
                     *ngFor="let category of categoryList" 
                     [value]="category?.tag"

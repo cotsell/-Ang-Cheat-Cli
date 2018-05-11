@@ -28,6 +28,7 @@ export interface DocumentInfo {
     userInfo?: UserInfo;
     tagList?: string[];
     libraryList?: Library[];
+    historyId?: string;
 }
 
 export interface Library {

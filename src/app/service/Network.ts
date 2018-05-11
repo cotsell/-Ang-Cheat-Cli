@@ -67,8 +67,9 @@ export class Network {
         return this.http.get<Result>(SysConf.GET_USER_DOCUMENT_LIST + '?id=' + userId);
     }
 
-    getDocument(documentId: string): Observable<Result> {
-        return this.http.get<Result>(SysConf.GET_DOCUMENT + '/' + documentId);
+    getDocument(docHistoryId: string): Observable<Result> {
+        return this.http.get<Result>(
+            SysConf.GET_DOCUMENT + '/' + docHistoryId);
     }
 
     modifyDocument(accessToken: string, document: DocumentInfo): Observable<Result> {

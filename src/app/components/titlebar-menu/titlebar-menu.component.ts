@@ -56,75 +56,80 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
         });
     }
 
-    // 카테고리 리스트를 구독합니다.
-    private subscribeCategoryList() {
-        let selectedCategory = '';
-        this.cateSubscription = this.store.select(Redux.getCategoryList)
-        .subscribe(value => {
-            selectedCategory = this.selectedCategory;
-            this.categoryList = value;
+  // 카테고리 리스트를 구독합니다.
+  private subscribeCategoryList() {
+    let selectedCategory = '';
+    this.cateSubscription = this.store.select(Redux.getCategoryList)
+      .subscribe(value => {
+        selectedCategory = this.selectedCategory;
+        this.categoryList = value;
 
-            // 선택된 카테고리가 있다면..
-            if (
-                this.selectedCategory !== undefined &&
-                this.selectedCategory !== null &&
-                this.selectedCategory !== '') {
-                    this.category = value.find(findingSelected);
-                }
-        });
-
-        // ---- 정리용도 함수들 ----
-        function findingSelected(value: Category) {
-            return value.tag === selectedCategory ? true : false;
+        // 선택된 카테고리가 있다면..
+        if (this.selectedCategory !== undefined &&
+            this.selectedCategory !== null &&
+            this.selectedCategory !== '') {
+          this.category = value.find(findingSelected);
         }
+      });
+
+    // ---- 정리용도 함수들 ----
+    function findingSelected(value: Category) {
+        return value.tag === selectedCategory ? true : false;
+    }
+  }
+
+  // 메뉴의 상세 내용의 화면 출력 여부를 변경해요.
+  private changeMenuState(event) {
+    if (event) { event.stopPropagation(); }
+
+    this.isMenuHidden = !this.isMenuHidden;
+  }
+
+  private writeDocument(event) {
+    if (event) { event.stopPropagation(); }
+
+    this.closeHideMenu(undefined);
+    if (this.relatedId === undefined ||
+        this.relatedId === null || this.relatedId === '') {
+      this.route.navigate(['/writeDocu']);
+    } else {
+      this.route.navigate(['/writeDocu', this.relatedId]);
+    }
+  }
+
+  // select에서 언어를 선택하면, 리덕스로부터 구독한 정보를 바탕으로,
+  // 카테고리의 서브 카테고리들을 받은적이 있는지 확인하고, 
+  // 받은적이 없는 카테고리는 서버로 서브 카테고리를 요청해서,
+  // 리덕스의 카테고리에 해당 카테고리의 서브 카테고리를 갱신해줘요.
+  private selectedLanguage(event) {
+    if (event) { event.stopPropagation(); }
+
+    const store = this.store;
+    const selectedCategory = event.target.value;
+    this.selectedCategory = event.target.value;
+
+    // 선택된 카테고리의 내부 정보가 서버로부터 받아졌는지 확인,
+    // 안 받아졌다면, 서버로 요청.
+    this.category = this.categoryList.find(isRight);
+    if (this.category !== undefined) {
+      if (this.category.subCategory === undefined ||
+          this.category.subCategory === null ||
+          this.category.subCategory.length < 1) {
+
+        this.network.getCategory(this.category._id)
+          .subscribe(checkCategoryResult);
+      }
     }
 
-    // 메뉴의 상세 내용의 화면 출력 여부를 변경해요.
-    private changeMenuState(event) {
-        if (event) { event.stopPropagation(); }
-
-        this.isMenuHidden = !this.isMenuHidden;
+    // ---- 정리용도 함수들 ----
+    function isRight(value: Category) {
+      return value.tag === selectedCategory ? true : false;
     }
 
-    private writeDocument(event) {
-        if (event) { event.stopPropagation(); }
-
-        this.closeHideMenu(undefined);
-        if (this.relatedId === undefined ||
-            this.relatedId === null || this.relatedId === '') {
-                this.route.navigate(['/writeDocu']);
-        } else {
-            this.route.navigate(['/writeDocu', this.relatedId]);
-        }
+    function checkCategoryResult(value: Result) {
+      store.dispatch(new Modify(value.payload));
     }
-
-    private selectedLanguage(event) {
-        if (event) { event.stopPropagation(); }
-
-        const store = this.store;
-        const selectedCategory = event.target.value;
-        this.selectedCategory = event.target.value;
-
-        // 선택된 카테고리의 내부 정보가 서버로부터 받아졌는지 확인,
-        // 안 받아졌다면, 서버로 요청.
-        this.category = this.categoryList.find(isRight);
-        if (this.category.subCategory === undefined ||
-            this.category.subCategory === null ||
-            this.category.subCategory.length < 1) {
-
-            this.network.getCategory(this.category._id)
-            .subscribe(checkCategoryResult);
-        }
-
-        // ---- 정리용도 함수들 ----
-        function isRight(value: Category) {
-            return value.tag === selectedCategory ? true : false;
-        }
-
-        function checkCategoryResult(value: Result) {
-            store.dispatch(new Modify(value.payload));
-        }
-    }
+  }
 
     private closeHideMenu(event) {
         if (event) { event.stopPropagation(); }

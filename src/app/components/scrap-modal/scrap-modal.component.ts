@@ -80,7 +80,7 @@ export class ScrapModalComponent implements OnInit, OnDestroy, OnChanges {
             // 기존 라벨 이용해서 만들기.
             labelObj = {
                 isNew: false,
-                documentId: this.document._id,
+                documentId: this.document.historyId,
                 documentTitle: this.document.title,
                 label: label
             };
@@ -89,7 +89,7 @@ export class ScrapModalComponent implements OnInit, OnDestroy, OnChanges {
             // 새로 만들기
             labelObj = {
                 isNew: true,
-                documentId: this.document._id,
+                documentId: this.document.historyId,
                 documentTitle: this.document.title,
                 label: this.labelName.nativeElement.value
             };
