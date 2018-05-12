@@ -29,6 +29,7 @@ export interface DocumentInfo {
     tagList?: string[];
     libraryList?: Library[];
     historyId?: string;
+    private?: boolean;
 }
 
 export interface Library {

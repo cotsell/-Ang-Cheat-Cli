@@ -1,103 +1,105 @@
-<div id="main_grid">
+<div id="mainDiv">
+  <div id="document_grid">
+    <div id="documentDiv">
 
-    <div id="document_main_flex">
-        <div id="document_grid">
-            <div id="documentGrid">
-                <!-- 타이틀 -->
-                <div id="document_title_article">
-                    <div id="document_title_div">
-                        <h2>{{ documentInfo?.title }}</h2>
-                    </div>
-                </div>
-
-                <!-- 작성 시간 -->
-                <div id="document_time_div">
-                    <i class="material-icons" style="font-size: 12px;">access_time</i>
-                    {{ changeTimeString(documentInfo?.createdTime, true) }}
-                </div>
-
-                <!-- 지금은 빈 공간 -->
-                <div></div>
-
-                <!-- 문서 컨트롤 버튼 -->
-                <div id="documentControlButtonsDiv">
-                    <div *ngIf="canUserControlDocument">
-                        <button 
-                            id="edit"
-                            type="button"
-                            (click)="changeEditMode($event)"
-                            >
-                            글 수정
-                        </button> 
-                        <button 
-                            id="delete"
-                            type="button"
-                            (click)="deleteDocument($event)"
-                            >글 삭제
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 문서 내용 -->
-                <div id="document_text_article">
-                    <div #target id="document_text_div">
-                        <!-- {{ documentInfo?.text }} -->
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- 태그리스트 -->
-            <div id="document_taglist_article">
-                <app-tags 
-                    [tagList]="documentInfo?.tagList"
-                    (insert)="sendNewTag($event)"
-                    (remove)="removeTagArticle($event)"
-                    ></app-tags>
-            </div>
-
-            <!-- 기타 기능 버튼들 -->
-            <div id="document_function_button_article">
-                <div id="thumbUpDiv">
-                    <i class="material-icons" 
-                        (click)="thumbUp($event)">
-                        thumb_up
-                    </i>
-                    {{ thumbUpCount }} 
-                </div>
-                <div id="scrapDiv">
-                    <button 
-                        type="button" 
-                        (click)="scrap($event)">
-                        스크랩
-                    </button> 
-                </div>
-            </div>
-
-            <!-- 시그니처 -->
-            <div id="document_signature_article">
-                <app-signature [userInfo]="documentInfo.userInfo"></app-signature>
-            </div>
-
-            <!-- 댓글 리스트 -->
-            <div id="document_reply_article">
-                <app-reply-list></app-reply-list>
-            </div>
-
+      <!-- 타이틀 -->
+      <div id="document_title_article">
+        <div id="document_title_div">
+          <h2>{{ documentInfo?.title }}</h2>
         </div>
+      </div>
+
+      <div id="TimeGrid">
+        <!-- 작성 시간 -->
+        <div id="document_time_div">
+          <i class="material-icons" style="font-size: 12px;">access_time</i>
+          {{ changeTimeString(documentInfo?.createdTime, true) }}
+        </div>
+  
+        <!-- 지금은 빈 공간 -->
+        <div></div>
+  
+        <!-- 문서 컨트롤 버튼 -->
+        <div id="documentControlButtonsDiv">
+          <div *ngIf="canUserControlDocument">
+            <button 
+              id="edit"
+              type="button"
+              (click)="changeEditMode($event)"
+              >
+              글 수정
+            </button> 
+            <button 
+              id="delete"
+              type="button"
+              (click)="deleteDocument($event)"
+              >글 삭제
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 문서 내용 -->
+      <div id="documentTextArticle">
+        <span #target id="documentTextDiv">
+          <!-- {{ documentInfo?.text }} -->
+        </span>
+      </div>
     </div>
+
+    <!-- 태그리스트 -->
+    <div id="documentTaglistArticle">
+      <app-tags 
+        [tagList]="documentInfo?.tagList"
+        (insert)="sendNewTag($event)"
+        (remove)="removeTagArticle($event)"
+        ></app-tags>
+    </div>
+
+    <!-- 기타 기능 버튼들 -->
+    <div id="documentFunctionButtonArticle">
+      <div id="thumbUpDiv">
+        <i class="material-icons" 
+          (click)="thumbUp($event)">
+          thumb_up
+        </i>
+        {{ thumbUpCount }} 
+      </div>
+      <div id="scrapDiv">
+        <button 
+          type="button" 
+          (click)="scrap($event)">
+          스크랩
+        </button> 
+      </div>
+    </div>
+
+    <!-- 시그니처 -->
+    <div id="documentSignatureArticle">
+      <app-signature [userInfo]="documentInfo.userInfo"></app-signature>
+    </div>
+
+    <!-- 댓글 리스트 -->
+    <div id="documentReplyArticle">
+      <app-reply-list></app-reply-list>
+    </div>
+
+  </div>
 </div>
 
 <div id="modal" *ngIf="isModalOpen">
-    <div id="mainDiv">
-        <div id="icon"><i class="material-icons">error_outline</i></div>
-        <div id="text">{{ modalComment }}</div>
-        <div id="buttons"><button (click)="modalFunction($event)">확인</button></div>
+  <div id="mainDiv">
+    <div id="icon"><i class="material-icons">error_outline</i></div>
+    <div id="text">{{ modalComment }}</div>
+    <div id="buttons">
+      <button (click)="modalFunction($event)">확인</button>
     </div>
+  </div>
 </div>
 
 <app-scrap-modal 
-    [on]="isScrapModalOpen" 
-    [document]="documentInfo"
-    (exit)="isScrapModalOpen = false;"
-    ></app-scrap-modal>
+  [on]="isScrapModalOpen" 
+  [document]="documentInfo"
+  (exit)="isScrapModalOpen = false;"
+  >
+</app-scrap-modal>

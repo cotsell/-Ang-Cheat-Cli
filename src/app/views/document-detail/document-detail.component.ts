@@ -141,7 +141,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   private changeEditMode(event?) {
     if (event) { event.stopPropagation(); }
 
-    this.router.navigate(['./writeDocu', this.documentInfo._id, 'edit']);
+    this.router.navigate(['./writeDocu', this.documentInfo.historyId, 'edit']);
   }
 
   // TODO 미완성.

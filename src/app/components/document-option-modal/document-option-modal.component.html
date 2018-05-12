@@ -1,0 +1,48 @@
+<div id="backgroundDiv"
+  *ngIf="on === true">
+  <div id="container">
+
+    <div id="question">Options..</div>
+
+    <div id="privateMode">
+      <div id="title">프라이빗 모드</div>
+      <div id="icon">
+        <i class="material-icons"
+          *ngIf="isPrivateMode"
+          (click)="changePrivateMode($event)">cloud_off</i>
+        <i class="material-icons"
+          *ngIf="!isPrivateMode"
+          (click)="changePrivateMode($event)">cloud_queue</i>
+      </div>
+    </div>
+
+    <div id="language">
+      <div id="title">언어 선택</div>
+      <div id="select">
+        <select #select 
+          (change)="changeSelectedLanguage($event)" 
+          [value]="selectedLanguage" >
+          <option value="-1">----</option>
+          <option 
+            *ngFor="let category of categoryList"
+            [value]="category.tag">{{ category.title }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <!-- 라이브러리는 아직 미지원 -->
+    </div>
+
+    <div id="buttons">
+      <div id="ok"
+        (click)="save($event)">
+        저장
+      </div>
+      <div id="cancel"
+        (click)="closeModal($event)">
+        취소
+      </div>
+    </div>
+  </div>
+</div>

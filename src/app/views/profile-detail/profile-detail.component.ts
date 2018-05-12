@@ -161,6 +161,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
           // console.log(this.userScrapList);
         } else {
           console.error(result.msg);
+          this.userScrapList = [];
         }
       });
   }

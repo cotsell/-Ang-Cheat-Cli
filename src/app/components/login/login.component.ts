@@ -12,61 +12,60 @@ import { UserInfo } from '../../service/Interface';
 import { Network } from '../../service/Network';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
-    private isLoggedIn = false;
-    private signupMode = false;
-    private userInfo: UserInfo;
+  private isLoggedIn = false;
+  private signupMode = false;
+  private userInfo: UserInfo;
 
-    private accountSubscription: Subscription;
-    private userInfoSubscription: Subscription;
+  private accountSubscription: Subscription;
+  private userInfoSubscription: Subscription;
 
-    // 로그인 관련 폼 설정
-    loginForm: FormGroup = new FormGroup({
-        id: new FormControl('', Validators.required),
-        password: new FormControl('', Validators.required)
-    });
+  // 로그인 관련 폼 설정
+  loginForm: FormGroup = new FormGroup({
+    id: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required)
+  });
 
-    // 가입 관련 폼 설정.
-    signupForm: FormGroup = new FormGroup({
-        id: new FormControl('', [Validators.email, Validators.required]),
-        nickName: new FormControl('', 
-            [Validators.required, Validators.minLength(5)]),
-        passwordsGroup: new FormGroup({
-          password: new FormControl('', 
-            [Validators.minLength(8), Validators.required]),
-          confirm: new FormControl('')
-        }, this.equalPassword)
-    });
+  // 가입 관련 폼 설정.
+  signupForm: FormGroup = new FormGroup({
+    id: new FormControl('', [Validators.email, Validators.required]),
+    nickName: new FormControl('', 
+      [Validators.required, Validators.minLength(5)]),
+    passwordsGroup: new FormGroup({
+      password: new FormControl('', 
+        [Validators.minLength(8), Validators.required]),
+      confirm: new FormControl('')
+    }, this.equalPassword)
+  });
 
-    constructor(
-        private store: Store<Redux.StoreInfo>,
-        private network: Network) { }
+  constructor(
+    private store: Store<Redux.StoreInfo>,
+    private network: Network) { }
 
-    ngOnInit() {
-        this.subscribeAccount();
-        this.subscribeUserInfo();
-        console.log(this.signupForm.get(['passwordsGroup', 'password']));
-    }
+  ngOnInit() {
+    this.subscribeAccount();
+    this.subscribeUserInfo();
+  }
 
-    // Account 리덕스를 구독해요.
-    private subscribeAccount() {
-        this.accountSubscription = this.store.select(Redux.getAccount)
-            .subscribe(obs => {
-                this.isLoggedIn = obs.loggedIn;
-            });
-    }
+  // Account 리덕스를 구독해요.
+  private subscribeAccount() {
+    this.accountSubscription = this.store.select(Redux.getAccount)
+      .subscribe(obs => {
+        this.isLoggedIn = obs.loggedIn;
+      });
+  }
 
-    // UserInfo 리덕스를 구독해요.
-    private subscribeUserInfo() {
-        this.userInfoSubscription = this.store.select(Redux.getUserInfo)
-            .subscribe(obs => {
-                this.userInfo = obs;
-            });
-    }
+  // UserInfo 리덕스를 구독해요.
+  private subscribeUserInfo() {
+    this.userInfoSubscription = this.store.select(Redux.getUserInfo)
+      .subscribe(obs => {
+        this.userInfo = obs;
+      });
+  }
 
   private login(event) {
     if (event) { event.stopPropagation(); }
@@ -131,10 +130,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (event) { event.stopPropagation(); }
 
     if (this.signupForm.valid) {
-      console.log(`signupForm 검사 결과 : ${this.signupForm.valid}`);
-
-      const { id, password, nickName } = this.signupForm.value;
-      this.network.signup(id, password, nickName)
+      // console.log(`signupForm 검사 결과 : ${this.signupForm.valid}`);
+      // console.log(this.signupForm.value);
+      const { id, passwordsGroup, nickName } = this.signupForm.value;
+      this.network.signup(id, passwordsGroup.password, nickName)
         .subscribe(Result => {
           if (Result.result === true) { // 가입 성공하면, 로그인 시도.
             const { result, payload } = Result;

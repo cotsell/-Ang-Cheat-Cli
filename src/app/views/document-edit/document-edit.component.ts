@@ -21,6 +21,7 @@ import * as Utils from '../../service/utils';
 export class DocumentEditComponent implements OnInit, OnDestroy {
   private isLoggedIn = false;
   private isPreviewMode = false;
+  private isDocumentOptionModalOpen = false;
   private accessToken: string;
   private relatedId: string;
   private documentInfo: DocumentInfo;
@@ -89,9 +90,10 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   // 작성한 문서를 서버에 저장합니다.
-  private sendNewText(event) {
+  private sendNewText(event, options: any) {
     if (event) { event.stopPropagation(); }
     console.log('SEND NEW TEXT()');
+    console.log(options);
 
     // 유효성 검사
     if (this.textForm.valid) {
@@ -105,14 +107,17 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         whatMode = NEW;
         this.documentInfo = Object.assign({}, {
           userId: this.userInfo.id,
-          relatedDocuId: this.relatedId
+          relatedDocuId: this.relatedId,
+          tagList: [options.selectedLanguage]
         });
       }
 
       this.documentInfo = Object.assign({}, this.documentInfo,
+        { private: options.private },
         { title: this.textForm.value['title'] },
         { text: this.textForm.value['text'] }
       );
+      this.documentInfo.tagList[0] = options.selectedLanguage;
 
       console.log(this.documentInfo);
 
@@ -122,7 +127,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         .subscribe(value => {
           if (value.result === true) {
             console.log(value.msg);
-            this.router.navigate(['/docuDetail', value.payload._id]);
+            this.router.navigate(['/docuDetail', value.payload.historyId]);
 
           } else {
             if (value.code === 1) {
@@ -139,7 +144,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         .subscribe(value => {
           if (value.result === true) {
             console.log(value.msg);
-            this.router.navigate(['/docuDetail', value.payload._id]);
+            this.router.navigate(['/docuDetail', value.payload.historyId]);
 
           } else {
             if (value.code === 1) {
@@ -208,9 +213,19 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  ngOnDestroy() {
-    Utils.unSubscribe(this.accountSubscription);
-    Utils.unSubscribe(this.userInfoSubscription);
+  // -----------------------------------------------------------
+  // ---- Document Option Modal 함수들..
+  // -----------------------------------------------------------
+  changeDocOptionModalState(event) {
+    if (event) { event.stopPropagation(); }
+
+    this.isDocumentOptionModalOpen = !this.isDocumentOptionModalOpen;
+  }
+
+  saveDocumentAndCloseModal(event) {
+    this.isDocumentOptionModalOpen = false;
+
+    this.sendNewText(undefined, event);
   }
 
   // -----------------------------------------------------------------------
@@ -228,5 +243,10 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       smartypants: false,
       xhtml: true
     });
+  }
+
+  ngOnDestroy() {
+    Utils.unSubscribe(this.accountSubscription);
+    Utils.unSubscribe(this.userInfoSubscription);
   }
 }

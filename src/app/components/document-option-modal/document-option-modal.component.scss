@@ -1,0 +1,84 @@
+#backgroundDiv {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  z-index: 4;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  #container {
+    width: 320px;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 15% auto;
+    padding: 1rem;
+
+    #question {
+      // text-align: center;
+      font-size: 2rem;
+    }
+
+    #privateMode {
+      display: grid;
+      grid-template-columns: auto 2rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+
+      #title {
+        display: flex;
+        align-items: center;
+
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+      #icon {
+        cursor: pointer;
+      }
+    }
+
+    #language {
+      display: grid;
+      grid-template-columns: auto 6rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+
+      #title {
+        display: flex;
+        align-items: center;
+        font-size: 0.8rem;
+      }
+
+      #select {
+        select {
+          width: 6rem;
+        }
+      }
+    }
+
+    #buttons {
+      display: flex;
+      // flex-direction: column;
+      align-items: flex-end;
+      justify-content: end;
+  
+      #ok {
+        margin-right: 1rem;
+        &:hover {
+          cursor: pointer;
+          color: yellowgreen;
+        }
+      }
+  
+      #cancel {
+        &:hover {
+          cursor: pointer;
+          color: tomato;
+        }
+      }
+    }
+  }
+}
