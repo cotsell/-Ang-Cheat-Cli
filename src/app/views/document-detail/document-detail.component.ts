@@ -63,17 +63,18 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     private store: Store<Redux.StoreInfo>,
     private account: Account) {
       this.changeTimeString = Utils.changeTimeString;
+
   }
 
   ngOnInit() {
     this.subscribeAccountAndTryLoginWithAccessToken();
     this.subscribeUserInfo();
     this.subscribeDocumentDetail();
-    this.getDocumentFromServer();
 
     // modal함수 기본 정의. modal함수는 필요하면 상황에 따라 정의해서 사용 가능.
     this.modalFunction = (event) => {
-      event.stopPropagation();
+      if (event) { event.stopPropagation(); }
+
       this.isModalOpen = false;
       this.router.navigate(['./']);
     };
@@ -96,33 +97,43 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   private getDocumentFromServer() {
     const docHistoryId = this.route.snapshot.params['id'];
 
-    this.network.getDocument(docHistoryId)
-      .subscribe(doc => {
-        if (doc.result === true) {
-          console.log('성공적으로 문서를 받았어요.\n');
-          this.store.dispatch(
-            new DocuDetail.NewDocumentDetail(Object.assign({}, doc).payload));
+    let observable;
+    if (this.accessToken === undefined) {
+      observable = this.network.getDocument(docHistoryId);
+    } else {
+      observable = this.network.getDocument(docHistoryId, this.accessToken);
+    }
 
-          this.network.getUserInfo(doc.payload.userId)
-            .subscribe(userCallback);
-          this.getThumbUpCount();
-        } else {
+    observable.subscribe((doc: Result) => {
+      if (doc.result === true) {
+        console.log('성공적으로 문서를 받았어요.\n');
+
+        this.network.getUserInfo(doc.payload.userId)
+        .subscribe(value => {
+          if (value.result === true) {
+            console.log('문서를 작성한 유저정보 받아오기 성공했어요.');
+            const document = Object.assign({}, doc.payload,
+              { userInfo: value.payload });
+            this.store.dispatch(new DocuDetail.NewDocumentDetail(document));
+          } else {
+              console.error('문서를 작성한 유저정보 받아오기 실패했어요.');
+              alert('문서를 작성한 유저정보 받아오기 실패했어요.');
+              this.router.navigate(['/']);
+          }
+        });
+
+        this.getThumbUpCount();
+      } else {
+        if (doc.code === 2) {
           const comment = '문서를 받아오는데 실패 했어요.\n';
-          console.log(comment);
           this.modalComment = comment;
           this.isModalOpen = true;
+        } else if (doc.code === 3) {
+          this.modalComment = doc.msg;
+          this.isModalOpen = true;
         }
-      });
-
-    const userCallback = (value: Result) => {
-        if (value.result === true) {
-            console.log('문서를 작성한 유저정보 받아오기 성공했어요.');
-            this.store.dispatch(new DocuDetail.InsertUserInfo(value.payload));
-        } else {
-            console.log('문서를 작성한 유저정보 받아오기 실패했어요.');
-            // TODO 실패하면 어떻게 처리해줘야 하지?
-        }
-    };
+      }
+    });
   }
 
   // 엄지척 갯수를 가져와요.
@@ -155,6 +166,10 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     this.accountSubscription = this.account.loginWithAccessToken(result => {
       this.isLoggedIn = result.loggedIn;
       this.accessToken = result.accessToken;
+      this.getDocumentFromServer();
+    },
+    () => {
+      this.getDocumentFromServer();
     });
   }
 

@@ -86,7 +86,8 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
 
         const reply: Reply = {
             parentId: this.reply._id,
-            text: this.reply.userId + '\n' + this.textarea.nativeElement.value,
+            parentUserId: this.reply.userId,
+            text: this.textarea.nativeElement.value,
             userId: ''
         };
 

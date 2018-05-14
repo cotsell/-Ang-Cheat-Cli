@@ -27,17 +27,20 @@ import * as conf from '../../service/SysConf';
   styleUrls: ['./profile-detail.component.scss']
 })
 export class ProfileDetailComponent implements OnInit, OnDestroy {
-  private isModalOpen = false; // Modal을 화면에 띄운 상태인지 구분.
-  private isPasswordModalOpen = false; // 비밀번호 변경 버튼 누를시 출력되는 모달 구분.
-  private isScrapListModalOpen = false; // 스크랩 리스트 모달 오픈 여부
-  private isLoggedIn = false; // 로그인 되어 있는지 구분.
-  private accessToken: string;
-  private isEditMode = false; // 프로필 내용 수정모드로 변환 구분.
-  private isEditable = false; // 프로필 수정하기 버튼을 화면에 표시할지 구분.
-  private userInfo: UserInfo;
-  private userScrapList: Scrap[] = [];
-  private accountSubscription: Subscription;
-  private userInfoSubscription: Subscription;
+  isModalOpen = false; // Modal을 화면에 띄운 상태인지 구분.
+  isPasswordModalOpen = false; // 비밀번호 변경 버튼 누를시 출력되는 모달 구분.
+  isScrapListModalOpen = false; // 스크랩 리스트 모달 오픈 여부
+  isLoggedIn = false; // 로그인 되어 있는지 구분.
+  accessToken: string;
+  isEditMode = false; // 프로필 내용 수정모드로 변환 구분.
+  isEditable = false; // 프로필 수정하기 버튼을 화면에 표시할지 구분.
+  userInfo: UserInfo;
+  userDocumentsCount = 0;
+  
+  userScrapList: Scrap[] = [];
+
+  accountSubscription: Subscription;
+  userInfoSubscription: Subscription;
 
   // 프로필 폼 설정.
   private profileForm: FormGroup = new FormGroup(
@@ -120,7 +123,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         if (result !== undefined && result !== null) {
           this.userInfo = result;
-          this.getUserDocumentList();
+          this.getUserDocumentsCount();
           this.getScrap();
         }
     });
@@ -132,18 +135,18 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     this.network.getUserInfo(otherUserId)
       .subscribe(result => {
         this.userInfo = result.payload;
-        this.getUserDocumentList();
+        this.getUserDocumentsCount();
       });
   }
 
   // this.userInfo에 저장된 유저의 작성한 문서 리스트를 가져와요.
   // this.userInfo는 로그인 한 유저일 수도, 다른 유저일 수도 있어요.
-  private getUserDocumentList() {
+  private getUserDocumentsCount() {
     if (this.userInfo !== undefined && this.userInfo !== null) {
-      this.network.getUserDocumentList(this.userInfo.id)
+      this.network.getUserDocumentsCount(this.userInfo.id)
         .subscribe(value => {
           if (value.result === true) {
-            this.userInfo.myDocumentIdList = value.payload;
+            this.userDocumentsCount = value.payload;
           } else {
             // 현재 서버에서는 true만 보내요. 없으면 []를 payload로 리턴.
           }

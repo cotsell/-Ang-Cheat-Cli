@@ -1,7 +1,7 @@
 <div *ngIf="isReReply === false" id="main_grid">
     <div id="nick_name">
         <i class="material-icons">face</i>
-        {{ reply.userId }}
+        {{ reply?.userInfo?.nickName }}
     </div>
     
     <div>
@@ -96,7 +96,7 @@
     </div>
     <div id="nick_name">
         <i class="material-icons">face</i>
-        {{ reply.userId }}
+        {{ reply?.userInfo?.nickName }}
     </div>
 
     <div>
@@ -133,7 +133,12 @@
         
         <div id="textPrint"
             *ngIf="isTextEditMode === false">
-            {{ reply.text }}
+            <div id="text">
+                <div id="parentUserId">
+                    {{ reply.parentUserNickName }}
+                </div>
+                {{ reply.text }}
+            </div>
         </div>
 
         <div id="textEdit"

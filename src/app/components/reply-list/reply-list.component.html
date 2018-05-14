@@ -33,7 +33,7 @@
                 (modifyReply)="updateReply($event)"></app-reply-article>
             <div *ngFor="let rereply of reply.rereply">
                 <app-reply-article 
-                    [isReReply]="true" 
+                    [isReReply]="true"
                     [reply]="rereply"
                     (deleteRereply)="removeRereply($event)"
                     (modifyRereply)="updateRereply($event)"></app-reply-article>

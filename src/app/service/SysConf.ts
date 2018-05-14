@@ -22,6 +22,7 @@ export const MODIFY_DOCUMENT = SERVER_ADDRESS + DOCUMENT + '/modify';
 export const REMOVE_DOCUMENT = SERVER_ADDRESS + DOCUMENT + '/remove';
 
 export const GET_USER_DOCUMENT_LIST = SERVER_ADDRESS + DOCUMENT + '/userDocumentList';
+export const GET_USER_DOCUMENTS_COUNT = SERVER_ADDRESS + DOCUMENT + '/userDocumentsCount';
 export const SEARCH_DOCUMENT = SERVER_ADDRESS + '/search';
 
 // Tag

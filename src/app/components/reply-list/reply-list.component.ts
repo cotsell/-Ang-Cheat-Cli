@@ -14,15 +14,17 @@ import * as conf from '../../service/SysConf';
 })
 export class ReplyListComponent implements OnInit, OnDestroy {
   @ViewChild('textarea') textarea: ElementRef;
-  private isReplyEditMode = false;
-  private document: DocumentInfo;
-  private userInfo: UserInfo;
-  private account: { logged: boolean, accessToken: string };
-  private replyList: Reply[] = [];
+  isReplyEditMode = false;
+  document: DocumentInfo;
+  userInfo: UserInfo;
+  userInfos: UserInfo[] = [];
+  
+  account: { logged: boolean, accessToken: string };
+  replyList: Reply[] = [];
 
-  private accountSubc: Subscription;
-  private userInfoSubc: Subscription;
-  private documentSubc: Subscription;
+  accountSubc: Subscription;
+  userInfoSubc: Subscription;
+  documentSubc: Subscription;
 
   constructor(
     private store: Store<Redux.StoreInfo>,
@@ -88,7 +90,10 @@ export class ReplyListComponent implements OnInit, OnDestroy {
           this.textarea.nativeElement.value = '';
           this.changeReplyEditMode(undefined);
           // TODO 리덕스로 변경 필요하겠지.
-          this.replyList.push(result.payload);
+          // this.replyList.push(result.payload);
+          const replyList = [...this.replyList];
+          replyList.push(result.payload);
+          this.getUserInfosAndSet(replyList);
         } else {
           // TODO 실패했으면?
           alert(conf.MSG_REPLY_MAKE_REPLY_ERR);
@@ -105,12 +110,15 @@ export class ReplyListComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         if (result.result === true) {
           // TODO 성공시. 리덕스 연결 필요.
-          this.replyList = this.replyList.map(value => {
+
+          const replyList = this.replyList.map(value => {
             if (value._id === result.payload._id) {
               value = Object.assign({}, result.payload);
             }
             return value;
           });
+          this.getUserInfosAndSet(replyList);
+
         } else {
           // TODO 실패시..
           alert(conf.MSG_REPLY_MAKE_REPLY_ERR);
@@ -123,7 +131,8 @@ export class ReplyListComponent implements OnInit, OnDestroy {
     this.network.getReply(this.document.historyId)
       .subscribe(result => {
         if (result.result === true) {
-          this.replyList = result.payload;
+          this.getUserInfosAndSet(result.payload);
+
         } else {
           if (result.code === 3) {
             // 배열이 비었을 때
@@ -134,6 +143,86 @@ export class ReplyListComponent implements OnInit, OnDestroy {
           }
         }
       });
+  }
+
+  // 서버로부터 받아온 리플들에서 userId를 추출하고, 중복된 userId는 제거할꺼에요.
+  // 추출한 id들은 서버에 ninkName을 요청하는데 사용 할 거에요.
+  takeUserIds(replyList: Reply[]) {
+    // -----------------------------------------------------------
+    // ---- 정리용도 함수 모음.
+
+    const func = (obj: Reply) => {
+      return ids.find(f => {
+        return obj.userId === f ? true : false;
+      });
+    }
+
+    // ---- 정리용도 함수 모음 끝.
+    // -----------------------------------------------------------
+    const ids: string[] = [];
+
+    for (const reply of replyList) {
+      if(reply.rereply !== undefined && reply.rereply.length > 0) {
+        reply.rereply.map(value => {
+          if (func(value) === undefined) {
+            ids.push(value.userId);
+          }
+        });
+      }
+
+      if (func(reply) === undefined) {
+        ids.push(reply.userId);
+      }
+    }
+
+    return ids;
+  }
+
+  getUserInfosAndSet(replyList: Reply[]) {
+    const ids = this.takeUserIds(replyList);
+
+    this.network.getUserInfos(ids)
+    .subscribe(users => {
+
+      if (users.result === true) {
+        
+        replyList = replyList.map(reply => {
+
+          if (reply.rereply !== undefined && reply.rereply.length > 0) {
+            reply.rereply = reply.rereply.map(rereply => {
+              const result = users.payload.find(user => {
+                return user.id === rereply.userId ? true : false;
+              });
+              if (result !== undefined) {
+                rereply.userInfo = result;
+              }
+
+              // parentUserNickName도 여기서 설정.
+              rereply.parentUserNickName = 
+                this.findNickName(rereply.parentUserId, users.payload);
+              return rereply;
+            });
+          }
+
+          const result = users.payload.find(user => {
+            return user.id === reply.userId ? true : false; 
+          });
+          if (result !== undefined) {
+            reply.userInfo = result;
+          }
+          return reply;
+        });
+
+        this.replyList = replyList;
+      }
+    });
+  }
+
+  findNickName(userId: string, infos: any) {
+    return infos.find(f => {
+      return f.id === userId;
+    })
+    .nickName;
   }
 
   // 리플 삭제.

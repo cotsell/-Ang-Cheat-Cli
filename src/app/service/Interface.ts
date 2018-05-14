@@ -80,8 +80,11 @@ export interface Reply {
     _id?: string;
     historyId?: string;
     parentId: string;
+    parentUserId?: string;
+    parentUserNickName?: string;
     text: string;
     userId: string;
+    userInfo?: UserInfo;
     createdTime?: Date;
     updatedTime?: Date;
     deleted?: boolean;

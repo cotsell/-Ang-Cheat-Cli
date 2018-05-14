@@ -19,15 +19,15 @@ import * as Utils from '../../service/utils';
   styleUrls: ['./document-edit.component.scss']
 })
 export class DocumentEditComponent implements OnInit, OnDestroy {
-  private isLoggedIn = false;
-  private isPreviewMode = false;
-  private isDocumentOptionModalOpen = false;
-  private accessToken: string;
-  private relatedId: string;
-  private documentInfo: DocumentInfo;
-  private userInfo: UserInfo;
-  private accountSubscription: Subscription;
-  private userInfoSubscription: Subscription;
+  isLoggedIn = false;
+  isPreviewMode = false;
+  isDocumentOptionModalOpen = false;
+  accessToken: string;
+  relatedId: string;
+  documentInfo: DocumentInfo;
+  userInfo: UserInfo;
+  accountSubscription: Subscription;
+  userInfoSubscription: Subscription;
 
   @ViewChild('target') preview_target: ElementRef;
 
@@ -49,7 +49,29 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscribeAccountAndTryLogin();
     this.subscribeUserInfo();
+    this.settingMakred();
+  }
 
+  // Account 리덕스를 구독하고, 미 로그인 상태일 시, 로컬 저장소를 살펴보고,
+  // AccessToken이 있다면, 로그인을 시도해요.
+  // 로그인 실패시에는 두번째 인자로 들어가는 콜백함수를 호출해요.
+  subscribeAccountAndTryLogin() {
+    this.accountSubscription = this.account.loginWithAccessToken(
+      result => {
+        this.isLoggedIn = result.loggedIn;
+        this.accessToken = result.accessToken;
+        console.log(this.accessToken);
+
+        this.worksAfterCheckingLogin();
+      },
+      () => {
+        // TODO 로그인 실패시 내용 코딩
+        this.router.navigate(['/']);
+      }
+    );
+  }
+
+  worksAfterCheckingLogin() {
     this.relatedId = this.route.snapshot.params['relatedId'];
     const documentId = this.route.snapshot.params['documentId'];
 
@@ -61,28 +83,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       console.log(this.relatedId);
       this.relatedId = '';
     }
-
-    this.settingMakred();
   }
 
-  // Account 리덕스를 구독하고, 미 로그인 상태일 시, 로컬 저장소를 살펴보고,
-  // AccessToken이 있다면, 로그인을 시도해요.
-  // 로그인 실패시에는 두번째 인자로 들어가는 콜백함수를 호출해요.
-  private subscribeAccountAndTryLogin() {
-    this.accountSubscription = this.account.loginWithAccessToken(
-      result => {
-        this.isLoggedIn = result.loggedIn;
-        this.accessToken = result.accessToken;
-        console.log(this.accessToken);
-      },
-      () => {
-        // TODO 로그인 실패시 내용 코딩
-        this.router.navigate(['/']);
-      }
-    );
-  }
-
-  private subscribeUserInfo() {
+  subscribeUserInfo() {
     this.userInfoSubscription = this.store.select(Redux.getUserInfo)
       .subscribe(Result => {
           this.userInfo = Result;
@@ -90,7 +93,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   // 작성한 문서를 서버에 저장합니다.
-  private sendNewText(event, options: any) {
+  sendNewText(event, options: any) {
     if (event) { event.stopPropagation(); }
     console.log('SEND NEW TEXT()');
     console.log(options);
@@ -168,8 +171,16 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   private getDocumentFromServer(documentId: string) {
-    this.network.getDocument(documentId)
-    .subscribe(value => {
+
+    // TODO sdafkjsafkjkasdfjasf
+    let observable;
+    if (this.accessToken === undefined) {
+      observable = this.network.getDocument(documentId);
+    } else {
+      observable = this.network.getDocument(documentId, this.accessToken);
+    }
+
+    observable.subscribe(value => {
       if (value.result === true) {
         console.log(value.msg);
         this.documentInfo = value.payload;
@@ -181,10 +192,14 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         );
       } else {
         if (value.code === 1) {
-          console.log(value.msg);
-          // TODO 엑세스토큰 오류일 경우 처리.
+          console.error(value.msg);
+          alert('엑세스토큰이 만료되었어요.');
+          this.router.navigate(['/']);
         } else {
           // 다른 오류일 경우 처리.
+          console.error(value.msg);
+          alert(value.msg);
+          this.location.back();
         }
       }
     });

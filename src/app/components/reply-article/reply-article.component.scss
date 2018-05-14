@@ -104,6 +104,13 @@
 
 #rereplyText {
     grid-column: 2 / 5;
+    
+    #text {
+        #parentUserId {
+            display: inline-block;
+            color: tomato;
+        }
+    }
 }
 
 #comment {

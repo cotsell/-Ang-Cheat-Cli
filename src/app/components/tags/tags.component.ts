@@ -14,7 +14,7 @@ export class TagsComponent implements OnInit {
       return new Tag(inner);
       });
     }
-    console.log(this._tagList);
+    // console.log(this._tagList);
   }
   get tagList() {
     return this._tagList.map(value => {
