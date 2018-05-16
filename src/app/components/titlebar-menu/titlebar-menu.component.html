@@ -7,7 +7,9 @@
 </div>
 
 <!-- 화면에서 숨겨지는 메뉴 내용이에요. -->
-<div id="backGround" *ngIf="!isMenuHidden">
+<div id="backGround" 
+  *ngIf="!isMenuHidden"
+  (click)="changeMenuState($event)">
 </div>
 
 <div

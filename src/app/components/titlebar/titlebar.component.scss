@@ -13,6 +13,9 @@
     position: relative;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
 
+    #menuDiv {
+    }
+
     #searchButton {
         border-radius: 3px;
         height: 2rem;
@@ -23,14 +26,12 @@
         i {
             font-size: 2rem;
             transition-duration: 0.2s;
+            color: black;
 
             &:hover {
                 color: #e6e6e6;
             }
         }
-    }
-
-    #menuDiv {
     }
     
     #accountDiv {
@@ -38,6 +39,7 @@
             font-size: 2rem;
             cursor: pointer;
             transition-duration: 0.2s;
+            color: black;
     
             &:hover {
                 color: #e6e6e6;

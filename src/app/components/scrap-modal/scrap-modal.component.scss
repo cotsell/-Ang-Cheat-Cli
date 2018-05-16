@@ -6,6 +6,7 @@
   right: 0rem;
   bottom: 0rem;
   z-index: 3;
+  overflow: auto;
 
   #container {
     width: 320px;
@@ -13,7 +14,7 @@
     border: none;
     border-radius: 5px;
     padding: 1rem;
-    margin: 15% auto;
+    margin: 15% auto 2% auto;
 
     #closeIcon {
       display: flex;
