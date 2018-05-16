@@ -1,107 +1,122 @@
 <div
-    id="menu_div"
-    onselectstart="return false"
-    (click)="changeMenuState($event)"
-    >
-    <i class="material-icons">menu</i>
+  id="menu_div"
+  onselectstart="return false"
+  (click)="changeMenuState($event)"
+  >
+  <i class="material-icons">menu</i>
 </div>
 
 <!-- 화면에서 숨겨지는 메뉴 내용이에요. -->
+<div id="backGround" *ngIf="!isMenuHidden">
+</div>
+
 <div
-    id="menu_detail"
-    [ngClass]="{ show_menu: !isMenuHidden }"
-    (click)="closeHideMenu($event)"
-    >
+  id="menu_detail"
+  [ngClass]="{ show_menu: !isMenuHidden }"
+  (click)="changeMenuState($event)"
+  >
 
-    <div id="menuDetailGrid">
+  <div id="titleGrid">
+    <div><i class="material-icons">menu</i></div>
+    <div id="title">Menu..</div>
+    <div></div>
+  </div>
 
-        <!-- 언어선택 및 트리 수정 -->
-        <div id="selectLanguage" (click)="stopBubbling($event)">
-            <select (change)="selectedLanguage($event)">
-                <option value="-1">언어선택</option>
-                <option 
-                    *ngFor="let category of categoryList" 
-                    [value]="category?.tag"
-                    [selected]="category?.tag === selectedCategory ? true : false"
-                    >
-                    {{ category?.title }}
-                </option>
-            </select>
-            <span 
-                id="modify"
-                (click)="changeCategoryModalState($event)"
-                >
-                카테고리 관리
-            </span>
-        </div>
+  <div id="menuDetailGrid">
 
-        <!-- 카테고리 트리 -->
-        <div id="categoryTree">
-            <div 
-                id="title"
-                class="gradeStyle"
-                *ngIf="category !== undefined"
-                [routerLink]="['/docuList']"
-                [queryParams]="{ lang: category.tag, type: 0, subj: '' }"
-                >
-                {{ category?.title }}
-            </div>
-            <div 
-                class="grade2" 
-                *ngFor="let grade2 of category?.subCategory"
-                >
-                <div 
-                    class="gradeStyle"
-                    [routerLink]="['/docuList']"
-                    [queryParams]="{ lang: category.tag, type: 3, subj: grade2.tag }"
-                    >
-                    {{ grade2?.title }}
-                </div>
-                <div 
-                    class="grade3" 
-                    *ngFor="let grade3 of grade2?.subCategory"
-                    >
-                    <div
-                        class="gradeStyle"
-                        [routerLink]="['/docuList']"
-                        [queryParams]="{ lang: category.tag, type: 3, subj: grade3.tag }"
-                        >
-                        {{ grade3?.title }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <a [routerLink]="['/']">
-                메인으로
-            </a><br>
-            <a [routerLink]="['/docuDetail', '5ad4cd750ea7de3044c500e4']">
-                자세한 문서
-            </a><br>
-            <a [routerLink]="['/profileDetail/hohosang']">
-                타유저 프로필 화면
-            </a><br>
-            <a 
-                [routerLink]="['/docuList']"
-                [queryParams]="{ lang: 'category-all', type: 0, subj: ' ' }"
-                >
-                문서 리스트
-            </a><br>
-        </div>
-
-        <div id="button">
-            <button type="button" (click)="writeDocument($event)">글 작성</button>
-        </div>
+    <!-- 언어선택 및 트리 수정 -->
+    <div id="selectLanguage" (click)="stopBubbling($event)">
+      <select (change)="selectedLanguage($event)">
+        <option value="-1">언어선택</option>
+        <option 
+          *ngFor="let category of categoryList" 
+          [value]="category?.tag"
+          [selected]="category?.tag === selectedCategory ? true : false"
+          >
+          {{ category?.title }}
+        </option>
+      </select>
+      <span 
+        id="modify"
+        (click)="changeCategoryModalState($event)"
+        >
+        카테고리 관리
+      </span>
     </div>
+
+    <!-- 카테고리 트리 -->
+    <div id="categoryTree">
+      <div 
+        id="title"
+        class="gradeStyle"
+        *ngIf="category !== undefined"
+        [routerLink]="['/docuList']"
+        [queryParams]="{ lang: category.tag, type: 0, subj: '' }"
+        >
+        {{ category?.title }}
+      </div>
+      <div 
+        class="grade2" 
+        *ngFor="let grade2 of category?.subCategory"
+        >
+        <div 
+          class="gradeStyle"
+          [routerLink]="['/docuList']"
+          [queryParams]="{ lang: category.tag, type: 3, subj: grade2.tag }"
+          >
+          {{ grade2?.title }}
+        </div>
+        <div 
+          class="grade3" 
+          *ngFor="let grade3 of grade2?.subCategory"
+          >
+          <div
+            class="gradeStyle"
+            [routerLink]="['/docuList']"
+            [queryParams]="{ lang: category.tag, type: 3, subj: grade3.tag }"
+            >
+            {{ grade3?.title }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <a [routerLink]="['/']">
+        메인으로
+      </a><br>
+      <a [routerLink]="['/docuDetail', '5ad4cd750ea7de3044c500e4']">
+        자세한 문서
+      </a><br>
+      <a [routerLink]="['/profileDetail/hohosang']">
+        타유저 프로필 화면
+      </a><br>
+      <a 
+        [routerLink]="['/docuList']"
+        [queryParams]="{ lang: 'category-all', type: 0, subj: ' ' }"
+        >
+        문서 리스트
+      </a><br>
+    </div>
+
+    <div id="button">
+      <button type="button" (click)="writeDocument($event)">글 작성</button>
+    </div>
+  </div>
 
 </div>
 
+<!-- 화면에서 숨겨지는 메뉴 내용 끝 -->
+
+<!-- 카테고리 모달 관련 -->
 <div 
-    id="categoryModalFlex"
-    *ngIf="isCategoryModalOpen"
-    >
-    <div id="mainDiv">
-        <app-category-maker (cancel)="changeCategoryModalState($event)"></app-category-maker>
-    </div>
+  id="categoryModalFlex"
+  *ngIf="isCategoryModalOpen"
+  (click)="changeCategoryModalState($event)"
+  >
+  <div id="mainDiv">
+    <app-category-maker 
+      (cancel)="changeCategoryModalState($event)">
+    </app-category-maker>
+  </div>
 </div>

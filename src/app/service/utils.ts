@@ -38,3 +38,15 @@ export function changeTimeString(time?: string, isFull?: boolean) {
         }
     }
 }
+
+// body의 overflow를 변경해서, 스크롤 기능을 끄고 켭니다.
+// 이 함수를 사용하기 위해서는 HTML의 BODY에 body라는 id를 부여해 주세요.
+export function bodyScroll(onOff: boolean) {
+  const body = document.getElementById('body');
+
+  if (onOff) {
+    body.style.overflow = "auto";
+  } else {
+    body.style.overflow = "hidden";
+  }
+}

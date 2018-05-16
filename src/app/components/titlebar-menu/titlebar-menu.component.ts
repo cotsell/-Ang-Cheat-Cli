@@ -9,7 +9,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxJs';
 import { Store } from '@ngrx/store';
 
-import { unSubscribe } from '../../service/utils';
+import { unSubscribe, bodyScroll } from '../../service/utils';
 import * as Redux from '../../service/redux';
 import { Router } from '@angular/router';
 import { Category, Result } from '../../service/Interface';
@@ -23,41 +23,41 @@ import { FormGroup } from '@angular/forms';
     styleUrls: ['./titlebar-menu.component.scss']
 })
 export class TitlebarMenuComponent implements OnInit, OnDestroy {
-    private isMenuHidden = true;
-    private isCategoryModalOpen = false;
-    private relatedId: string;
-    private categoryList: Category[] = [];
-    private category: Category;
-    private selectedCategory: string;
+  isMenuHidden = true;
+  isCategoryModalOpen = false;
+  relatedId: string;
+  categoryList: Category[] = [];
+  category: Category;
+  selectedCategory: string;
 
-    private docSubscription: Subscription;
-    private cateSubscription: Subscription;
+  docSubscription: Subscription;
+  cateSubscription: Subscription;
 
-    constructor(
-        private store: Store<Redux.StoreInfo>,
-        private network: Network,
-        private route: Router) { }
+  constructor(
+    private store: Store<Redux.StoreInfo>,
+    private network: Network,
+    private route: Router) { }
 
-    ngOnInit() {
-        this.subscribeDocumentDetail();
-        this.subscribeCategoryList();
-    }
+  ngOnInit() {
+    this.subscribeDocumentDetail();
+    this.subscribeCategoryList();
+  }
 
-    // 연관문서ID를 얻기 위해서 리덕스의 DocumentDetail을 구독합니다.
-    // TODO 연관문서ID는 기능 미작동 중 이에요.
-    private subscribeDocumentDetail() {
-        this.docSubscription = this.store.select(Redux.getDocumentDetail)
-        .subscribe(result => {
-            if (result !== undefined && result !== null) {
-                if (result.relatedDocuId !== undefined && result.relatedDocuId !== null) {
-                    this.relatedId = result.relatedDocuId;
-                }
-            }
-        });
-    }
+  // 연관문서ID를 얻기 위해서 리덕스의 DocumentDetail을 구독합니다.
+  // TODO 연관문서ID는 기능 미작동 중 이에요.
+  subscribeDocumentDetail() {
+    this.docSubscription = this.store.select(Redux.getDocumentDetail)
+    .subscribe(result => {
+      if (result !== undefined && result !== null) {
+        if (result.relatedDocuId !== undefined && result.relatedDocuId !== null) {
+          this.relatedId = result.relatedDocuId;
+        }
+      }
+    });
+  }
 
   // 카테고리 리스트를 구독합니다.
-  private subscribeCategoryList() {
+  subscribeCategoryList() {
     let selectedCategory = '';
     this.cateSubscription = this.store.select(Redux.getCategoryList)
       .subscribe(value => {
@@ -79,16 +79,17 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
   }
 
   // 메뉴의 상세 내용의 화면 출력 여부를 변경해요.
-  private changeMenuState(event) {
+  changeMenuState(event) {
     if (event) { event.stopPropagation(); }
 
     this.isMenuHidden = !this.isMenuHidden;
+    bodyScroll(this.isMenuHidden);
   }
 
-  private writeDocument(event) {
+  writeDocument(event) {
     if (event) { event.stopPropagation(); }
 
-    this.closeHideMenu(undefined);
+    this.changeMenuState(undefined);
     if (this.relatedId === undefined ||
         this.relatedId === null || this.relatedId === '') {
       this.route.navigate(['/writeDocu']);
@@ -101,7 +102,7 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
   // 카테고리의 서브 카테고리들을 받은적이 있는지 확인하고, 
   // 받은적이 없는 카테고리는 서버로 서브 카테고리를 요청해서,
   // 리덕스의 카테고리에 해당 카테고리의 서브 카테고리를 갱신해줘요.
-  private selectedLanguage(event) {
+  selectedLanguage(event) {
     if (event) { event.stopPropagation(); }
 
     const store = this.store;
@@ -131,28 +132,21 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-    private closeHideMenu(event) {
-        if (event) { event.stopPropagation(); }
+  stopBubbling(event) {
+    if (event) { event.stopPropagation(); }
+  }
 
-        this.isMenuHidden = true;
-    }
+  // 카테고리 모달의 열림, 닫힘 상태를 변경하고 있어요.
+  changeCategoryModalState(event) {
+    if (event) { event.stopPropagation(); }
 
-    private stopBubbling(event) {
-        event.stopPropagation();
-    }
+    this.isMenuHidden = true;
+    this.isCategoryModalOpen = !this.isCategoryModalOpen;
+    bodyScroll(!this.isCategoryModalOpen);
+  }
 
-    // 카테고리 모달의 열림, 닫힘 상태를 변경하고 있어요.
-    private changeCategoryModalState(event) {
-        if (event !== undefined) {
-            event.stopPropagation();
-        }
-
-        this.isCategoryModalOpen = !this.isCategoryModalOpen;
-        this.isMenuHidden = true;
-    }
-
-    ngOnDestroy() {
-        unSubscribe(this.docSubscription);
-        unSubscribe(this.cateSubscription);
-    }
+  ngOnDestroy() {
+    unSubscribe(this.docSubscription);
+    unSubscribe(this.cateSubscription);
+  }
 }

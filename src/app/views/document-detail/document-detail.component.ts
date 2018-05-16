@@ -49,7 +49,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   accountSubscription: Subscription;
   userInfoSubscription: Subscription;
   documentSubscription: Subscription;
-  
+
   // 다용도 모달용
   publicModal = {
     isModalOpen: false,
@@ -57,14 +57,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     leftBtn: undefined,
     rightBtnTitle: undefined,
     rightBtn: undefined,
-    comment: undefined  
+    comment: undefined
   };
-  // isModalOpen = false;
-  // modalLeftBtnTitle: string;
-  // modalRightBtnTitle: string;
-  // modalLeftBtn: Function;
-  // modalRightBtn: Function;
-  // modalComment: string;
 
   // 함수들..
   private changeTimeString;
@@ -95,13 +89,13 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     this.publicModal.leftBtn = undefined;
     this.publicModal.rightBtnTitle = undefined;
     this.publicModal.rightBtn = undefined;
+    Utils.bodyScroll(true);
   }
 
   setPublicModalDefault() {
     this.publicModal.rightBtn = (event) => {
       if (event) { event.stopPropagation() ;}
-      
-      // this.publicModal.isModalOpen = false;
+
       this.resetPublicModal();
       this.router.navigate(['/']);
     };
@@ -117,15 +111,19 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
       comment: '정말 삭제 하시겠어요?',
       leftBtnTitle: '확인',
       rightBtnTitle: '취소',
-      leftBtn: (event) => { this.deleteDocument(event) },
+      leftBtn: (event) => {
+        this.deleteDocument(event);
+        this.resetPublicModal();
+      },
       rightBtn: (event) => {
         if (event) { event.stopPropagation(); }
-      
+
         this.resetPublicModal();
       }
     };
 
     this.publicModal = setting;
+    Utils.bodyScroll(false);
   }
 
   // 서버에 문서 삭제 요청을 하는 함수에요.
@@ -176,9 +174,11 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
           const comment = '문서를 받아오는데 실패 했어요.\n';
           this.publicModal.comment = comment;
           this.publicModal.isModalOpen = true;
+          Utils.bodyScroll(false);
         } else if (doc.code === 3) {
           this.publicModal.comment = doc.msg;
           this.publicModal.isModalOpen = true;
+          Utils.bodyScroll(false);
         }
       }
     });
