@@ -1,176 +1,176 @@
 <div>
-    <!-- 타이틀과 New, CategoryList, Delete를 위한 컨테이너 -->
-    <div id="menuGrid">
-        <div id="title">카테고리 관리</div>
-        <div id="new" (click)="newCategory($event)">New</div>
-        <div #cateSelect id="select">
-            <select (change)="selectedCategory($event)">
-                <option value="all">언어 선택</option>
-                <option 
-                    *ngFor="let cate of categoryList" 
-                    [value]="cate?.tag"
-                    >
-                    {{ cate?.title }}
-                </option>
-            </select>
+  <!-- 타이틀과 New, CategoryList, Delete를 위한 컨테이너 -->
+  <div id="menuGrid">
+    <div id="title">Category Manager</div>
+    <div id="new" (click)="newCategory($event)">New</div>
+    <div #cateSelect id="select">
+      <select (change)="selectedCategory($event)">
+        <option value="all">언어 선택</option>
+        <option 
+          *ngFor="let cate of categoryList" 
+          [value]="cate?.tag"
+          >
+          {{ cate?.title }}
+        </option>
+      </select>
+    </div>
+    <div 
+      id="delete" 
+      (click)="deleteCategory($event)">
+      Delete
+    </div>
+  </div>
+
+  <!-- 카테고리 트리와 확인, 취소 버튼. -->
+  <div>
+    <div id="tree" *ngIf="category !== undefined">
+      <!-- 카테고리 루트  -->
+      <div class="root">
+        <input class="title" 
+          type="text" 
+          [value]="category?.title"
+          placeholder="title.."
+          (keyup)="updateCategory($event, category._id, 'title')"
+          >
+        <input class="tag"
+          type="text" 
+          [value]="category?.tag"
+          placeholder="tag.."
+          (keyup)="updateCategory($event, category._id, 'tag')"
+          >
+
+        <!-- 2단계 카테고리 -->
+        <div class="grade2" 
+          *ngFor="let cate2 of category?.subCategory;"
+          >
+
+          <!-- 2단계 옵션 버튼들 -->
+          <div style="text-align: right;">
+            <i class="material-icons" 
+              (click)="moveArticle($event, 'up', cate2._id)"
+              >
+              keyboard_arrow_up
+            </i>
+            <i class="material-icons"
+              (click)="moveArticle($event, 'down', cate2._id)"
+              >
+              keyboard_arrow_down
+            </i> 
+            <i class="material-icons"
+              (click)="removeArticle($event, cate2._id)"
+              >
+              close
+            </i> 
+          </div>
+
+          <!-- 2단계 타이틀, 태그 입력 폼 -->
+          <div class="grid">
+            <i class="material-icons">
+              keyboard_arrow_right
+            </i>
+            <input class="title"
+              type="text" 
+              placeholder="title..."
+              [value]="cate2?.title"
+              (keyup)="updateCategory($event, cate2._id, 'title')"
+              >
+            <div><!-- 공백용 --></div>
+            <input class="tag"
+              type="text" 
+              placeholder="tag..."
+              [value]="cate2?.tag"
+              (keyup)="updateCategory($event, cate2._id, 'tag')"
+              >
+          </div>
+
+          <!-- 3단계 카테고리 -->
+          <div class="grade3" 
+            *ngFor="let cate3 of cate2?.subCategory"
+            >
+
+            <!-- 3단계 카테고리 옵션 버튼 -->
+            <div style="text-align: right;">
+              <i class="material-icons"
+                (click)="moveArticle($event, 'up', cate3._id)"
+                >
+                keyboard_arrow_up
+              </i>
+              <i class="material-icons"
+                (click)="moveArticle($event, 'down', cate3._id)"
+                >
+                keyboard_arrow_down
+              </i> 
+              <i class="material-icons"
+                (click)="removeArticle($event, cate3._id)"
+                >
+                close
+              </i> 
+            </div>
+
+            <!-- 타이틀과 태그 수정 폼 -->
+            <div class="grid">
+              <i class="material-icons">
+                keyboard_arrow_right
+              </i>
+              <input class="title"
+                type="text" 
+                placeholder="title..."
+                [value]="cate3?.title"
+                (keyup)="updateCategory($event, cate3._id, 'title')"
+                >
+              <div><!-- 공백용 --></div>
+              <input class="tag"
+                type="text" 
+                placeholder="tag..."
+                [value]="cate3?.tag"
+                (keyup)="updateCategory($event, cate3._id, 'tag')"
+                >
+            </div>
+          </div>
+
+          <!-- 3단계 추가 버튼 -->
+          <div class="grade3 selector">
+            <div style="text-align: center"
+              (click)="addNewArticle($event, cate2._id)"
+              >
+              <i class="material-icons">
+                add_circle_outline
+              </i>
+            </div>
+          </div>
         </div>
-        <div 
-            id="delete" 
-            (click)="deleteCategory($event)">
-            Delete
+
+        <!-- 2단계 추가 버튼 -->
+        <div class="grade2 selector">
+          <div style="text-align: center"
+            (click)="addNewArticle($event, category._id)"
+            >
+            <i class="material-icons">
+              add_circle_outline
+            </i>
+          </div>
         </div>
+      </div>
     </div>
 
-    <!-- 카테고리 트리와 확인, 취소 버튼. -->
-    <div>
-        <div id="tree" *ngIf="category !== undefined">
-            <!-- 카테고리 루트  -->
-            <div class="root">
-                <input 
-                    type="text" 
-                    class="title" 
-                    [value]="category?.title"
-                    placeholder="title.."
-                    (keyup)="updateCategory($event, category._id, 'title')">
-                <input 
-                    type="text" 
-                    class="tag"
-                    [value]="category?.tag"
-                    placeholder="tag.."
-                    (keyup)="updateCategory($event, category._id, 'tag')">
-
-                <!-- 2단계 카테고리 -->
-                <div 
-                    class="grade2" 
-                    *ngFor="let cate2 of category?.subCategory;">
-
-                    <!-- 2단계 옵션 버튼들 -->
-                    <div style="text-align: right;">
-                        <i 
-                            class="material-icons" 
-                            (click)="moveArticle($event, 'up', cate2._id)">
-                            keyboard_arrow_up
-                        </i>
-                        <i 
-                            class="material-icons"
-                            (click)="moveArticle($event, 'down', cate2._id)">
-                            keyboard_arrow_down
-                        </i> 
-                        <i 
-                            class="material-icons"
-                            (click)="removeArticle($event, cate2._id)">
-                            close
-                        </i> 
-                    </div>
-
-                    <!-- 2단계 타이틀, 태그 입력 폼 -->
-                    <div class="grid">
-                        <i class="material-icons">
-                            keyboard_arrow_right
-                        </i>
-                        <input 
-                            type="text" 
-                            class="title"
-                            placeholder="title..."
-                            [value]="cate2?.title"
-                            (keyup)="updateCategory($event, cate2._id, 'title')">
-                        <div><!-- 공백용 --></div>
-                        <input 
-                            type="text" 
-                            class="tag"
-                            placeholder="tag..."
-                            [value]="cate2?.tag"
-                            (keyup)="updateCategory($event, cate2._id, 'tag')">
-                    </div>
-
-                    <!-- 3단계 카테고리 -->
-                    <div 
-                        class="grade3" 
-                        *ngFor="let cate3 of cate2?.subCategory">
-
-                        <!-- 3단계 카테고리 옵션 버튼 -->
-                        <div style="text-align: right;">
-                            <i 
-                                class="material-icons"
-                                (click)="moveArticle($event, 'up', cate3._id)">
-                                keyboard_arrow_up
-                            </i>
-                            <i 
-                                class="material-icons"
-                                (click)="moveArticle($event, 'down', cate3._id)">
-                                keyboard_arrow_down
-                            </i> 
-                            <i 
-                                class="material-icons"
-                                (click)="removeArticle($event, cate3._id)">
-                                close
-                            </i> 
-                        </div>
-
-                        <!-- 타이틀과 태그 수정 폼 -->
-                        <div class="grid">
-                            <i class="material-icons">
-                                keyboard_arrow_right
-                            </i>
-                            <input 
-                                type="text" 
-                                class="title"
-                                placeholder="title..."
-                                [value]="cate3?.title"
-                                (keyup)="updateCategory($event, cate3._id, 'title')">
-                            <div><!-- 공백용 --></div>
-                            <input 
-                                type="text" 
-                                class="tag"
-                                placeholder="tag..."
-                                [value]="cate3?.tag"
-                                (keyup)="updateCategory($event, cate3._id, 'tag')"
-                                >
-                        </div>
-                    </div>
-
-                    <!-- 3단계 추가 버튼 -->
-                    <div class="grade3 selector">
-                        <div style="text-align: center"
-                        (click)="addNewArticle($event, cate2._id)">
-                            <i class="material-icons">
-                                add_circle_outline
-                            </i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2단계 추가 버튼 -->
-                <div class="grade2 selector">
-                    <div 
-                        style="text-align: center"
-                        (click)="addNewArticle($event, category._id)">
-                        <i class="material-icons">
-                            add_circle_outline
-                        </i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 버튼들 -->
-        <div id="buttons">
-            <div id="ok">
-                <button 
-                    type="button" 
-                    id="btn"
-                    (click)="saveCategory($event)">
-                    확인
-                </button>
-            </div>
-            <div id="cancel">
-                <button 
-                    type="button" 
-                    id="btn"
-                    (click)="closeModal($event)">
-                    취소
-                </button>
-            </div>
-        </div>
+    <!-- 버튼들 -->
+    <div id="buttons">
+      <div id="ok">
+        <button id="btn"
+          type="button" 
+          (click)="saveCategory($event)"
+          >
+          확인
+        </button>
+      </div>
+      <div id="cancel">
+        <button id="btn" 
+          type="button" 
+          (click)="closeModal($event)"
+          >
+          취소
+        </button>
+      </div>
     </div>
+  </div>
 </div>

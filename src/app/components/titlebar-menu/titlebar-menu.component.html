@@ -9,7 +9,8 @@
 <!-- 화면에서 숨겨지는 메뉴 내용이에요. -->
 <div id="backGround" 
   *ngIf="!isMenuHidden"
-  (click)="changeMenuState($event)">
+  (click)="changeMenuState($event)"
+  >
 </div>
 
 <div
@@ -116,7 +117,9 @@
   *ngIf="isCategoryModalOpen"
   (click)="changeCategoryModalState($event)"
   >
-  <div id="mainDiv">
+  <div id="mainDiv"
+    (click)="stopBubbling($event)"
+    >
     <app-category-maker 
       (cancel)="changeCategoryModalState($event)">
     </app-category-maker>
