@@ -167,15 +167,30 @@
     #buttons {
       margin-right: 1rem;
       text-align: right;
+
+      #left {
+        display: inline-block;
+        button {
+          &:hover {
+            color: yellowgreen;
+          }
+        }
+      }
+
+      #right {
+        display: inline-block;
+        button {
+          &:hover {
+            color: tomato;
+          }
+        }
+      }
+
       button {
         cursor: pointer;
         border: none;
         background-color: white;
         font-size: 1rem;
-
-        &:hover {
-          color: yellowgreen;
-        }
       }
     }
   }

@@ -145,41 +145,8 @@ export class ReplyListComponent implements OnInit, OnDestroy {
       });
   }
 
-  // 서버로부터 받아온 리플들에서 userId를 추출하고, 중복된 userId는 제거할꺼에요.
-  // 추출한 id들은 서버에 ninkName을 요청하는데 사용 할 거에요.
-  takeUserIds(replyList: Reply[]) {
-    // -----------------------------------------------------------
-    // ---- 정리용도 함수 모음.
-
-    const func = (obj: Reply) => {
-      return ids.find(f => {
-        return obj.userId === f ? true : false;
-      });
-    }
-
-    // ---- 정리용도 함수 모음 끝.
-    // -----------------------------------------------------------
-    const ids: string[] = [];
-
-    for (const reply of replyList) {
-      if(reply.rereply !== undefined && reply.rereply.length > 0) {
-        reply.rereply.map(value => {
-          if (func(value) === undefined) {
-            ids.push(value.userId);
-          }
-        });
-      }
-
-      if (func(reply) === undefined) {
-        ids.push(reply.userId);
-      }
-    }
-
-    return ids;
-  }
-
   getUserInfosAndSet(replyList: Reply[]) {
-    const ids = this.takeUserIds(replyList);
+    const ids = takeUserIds(replyList);
 
     this.network.getUserInfos(ids)
     .subscribe(users => {
@@ -199,7 +166,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
 
               // parentUserNickName도 여기서 설정.
               rereply.parentUserNickName = 
-                this.findNickName(rereply.parentUserId, users.payload);
+                findNickName(rereply.parentUserId, users.payload);
               return rereply;
             });
           }
@@ -216,13 +183,53 @@ export class ReplyListComponent implements OnInit, OnDestroy {
         this.replyList = replyList;
       }
     });
-  }
 
-  findNickName(userId: string, infos: any) {
-    return infos.find(f => {
-      return f.id === userId;
-    })
-    .nickName;
+    // -----------------------------------------------------------
+    // ---- 정리용도 함수 모음 시작
+    
+    // 서버로부터 받아온 리플들에서 userId를 추출하고, 중복된 userId는 제거할꺼에요.
+    // 추출한 id들은 서버에 ninkName을 요청하는데 사용 할 거에요.
+    function takeUserIds(replyList: Reply[]) {
+      // -----------------------------------------------------------
+      // ---- 정리용도 함수 모음.
+
+      const func = (obj: Reply) => {
+        return ids.find(f => {
+          return obj.userId === f ? true : false;
+        });
+      }
+
+      // ---- 정리용도 함수 모음 끝.
+      // -----------------------------------------------------------
+      const ids: string[] = [];
+
+      for (const reply of replyList) {
+        if(reply.rereply !== undefined && reply.rereply.length > 0) {
+          reply.rereply.map(value => {
+            if (func(value) === undefined) {
+              ids.push(value.userId);
+            }
+          });
+        }
+
+        if (func(reply) === undefined) {
+          ids.push(reply.userId);
+        }
+      }
+
+      return ids;
+    }
+    
+    
+    function findNickName(userId: string, infos: any) {
+      return infos.find(f => {
+        return f.id === userId;
+      })
+      .nickName;
+    }
+
+    // ---- 정리용도 함수 모음 끝
+    // -----------------------------------------------------------
   }
 
   // 리플 삭제.
@@ -234,10 +241,11 @@ export class ReplyListComponent implements OnInit, OnDestroy {
           // TODO 그냥 전체 리플을 다시 받는게 나으려나..;;
           console.log(result.payload);
 
-          this.replyList = this.replyList.map(value => {
+          const replyList = this.replyList.map(value => {
             return value.historyId === result.payload.historyId ?
               result.payload : value;
           });
+          this.getUserInfosAndSet(replyList);
         } else {
           // TODO
           console.error(result.msg);
@@ -253,10 +261,12 @@ export class ReplyListComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);
-          this.replyList = this.replyList.map(value => {
+
+          const replyList = this.replyList.map(value => {
             return value._id === result.payload._id ?
                 Object.assign({}, result.payload) : value;
           });
+          this.getUserInfosAndSet(replyList);
         } else {
           alert(conf.MSG_REREPLY_REMOVE_REREPLY_ERR);
         }
@@ -272,12 +282,13 @@ export class ReplyListComponent implements OnInit, OnDestroy {
         if (result.result === true) {
           console.log(result.msg);
           console.log(result.payload);
-          this.replyList = this.replyList.map(value => {
+          const replyList = this.replyList.map(value => {
             if (value.historyId === result.payload.historyId) {
               value = result.payload;
             }
             return value;
           });
+          this.getUserInfosAndSet(replyList);
         } else {
           // TODO 실패.
           console.log(result.msg);
@@ -295,12 +306,14 @@ export class ReplyListComponent implements OnInit, OnDestroy {
           // TODO TEST
           console.log(result.msg);
           console.log(result.payload);
-          this.replyList = this.replyList.map(value => {
+
+          const replyList = this.replyList.map(value => {
             if (value._id === result.payload._id) {
               value = Object.assign({}, result.payload);
             }
             return value;
           });
+          this.getUserInfosAndSet(replyList);
         } else {
           // TODO
           console.log(result.msg);

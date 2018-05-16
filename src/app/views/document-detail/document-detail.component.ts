@@ -39,19 +39,32 @@ import * as conf from '../../service/SysConf';
 })
 export class DocumentDetailComponent implements OnInit, OnDestroy {
   @ViewChild('target') target: ElementRef;
-  private isLoggedIn = false;
-  private isModalOpen = false;
-  private isScrapModalOpen = false;
-  private modalComment: string;
-  private modalFunction: Function;
-  private canUserControlDocument = false;
-  private accessToken: string;
-  private userInfo: UserInfo;
-  private documentInfo: DocumentInfo;
-  private thumbUpCount = 0;
-  private accountSubscription: Subscription;
-  private userInfoSubscription: Subscription;
-  private documentSubscription: Subscription;
+  isLoggedIn = false;
+  isScrapModalOpen = false;
+  canUserControlDocument = false;
+  accessToken: string;
+  userInfo: UserInfo;
+  documentInfo: DocumentInfo;
+  thumbUpCount = 0;
+  accountSubscription: Subscription;
+  userInfoSubscription: Subscription;
+  documentSubscription: Subscription;
+  
+  // 다용도 모달용
+  publicModal = {
+    isModalOpen: false,
+    leftBtnTitle: undefined,
+    leftBtn: undefined,
+    rightBtnTitle: undefined,
+    rightBtn: undefined,
+    comment: undefined  
+  };
+  // isModalOpen = false;
+  // modalLeftBtnTitle: string;
+  // modalRightBtnTitle: string;
+  // modalLeftBtn: Function;
+  // modalRightBtn: Function;
+  // modalComment: string;
 
   // 함수들..
   private changeTimeString;
@@ -71,26 +84,58 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     this.subscribeUserInfo();
     this.subscribeDocumentDetail();
 
-    // modal함수 기본 정의. modal함수는 필요하면 상황에 따라 정의해서 사용 가능.
-    this.modalFunction = (event) => {
-      if (event) { event.stopPropagation(); }
+    this.settingMarked();
+  }
 
-      this.isModalOpen = false;
-      this.router.navigate(['./']);
+  // 모달 닫기 및 데이터 초기화.
+  resetPublicModal() {
+    this.publicModal.isModalOpen = false;
+    this.publicModal.comment = undefined;
+    this.publicModal.leftBtnTitle = undefined;
+    this.publicModal.leftBtn = undefined;
+    this.publicModal.rightBtnTitle = undefined;
+    this.publicModal.rightBtn = undefined;
+  }
+
+  setPublicModalDefault() {
+    this.publicModal.rightBtn = (event) => {
+      if (event) { event.stopPropagation() ;}
+      
+      // this.publicModal.isModalOpen = false;
+      this.resetPublicModal();
+      this.router.navigate(['/']);
+    };
+    this.publicModal.rightBtnTitle = "확인";
+  }
+
+  showDeleteModal(event) {
+    if (event) { event.stopPropagation(); }
+
+    this.resetPublicModal();
+    const setting = {
+      isModalOpen: true,
+      comment: '정말 삭제 하시겠어요?',
+      leftBtnTitle: '확인',
+      rightBtnTitle: '취소',
+      leftBtn: (event) => { this.deleteDocument(event) },
+      rightBtn: (event) => {
+        if (event) { event.stopPropagation(); }
+      
+        this.resetPublicModal();
+      }
     };
 
-    this.settingMarked();
+    this.publicModal = setting;
   }
 
   // 서버에 문서 삭제 요청을 하는 함수에요.
   private deleteDocument(event) {
-    event.stopPropagation();
+    if (event) { event.stopPropagation(); }
 
     this.network.removeDocument(this.accessToken, this.documentInfo)
       .subscribe(value => {
         this.router.navigate(['./']);
       });
-    // console.log('삭제 버튼이 눌렸으나, 기능은 작성되지 않았어요.');
   }
 
   // 서버로부터 문서를 가져옵니다.
@@ -124,13 +169,16 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
         this.getThumbUpCount();
       } else {
+
+        this.setPublicModalDefault(); // 모달 세팅.
+
         if (doc.code === 2) {
           const comment = '문서를 받아오는데 실패 했어요.\n';
-          this.modalComment = comment;
-          this.isModalOpen = true;
+          this.publicModal.comment = comment;
+          this.publicModal.isModalOpen = true;
         } else if (doc.code === 3) {
-          this.modalComment = doc.msg;
-          this.isModalOpen = true;
+          this.publicModal.comment = doc.msg;
+          this.publicModal.isModalOpen = true;
         }
       }
     });

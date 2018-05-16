@@ -32,7 +32,7 @@
             <button 
               id="delete"
               type="button"
-              (click)="deleteDocument($event)"
+              (click)="showDeleteModal($event)"
               >글 삭제
             </button>
           </div>
@@ -87,16 +87,31 @@
   </div>
 </div>
 
-<div id="modal" *ngIf="isModalOpen">
+<!-- 다용도 모달 -->
+<div id="modal" *ngIf="publicModal.isModalOpen">
   <div id="mainDiv">
     <div id="icon"><i class="material-icons">error_outline</i></div>
-    <div id="text">{{ modalComment }}</div>
+    <div id="text">{{ publicModal.comment }}</div>
     <div id="buttons">
-      <button (click)="modalFunction($event)">확인</button>
+      <div id="left"
+        *ngIf="publicModal.leftBtnTitle !== undefined"
+        >
+        <button (click)="publicModal.leftBtn($event)">
+          {{ publicModal.leftBtnTitle }}
+        </button>
+      </div>
+      <div id="right"
+        *ngIf="publicModal.rightBtnTitle !== undefined"
+        >
+        <button (click)="publicModal.rightBtn($event)">
+          {{ publicModal.rightBtnTitle }}
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- 스크랩 리스트 모달 -->
 <app-scrap-modal 
   [on]="isScrapModalOpen" 
   [document]="documentInfo"
