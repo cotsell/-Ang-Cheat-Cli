@@ -30,6 +30,7 @@ export class ScrapListModalComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit() {
     if (this.on) {
       this.subscribeAccount();
+      utils.bodyScroll(false);
     }
   }
 
@@ -145,6 +146,7 @@ export class ScrapListModalComponent implements OnInit, OnDestroy, OnChanges {
 
   pause() {
     utils.unSubscribe(this.accountSubc);
+    utils.bodyScroll(true);
   }
 
   closeModal(event) {

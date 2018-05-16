@@ -211,6 +211,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   // 비밀번호 확인 모달을 열어주는 함수.
   private modalOpen(event) {
     if (event) { event.stopPropagation(); }
+
     this.isModalOpen = true;
 
     // 프로필 폼 값 초기 설정
@@ -220,6 +221,8 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         signature: this.userInfo.signature
       }
     );
+
+    Utils.bodyScroll(false);
   }
 
   // 비밀번호 확인 모달을 취소하는 버튼.
@@ -228,6 +231,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
     this.isModalOpen = false;
     this.isEditMode = false;
+    Utils.bodyScroll(true);
   }
 
   // 유저가 입력한 확인용 비밀번호를 서버로 전송하는 버튼.
@@ -254,6 +258,8 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     } else {
       alert('패스워드를 입력해 주세요.');
     }
+
+    Utils.bodyScroll(true);
   }
 
   private resetCheckPassFormData() {
@@ -263,6 +269,13 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   // -----------------------------------------------------------
   // ---- 패스워드 변경 모달 관련
   // -----------------------------------------------------------
+
+  passModalOpen(event) {
+    if (event) { event.stopPropagation(); }
+
+    this.isPasswordModalOpen = true;
+    Utils.bodyScroll(false);
+  }
 
   // 패스워드 변경 모달에서 Submit을 누르면 실행되는 함수.
   private changePassword(event) {
@@ -274,18 +287,20 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         this.accessToken,
         this.changePassForm.value['oldPass'],
         this.changePassForm.value['newPass'])
-        .subscribe(value => {
-          console.log(value.msg);
-          if (value.result === true) {
-            // TODO 비밀번호 변경 성공했는데.. 뭐 모달 같은거라도 띄워줄까?
-            alert(conf.MSG_PROFILE_DETAIL_PASS_OK);
-            this.resetPasswordFormData();
-            this.isPasswordModalOpen = false;
-          } else {
-            // TODO 비밀번호 변경 실패시
-            alert(conf.MSG_PROFILE_DETAIL_PASS_ERROR2);
-          }
-        });
+      .subscribe(value => {
+        console.log(value.msg);
+
+        if (value.result === true) {
+          // TODO 비밀번호 변경 성공했는데.. 뭐 모달 같은거라도 띄워줄까?
+          alert(conf.MSG_PROFILE_DETAIL_PASS_OK);
+          this.resetPasswordFormData();
+          this.isPasswordModalOpen = false;
+          Utils.bodyScroll(true);
+        } else {
+          // TODO 비밀번호 변경 실패시
+          alert(conf.MSG_PROFILE_DETAIL_PASS_ERROR2);
+        }
+      });
     } else {
       alert('기존 비밀번호와, 새 비밀번호를\n 모두 입력 해 주세요.');
     }
@@ -297,6 +312,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
     this.resetPasswordFormData();
     this.isPasswordModalOpen = false;
+    Utils.bodyScroll(true);
   }
 
   // 패스워드 폼의 데이터를 모두 리셋해요.

@@ -77,7 +77,7 @@
         <div style="float: right;">
           <button 
             type="button" 
-            (click)="$event.stopPropagation(); isPasswordModalOpen = true;">
+            (click)="passModalOpen($event)">
             비밀번호 변경하기
           </button>
         </div>
@@ -104,69 +104,67 @@
 
 <!-- 프로필 내용 수정을 위해 패스워드를 다시 입력받는 모달 소환! -->
 <div *ngIf="isModalOpen" id="pass_confirm_modal_grid">
-    <div class="empty"></div>
-
-    <div></div>
-    <div id="modal">
-        <form [formGroup]="checkPassForm" (ngSubmit)="okModal($event)">
-            <div id="title">패스워드를 입력해주세요.</div>
-            <div id="password">
-                <input 
-                    type="password" 
-                    [formControlName]="'password'" 
-                    placeholder="패스워드"
-                    autofocus
-                    >
-            </div>
-            <button id="ok" type="submit" (click)="stopBubbling($event)">
-                <i class="material-icons">check</i>
-            </button>
-            <button id="cancel" type="reset" (click)="cancelModal($event)">
-                <i class="material-icons">close</i>
-            </button>
-        </form>
-    </div>
-    <div></div>
-
-    <div class="empty"></div>
-
+  <div id="modal">
+    <form [formGroup]="checkPassForm" (ngSubmit)="okModal($event)">
+      <div id="title">패스워드를 입력해주세요.</div>
+      <div id="password">
+        <input 
+          type="password" 
+          [formControlName]="'password'" 
+          placeholder="패스워드"
+          autofocus
+          >
+      </div>
+      <div id="buttons">
+        <button id="ok" type="submit" (click)="stopBubbling($event)">
+          <i class="material-icons">check</i>
+        </button>
+        <button id="cancel" type="reset" (click)="cancelModal($event)">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <!-- 패스워드 변경을 위한 모달 소환 -->
 <div id="passModalFlex" *ngIf="isPasswordModalOpen">
-    <form id="FormGrid" [formGroup]="changePassForm" (ngSubmit)="changePassword($event)">
-        <div id="icon"><i class="material-icons">priority_high</i></div>
-        <div id="oldPass">
-            <div class="lineDivUp">
-                <label for="oldPassInput">기존 비밀번호</label>
-            </div>
-            <div>
-                <input 
-                    id="oldPassInput" 
-                    type="password" 
-                    [formControlName]="'oldPass'"
-                    >
-            </div>
-        </div>
-        <div id="newPass">
-            <div class="lineDivUp">
-                <label for="newPassInput">새 비밀번호</label>
-            </div>
-            <div>
-                <input 
-                    id="newPassInput" 
-                    type="password"
-                    [formControlName]="'newPass'"
-                    >
-            </div>
-        </div>
-        <div id="okBtn">
-            <button type="submit" (click)="stopBubbling($event);">변경</button>
-        </div>
-        <div id="cancelBtn">
-            <button type="reset" (click)="passModalCancelButton($event)">취소</button>
-        </div>
-    </form>
+  <form id="FormGrid" 
+    [formGroup]="changePassForm" 
+    (ngSubmit)="changePassword($event)"
+    >
+    <div id="icon"><i class="material-icons">priority_high</i></div>
+    <div id="oldPass">
+      <div class="lineDivUp">
+        <label for="oldPassInput">기존 비밀번호</label>
+      </div>
+      <div>
+        <input 
+          id="oldPassInput" 
+          type="password" 
+          [formControlName]="'oldPass'"
+          >
+      </div>
+    </div>
+    <div id="newPass">
+      <div class="lineDivUp">
+        <label for="newPassInput">새 비밀번호</label>
+      </div>
+      <div>
+        <input 
+          id="newPassInput" 
+          type="password"
+          [formControlName]="'newPass'"
+          >
+      </div>
+    </div>
+    <div id="okBtn">
+      <button type="submit" (click)="stopBubbling($event);">변경</button>
+    </div>
+    <div id="cancelBtn">
+      <button type="reset" (click)="passModalCancelButton($event)">취소</button>
+    </div>
+  </form>
 </div>
 
 <!-- 스크랩 리스트 보기 모달 -->

@@ -140,10 +140,6 @@
 }
 
 #pass_confirm_modal_grid {
-  display: grid;
-  grid-template-columns: auto max-content auto;
-  grid-template-rows: auto max-content auto;
-
   position: fixed;
   top: 0px;
   left: 0px;
@@ -152,45 +148,49 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 2;
   transition-duration: 0.2s;
-
-  .empty {
-    grid-column: 1 / 4;
-  }
+  overflow: auto;
 
   #modal {
+    width: 320px;
     border-radius: 5px;
     background-color: white;
     padding: 2rem;
-
+    margin: 10% auto;
     text-align: center;
 
     #title {
       margin-bottom: 2rem;
     }
 
-    #ok {
-      border: none;
-      background-color: white;
-      float: left;
-      font-size: 2rem;
-      color: darkseagreen;
-      cursor: pointer;
+    #buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 2rem;
 
-      &:hover {
-        color: yellowgreen;
+      #ok {
+        justify-self: left;
+        border: none;
+        background-color: white;
+        font-size: 2rem;
+        color: darkseagreen;
+        cursor: pointer;
+  
+        &:hover {
+          color: yellowgreen;
+        }
       }
-    }
-
-    #cancel {
-      border: none;
-      background-color: white;
-      float: right;
-      font-size: 2rem;
-      color: red;
-      cursor: pointer;
-
-      &:hover {
-        color: sandybrown;
+  
+      #cancel {
+        justify-self: right;
+        border: none;
+        background-color: white;
+        font-size: 2rem;
+        color: red;
+        cursor: pointer;
+  
+        &:hover {
+          color: sandybrown;
+        }
       }
     }
     #password {
@@ -212,20 +212,19 @@
 }
 
 #passModalFlex {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   position: fixed;
   left: 0px;
   top: 0px;
-  right: 0px;
-  bottom: 0px;
+  width: 100%;
+  height: 100%;
 
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 2;
+  z-index: 3;
+  overflow: auto;
 
   #FormGrid {
+    margin: 10% auto 2% auto;
+
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 8rem 4rem 4rem 2rem;
