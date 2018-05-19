@@ -30,6 +30,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   isModalOpen = false; // Modal을 화면에 띄운 상태인지 구분.
   isPasswordModalOpen = false; // 비밀번호 변경 버튼 누를시 출력되는 모달 구분.
   isScrapListModalOpen = false; // 스크랩 리스트 모달 오픈 여부
+  isUserImgModalOpen = false; // 유저 이미지 변경 모달 오픈 여부
   isLoggedIn = false; // 로그인 되어 있는지 구분.
   accessToken: string;
   isEditMode = false; // 프로필 내용 수정모드로 변환 구분.
@@ -123,6 +124,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         if (result !== undefined && result !== null) {
           this.userInfo = result;
+          console.log(this.userInfo);
           this.getUserDocumentsCount();
           this.getScrap();
         }
@@ -337,6 +339,20 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
       this.isScrapListModalOpen = false;
     }
   }
+
+  // -----------------------------------------------------------
+  // ---- 유저 이미지 변경 모달 관련
+  // -----------------------------------------------------------
+  openChangingUserImgModal(event) {
+    if (event) { event.stopPropagation(); }
+
+    this.isUserImgModalOpen = !this.isUserImgModalOpen;
+  }
+
+  closeUserImgModal(event) {
+    this.isUserImgModalOpen = false;
+  }
+
 
   // ---------------------
   // ---- 기타 범용 함수

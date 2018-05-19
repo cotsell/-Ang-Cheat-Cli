@@ -63,6 +63,13 @@ export class Network {
         );
     }
 
+    changeUserImg(accessToken: string, formData: any): Observable<Result> {
+        return this.http.post<Result>(SysConf.CHANGE_USER_IMG,
+            formData,
+            { headers: { 'c-access-token': accessToken } }
+        );
+    }
+
     // TODO 이거 수정해야 해요. 용도 다르게 할 거임. 진짜 리스트 가져오는거로.
     getUserDocumentList(userId: string): Observable<Result> {
         return this.http.get<Result>(SysConf.GET_USER_DOCUMENT_LIST +

@@ -7,8 +7,19 @@
       (ngSubmit)="saveProfile($event)"
       >
       <div id="profile_grid">
-        <div id="user_img">
-          <i class="material-icons" style="font-size: 10rem; color: white;">account_circle</i>
+        <div id="userImgDiv"
+          (click)="openChangingUserImgModal($event)"
+          >
+          <i class="material-icons" 
+            *ngIf="userInfo.profileImgUrl === ''"
+            style="font-size: 10rem; color: white;"
+            >
+            account_circle
+          </i>
+          <img id="userImg"
+            *ngIf="userInfo.profileImgUrl !== ''"
+            [src]="'http://localhost:8010/' + userInfo.profileImgUrl"
+            >
         </div>
 
         <div id="rightDiv">
@@ -174,3 +185,10 @@
   (exit)="closeScrapListModal($event)"
   >
 </app-scrap-list-modal>
+
+<!-- 유저 이미지 변경 모달 -->
+<app-user-img-change-modal
+  [on]="isUserImgModalOpen"
+  (exit)="closeUserImgModal($event)"
+  >
+</app-user-img-change-modal>

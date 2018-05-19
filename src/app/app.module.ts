@@ -30,6 +30,7 @@ import { CategoryMakerComponent } from './components/category-maker/category-mak
 import { ScrapModalComponent } from './components/scrap-modal/scrap-modal.component';
 import { ScrapListModalComponent } from './components/scrap-list-modal/scrap-list-modal.component';
 import { DocumentOptionModalComponent } from './components/document-option-modal/document-option-modal.component';
+import { UserImgChangeModalComponent } from './components/user-img-change-modal/user-img-change-modal.component';
 
 const route: Routes = [
   { path: '', component: MainComponent },
@@ -63,7 +64,8 @@ const route: Routes = [
     CategoryMakerComponent,
     ScrapModalComponent,
     ScrapListModalComponent,
-    DocumentOptionModalComponent
+    DocumentOptionModalComponent,
+    UserImgChangeModalComponent
   ],
   imports: [
     BrowserModule,

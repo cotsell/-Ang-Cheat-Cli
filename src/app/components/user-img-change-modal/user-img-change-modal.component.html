@@ -1,0 +1,25 @@
+<div id="backGroundDiv" *ngIf="on">
+  <div id="container">
+    
+    <div id="imgDiv">
+      <img *ngIf="img !== undefined" [src]="img">
+    </div>
+
+    <div id="fileSelect">
+      <input #file type="file" 
+        accept="image/*"
+        (change)="onFileChange(file.files)"
+        >
+    </div>
+
+    <div id="buttons">
+      <div id="ok">
+        <button type="button" (click)="okBtn($event, file.files)">변경</button>
+      </div>
+      <div id="cancel">
+        <button type="button" (click)="cancelBtn($event)">취소</button>
+      </div>
+    </div>
+
+  </div>
+</div>

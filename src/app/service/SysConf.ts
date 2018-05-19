@@ -13,6 +13,7 @@ export const UPDATE_USER = SERVER_ADDRESS + '/account/user/update';
 export const REMOVE_USER = SERVER_ADDRESS + '/account/user/remove';
 export const CHANGE_PASSWORD = SERVER_ADDRESS + '/account/user/changePassword';
 export const CHECK_PASSWORD = SERVER_ADDRESS + '/account/user/checkPassword';
+export const CHANGE_USER_IMG = SERVER_ADDRESS + '/account/user/changeUserImg';
 
 // Document
 const DOCUMENT = '/document';
