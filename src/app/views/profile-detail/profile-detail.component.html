@@ -11,14 +11,14 @@
           (click)="openChangingUserImgModal($event)"
           >
           <i class="material-icons" 
-            *ngIf="userInfo.profileImgUrl === ''"
+            *ngIf="userInfo?.profileImgUrl === ''"
             style="font-size: 10rem; color: white;"
             >
             account_circle
           </i>
           <img id="userImg"
-            *ngIf="userInfo.profileImgUrl !== ''"
-            [src]="'http://localhost:8010/' + userInfo.profileImgUrl"
+            *ngIf="userInfo?.profileImgUrl !== ''"
+            [src]="'http://localhost:8010/' + userInfo?.profileImgUrl"
             >
         </div>
 

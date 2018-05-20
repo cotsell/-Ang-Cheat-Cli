@@ -90,33 +90,33 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-    private subscribeAccountAndTryLogin() {
-        this.accountSubscription = this.account.loginWithAccessToken(
-            result => {
-                this.isLoggedIn = result.loggedIn;
-                this.accessToken = result.accessToken;
-            },
-            () => {
-                // TODO 로그인 실패시 유저에게 뭘 해줘야 할지.
-                console.log('로그인 실패');
+  private subscribeAccountAndTryLogin() {
+    this.accountSubscription = this.account.loginWithAccessToken(
+      result => {
+        this.isLoggedIn = result.loggedIn;
+        this.accessToken = result.accessToken;
+      },
+      () => {
+        // TODO 로그인 실패시 유저에게 뭘 해줘야 할지.
+        console.log('로그인 실패');
 
-                // 다른 유저 정보 보기는 로그인 안해도 가능.
-                // 다른 유저 정보 보기모드가 아닌 경우에는 로그아웃 상태면 메인화면으로 백.
-                const userId = this.route.snapshot.params['id'];
-                if (isMyProfileMode()) {
-                    console.log(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
-                    this.router.navigate(['/']);
-                } else {
-                    // 다른 유저 정보 보기 모드에서는 아무것도 하지 말자..
-                }
+        // 다른 유저 정보 보기는 로그인 안해도 가능.
+        // 다른 유저 정보 보기모드가 아닌 경우에는 로그아웃 상태면 메인화면으로 백.
+        const userId = this.route.snapshot.params['id'];
+        if (isMyProfileMode()) {
+          console.log(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
+          this.router.navigate(['/']);
+        } else {
+          // 다른 유저 정보 보기 모드에서는 아무것도 하지 말자..
+        }
 
-                // ---- 정리용도 함수들 ----
-                function isMyProfileMode() {
-                    return (userId === undefined || userId === null || userId === '');
-                }
-            }
-        );
-    }
+        // ---- 정리용도 함수들 ----
+        function isMyProfileMode() {
+          return (userId === undefined || userId === null || userId === '');
+        }
+      }
+    );
+  }
 
   // 리덕스에서 사용자 정보를 구독하고, 유저가 작성한 문서 리스트도 가져옵니다.
   private subscribeUserInfo() {
@@ -124,7 +124,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         if (result !== undefined && result !== null) {
           this.userInfo = result;
-          console.log(this.userInfo);
+          // console.log(this.userInfo);
           this.getUserDocumentsCount();
           this.getScrap();
         }

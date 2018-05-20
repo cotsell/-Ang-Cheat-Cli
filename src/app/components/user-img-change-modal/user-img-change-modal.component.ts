@@ -36,7 +36,7 @@ export class UserImgChangeModalComponent implements OnInit, OnChanges, OnDestroy
       const reader = new FileReader();
       reader.onload = () => {
         this.img = reader.result;
-        console.log(this.img);
+        // console.log(this.img);
       }
       reader.readAsDataURL(file);
 
@@ -55,8 +55,10 @@ export class UserImgChangeModalComponent implements OnInit, OnChanges, OnDestroy
     .subscribe(result => {
       if (result.result === true) {
 
-        console.log(result.msg);
+        // console.log(result.msg);
+        // console.log(result.payload);
         this.store.dispatch(new ChangeUserImgUrl(result.payload));
+        this.exit.emit(true);
 
       } else {
 
