@@ -14,9 +14,6 @@
   width: 100%;
 
   #profile_form {
-    // display: inline-block !important;
-    // width: max-content;
-    // height: max-content;
     background-color: white;
     padding: 2rem;
     border-radius: 5px;
@@ -29,6 +26,8 @@
       width: 100%;
 
       #userImgDiv {
+        align-self: center;
+        justify-content: center;
         height: 10rem;
         width: 10rem;
         background-color: #4d4d4d;

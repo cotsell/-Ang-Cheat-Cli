@@ -1,12 +1,27 @@
 <div id="main_grid">
-  <div id="img_div">
-    <i class="material-icons" style="font-size: 10rem">account_circle</i>
+  <div id="imgDiv">
+    <i class="material-icons" 
+      *ngIf="userInfo?.profileImgUrl === ''"
+      >
+      account_circle
+    </i>
+    <img id="profileImg"
+      *ngIf="userInfo?.profileImgUrl !== ''"
+      [src]="SERVER_ADDRESS + '/' + userInfo?.profileImgUrl"
+      >
   </div>
 
   <div id="text_div">{{ userInfo?.signature }}</div>
 
-  <div id="profile_div">
-    {{ userInfo?.nickName }}님<br>
+  <div id="profileDiv">
+    <div>
+      <span id="nickName"
+        (click)="showUserProfile($event)"
+        >
+        {{ userInfo?.nickName }}
+      </span>
+      님
+    </div>
     총 추천 수 : {{ userInfo?.totalThumbUp }}<br>
     총 작성 글 수: {{ userInfo?.myDocumentIdList?.length }}
   </div>

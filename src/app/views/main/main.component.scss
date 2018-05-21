@@ -1,51 +1,53 @@
 @import '../../../styles';
 
-#main_grid {
-    display: grid;
-    grid-template-rows: auto;
-    // height: calc(100% - 2rem);
-    width: 100%;
-}
+#mainDiv {
+    width: 768px;
+    margin: 0px auto 0px auto;
+    background-color: white;
 
-#titlebar_div {
+    #firstDiv {
+        display: grid;
+        grid-template-columns: auto 300px;
+
+        #notice {
+            grid-column: 1 / 2;
+        }
+    
+        #loginDiv {
+            grid-column: 2 / 3;
+            margin-top: 10%;
+            width: 300px;
+            height: max-content;
+        }
+    }
 }
 
 #main_div {
 
 }
 
-#login_div {
-    position: fixed;
-    width: 300px;
-    height: max-content;
-    top: 20%;
-    left: calc(90% - 300px);
-    z-index: 1;
-}
 
 // 미디어 쿼리
 @media (max-width: $g_mediaMiddle - 1px) {
-    #main_grid {
-        grid-template-rows: max-content auto;
-    }
-    #login_div {
-        position: static;
+    #mainDiv {
         width: 100%;
+        #firstDiv {
+            display: block;
+            #loginDiv {
+                margin: 0px;
+                width: 100%;
+            }
+        }
     }
 }
 
 @media (min-width: $g_mediaMiddle) and (max-width: $g_mediaTablet - 1px) {
-    #main_grid {
-        grid-template-rows: max-content auto;
-    }
-    #login_div {
-        position: static;
+    #mainDiv {
         width: 100%;
     }
 }
 
 @media (min-width: $g_mediaTablet) {
-
 }
 
 @media (min-width: $g_mediaLaptop) {

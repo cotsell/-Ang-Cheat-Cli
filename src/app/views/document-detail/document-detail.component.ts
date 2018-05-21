@@ -250,32 +250,38 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   // Tags 컴포넌트에서 새로운 태그가 입력되면 이게 실행돼요.
-  private sendNewTag(event) {
-    // console.log('sendNewTag()');
-    // console.log(event);
+  sendNewTag(event) {
 
-    this.network.newTag(this.accessToken, this.documentInfo._id, event)
-    .subscribe(value => {
-      if (value.result === true) {
-        console.log(value.msg);
-        this.store.dispatch(new DocuDetail.AddNewTagArticle(event));
-      } else {
-        if (value.code === 1) {
-          console.log('엑세스토큰에 문제가 생겼어요.');
-          alert(conf.MSG_DOCUMENT_DETAIL_ACCESS_TOKEN_ERROR);
-          // TODO 엑세스토큰 만료 요류라면 로그아웃 처리 필요.
+    if (this.accessToken !== undefined && this.accessToken !== '' &&
+        this.userInfo.id === this.documentInfo.userId ) {
+
+      this.network.newTag(this.accessToken, this.documentInfo._id, event)
+      .subscribe(value => {
+        if (value.result === true) {
+          console.log(value.msg);
+          this.store.dispatch(new DocuDetail.AddNewTagArticle(event));
         } else {
-          // TODO 삭제 실패시 처리...
+          if (value.code === 1) {
+            console.log('엑세스토큰에 문제가 생겼어요.');
+            alert(conf.MSG_DOCUMENT_DETAIL_ACCESS_TOKEN_ERROR);
+            this.router.navigate(['/']);
+          } else {
+            // TODO 삭제 실패시 처리...
+          }
         }
-      }
-    });
+      });
+    } else {
+      console.error(`비 로그인 상태이거나, 로그인 유저가 문서 작성자가 아니에요.`);
+    }
   }
 
   // Tags 컴포넌트에서 태그 삭제가 요청되면 이게 실행돼요.
-  private removeTagArticle(event) {
-    // console.log(event);
+  removeTagArticle(event) {
 
-    this.network.removeTag(this.accessToken, this.documentInfo._id, event)
+    if (this.accessToken !== undefined && this.accessToken !== '' &&
+        this.userInfo.id === this.documentInfo.userId ) {
+
+      this.network.removeTag(this.accessToken, this.documentInfo._id, event)
       .subscribe(value => {
         if (value.result === true) {
           console.log(value.msg);
@@ -290,18 +296,30 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
           }
         }
       });
+    } else {
+      console.error(`비 로그인 상태이거나, 로그인 유저가 문서 작성자가 아니에요.`);
+    }
   }
 
   private scrap(event) {
     if (event) { event.stopPropagation(); }
 
-    this.isScrapModalOpen = true;
+    if (this.accessToken !== undefined && 
+        this.userInfo !== undefined && this.userInfo.id !== undefined) {
+
+      this.isScrapModalOpen = true;
+    } else {
+      console.error(`비 로그인 상태에요.`)
+    }
   }
 
   private thumbUp(event) {
     if (event) { event.stopPropagation(); }
 
-    this.network.setThumbUp(this.accessToken, this.documentInfo.historyId)
+    if (this.accessToken !== undefined && 
+        this.userInfo !== undefined && this.userInfo.id !== undefined) {
+
+      this.network.setThumbUp(this.accessToken, this.documentInfo.historyId)
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);
@@ -311,6 +329,9 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
           console.error(result.msg);
         }
       });
+    } else {
+      console.error(`비로그인 상태에요.`)
+    }
   }
 
   // -----------------------------------------------------------

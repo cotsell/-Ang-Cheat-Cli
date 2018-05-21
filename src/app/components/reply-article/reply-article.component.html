@@ -1,45 +1,48 @@
-<div *ngIf="isReReply === false" id="main_grid">
-  <div id="nick_name">
-    <i class="material-icons">face</i>
-    {{ reply?.userInfo?.nickName }}
-  </div>
-  
-  <div>
-    <div id="modify"
-      *ngIf="isAbleToShowEditButtons === true"
-      (click)="changeTextEditMode($event)">
-      수정
+<div *ngIf="isReReply === false"> 
+ <div id="topGrid">
+    <div id="nick_name">
+      <i class="material-icons">face</i>
+      {{ reply?.userInfo?.nickName }}
+    </div>
+
+    <div id="modify">
+      <div
+        *ngIf="isAbleToShowEditButtons === true"
+        (click)="changeTextEditMode($event)">
+        수정
+      </div>
+    </div>
+
+    <div id="remove">
+      <div
+        *ngIf="isAbleToShowEditButtons === true"
+        (click)="removeReply($event)">
+        삭제
+      </div>
+    </div>
+
+    <div id="write_comment">
+      <div
+        *ngIf="isAbleToShowReplyButton === true"
+        (click)="changeCommentShowed($event)">
+        댓글
+      </div>
+    </div>
+
+    <div id="created_time">
+      <i class="material-icons">access_time</i>
+      {{ changeTimeString(reply?.createdTime, false) }}
     </div>
   </div>
 
-  <div>
-    <div id="remove"
-      *ngIf="isAbleToShowEditButtons === true"
-      (click)="removeReply($event)">
-      삭제
-    </div>
-  </div>
-
-  <div>
-    <div id="write_comment"
-      *ngIf="isAbleToShowReplyButton === true"
-      (click)="changeCommentShowed($event)">
-      댓글
-    </div>
-  </div>
-
-  <div id="created_time">
-    <i class="material-icons">access_time</i>
-    {{ changeTimeString(reply?.createdTime, false) }}
-  </div>
-
-  <div id="text">
+  <div id="textGrid">
 
     <div id="textPrint"
       *ngIf="isTextEditMode === false">
       {{ reply.text }}
     </div>
 
+    <!-- 리플 내용 수정 화면 -->
     <div id="textEdit"
       *ngIf="isTextEditMode === true"
       >
@@ -68,13 +71,13 @@
       <textarea #textarea></textarea>
     </div>
     <div id="buttons">
-      <button 
-        type="button" 
+      <button
+        type="button"
         (click)="sendRereply($event)">
         저장
       </button>
-      <button 
-        type="button" 
+      <button
+        type="button"
         (click)="resetWriting($event)">
         취소
       </button>
@@ -86,52 +89,52 @@
 
 
 
-
-
 <!-- 리리플모드 -->
-<div *ngIf="isReReply === true" id="rereply_main_grid">
-  <div id="rereply_icon">
-    <i class="material-icons">subdirectory_arrow_right</i>
-  </div>
-  <div id="nick_name">
-    <i class="material-icons">face</i>
-    {{ reply?.userInfo?.nickName }}
-  </div>
+<div *ngIf="isReReply === true">
+  <div id="rereplyTopGrid">
+    <div id="rereply_icon">
+      <i class="material-icons">subdirectory_arrow_right</i>
+    </div>
+    <div id="nick_name">
+      <i class="material-icons">face</i>
+      {{ reply?.userInfo?.nickName }}
+    </div>
 
-  <div>
-    <div id="modify"
-      *ngIf="isAbleToShowEditButtons === true"
-      (click)="changeTextEditMode($event)"
-      >
-      수정
+    <div id="modify">
+      <div
+        *ngIf="isAbleToShowEditButtons === true"
+        (click)="changeTextEditMode($event)"
+        >
+        수정
+      </div>
+    </div>
+
+    <div id="remove">
+      <div
+        *ngIf="isAbleToShowEditButtons === true"
+        (click)="removeRereply($event)"
+        >
+        삭제
+      </div>
+    </div>
+
+    <div id="write_comment">
+      <div
+        *ngIf="isAbleToShowReplyButton === true"
+        (click)="changeCommentShowed($event)"
+        >
+        댓글
+      </div>
+    </div>
+
+    <div id="created_time">
+      <i class="material-icons">access_time</i>
+      {{ changeTimeString(reply?.createdTime, false) }}
     </div>
   </div>
 
-  <div>
-    <div id="remove"
-      *ngIf="isAbleToShowEditButtons === true"
-      (click)="removeRereply($event)"
-      >
-      삭제
-    </div>
-  </div>
+  <div id="rereplyTextDiv">
 
-  <div>
-    <div id="write_comment"
-      *ngIf="isAbleToShowReplyButton === true"
-      (click)="changeCommentShowed($event)"
-      >
-      댓글
-    </div>
-  </div>
-
-  <div id="created_time">
-    <i class="material-icons">access_time</i> 
-    {{ changeTimeString(reply?.createdTime, false) }}
-  </div>
-    
-  <div id="rereplyText">
-      
     <div id="textPrint"
       *ngIf="isTextEditMode === false">
       <div id="text">
@@ -172,13 +175,13 @@
       <textarea #textarea></textarea>
     </div>
     <div id="buttons">
-      <button 
-        type="button" 
+      <button
+        type="button"
         (click)="sendRereply($event)">
         저장
       </button>
-      <button 
-        type="button" 
+      <button
+        type="button"
         (click)="resetWriting($event)">
         취소
       </button>

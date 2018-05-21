@@ -37,7 +37,8 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   isEditable = false; // 프로필 수정하기 버튼을 화면에 표시할지 구분.
   userInfo: UserInfo;
   userDocumentsCount = 0;
-  
+  readonly SERVER_ADDRESS = conf.SERVER_ADDRESS;
+
   userScrapList: Scrap[] = [];
 
   accountSubscription: Subscription;
@@ -331,7 +332,11 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   changeScrapListModalState(event) {
     if (event) { event.stopPropagation(); }
 
-    this.isScrapListModalOpen = !this.isScrapListModalOpen;
+    this.isThisProfileForPlayer(() => {
+      this.isScrapListModalOpen = !this.isScrapListModalOpen;
+    });
+
+    // this.isScrapListModalOpen = !this.isScrapListModalOpen;
   }
 
   closeScrapListModal(event: boolean) {
@@ -346,7 +351,10 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   openChangingUserImgModal(event) {
     if (event) { event.stopPropagation(); }
 
-    this.isUserImgModalOpen = !this.isUserImgModalOpen;
+    this.isThisProfileForPlayer(() => {
+      this.isUserImgModalOpen = !this.isUserImgModalOpen;
+    });
+
   }
 
   closeUserImgModal(event) {
@@ -357,7 +365,40 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   // ---------------------
   // ---- 기타 범용 함수
   // ---------------------
-  private stopBubbling(event) {
+
+  isThisProfileForPlayer(cb: Function) {
+    if (this.accessToken !== undefined &&
+        !hasUserInfoProblem(this.userInfo) &&
+        isSameUser(this.accessToken, this.userInfo)) {
+
+      cb();
+
+    }
+
+    // -----------------------------------------------------------
+    // ---- 정리용 함수 모음
+    // -----------------------------------------------------------
+
+    // 아직 유저정보가 제대로 채워지지 않았을 때 눌렸을 수도 있으니까..
+    function hasUserInfoProblem(obj: UserInfo) {
+      obj === undefined || obj.id === undefined || obj.id === '' ?
+        true : false;
+    }
+
+    function isSameUser(accessToken: string, userInfo: UserInfo) {
+      const loginUserId = Utils.jwtDecode(accessToken)['userId'];
+      if (loginUserId === undefined || loginUserId === '' ||
+          loginUserId !== userInfo.id) {
+
+        console.error(`로그인 한 사용자 ${loginUserId}와 프로필 사용자 ${userInfo.id}는 다른 사람이에요.`);
+        return false;
+
+      }
+      return true;
+    }
+  }
+
+  stopBubbling(event) {
     if (event) { event.stopPropagation(); }
   }
 

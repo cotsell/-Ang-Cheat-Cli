@@ -18,7 +18,7 @@
           </i>
           <img id="userImg"
             *ngIf="userInfo?.profileImgUrl !== ''"
-            [src]="'http://localhost:8010/' + userInfo?.profileImgUrl"
+            [src]="SERVER_ADDRESS + '/' + userInfo?.profileImgUrl"
             >
         </div>
 

@@ -1,20 +1,22 @@
-#main_grid {
+#topGrid {
   display: grid;
   grid-template-columns: auto 2rem 2rem 2rem 5rem;
-  grid-template-rows: 2rem max-content max-content;
+  align-items: center;
+  background-color: lightgray;
 }
 
-#rereply_main_grid {
+#rereplyTopGrid {
   display: grid;
   grid-template-columns: 1rem auto 2rem 2rem 2rem 5rem;
-  grid-template-rows: 2rem max-content max-content;
   align-items: center;
-  // background-color: yellowgreen;
+  background-color: lightgray;
+}
+
+#textGrid {
+
 }
 
 #rereply_icon {
-  // height: 2rem;
-  // width: 1rem;
   i {
     font-size: 1rem;
   }
@@ -26,36 +28,43 @@
   height: 2rem;
   i {
     font-size: 1rem;
+    margin-right: 1rem;
   }
 }
 
 #modify {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 0.8rem;
-  &:hover {
-    color: yellowgreen;
+  div {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    &:hover {
+      color: yellowgreen;
+    }
   }
 }
 
 #remove {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 0.8rem;
-  &:hover {
-    color: yellowgreen;
+  div {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    &:hover {
+      color: yellowgreen;
+    }
   }
 }
 
 #write_comment {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 0.8rem;
-  &:hover {
-    color: yellowgreen;
+  div {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    &:hover {
+      color: yellowgreen;
+    }
   }
 }
 
@@ -71,17 +80,9 @@
   }
 }
 
-#text {
-  grid-column: 1 / 5;
-  
-  #textPrint {
-  }
-}
-
-#rereplyText {
-  grid-column: 2 / 5;
-  
+#rereplyTextDiv {
   #text {
+    margin-left: 2rem;
     #parentUserId {
       display: inline-block;
       color: tomato;
