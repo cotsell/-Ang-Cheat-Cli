@@ -24,8 +24,8 @@ export class PaginationComponent implements OnInit, OnChanges {
     @Input() totalArticle = 0;
     @Input() perPage = 10;
     @Output() output: EventEmitter<number> = new EventEmitter();
-    private MAX_PAGE = 0;
-    private pages: Page[] = [];
+    MAX_PAGE = 0;
+    pages: Page[] = [];
 
     constructor() { }
 
@@ -37,7 +37,7 @@ export class PaginationComponent implements OnInit, OnChanges {
         // console.log(this.pages);
     }
 
-    private reRender() {
+    reRender() {
         let start = 1;
         let end = 10;
         this.MAX_PAGE = (this.totalArticle / this.perPage);
@@ -83,7 +83,7 @@ export class PaginationComponent implements OnInit, OnChanges {
     }
 
     // 페이지 변경을 하면 실행되는 함수에요
-    private outputCursor(number, event?) {
+    outputCursor(number, event?) {
         if (event !== undefined && event !== null) {
             event.stopPropagation();
         }
@@ -91,7 +91,7 @@ export class PaginationComponent implements OnInit, OnChanges {
     }
 
     // 왼쪽방향 커서를 클릭하면 실행
-    private leftCursor(event) {
+    leftCursor(event) {
         event.stopPropagation();
         const result = this.cursor - 1;
         if (result < 1) {
@@ -102,7 +102,7 @@ export class PaginationComponent implements OnInit, OnChanges {
     }
 
     // 오른쪽 방향 커서를 클릭하면 실행
-    private rightCursor(event) {
+    rightCursor(event) {
         event.stopPropagation();
         const result = this.cursor + 1;
         if (result > this.MAX_PAGE) {

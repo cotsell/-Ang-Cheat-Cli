@@ -10,7 +10,7 @@ import * as UserInfoRedux from './redux/UserInfoReducer';
 import * as AccountRedux from './redux/AccountReducer';
 
 @Injectable()
-export default class Account {
+export class Account {
 
   constructor(
     private network: Network,

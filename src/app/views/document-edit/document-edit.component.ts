@@ -9,7 +9,7 @@ import * as marked from 'marked';
 import * as prism from 'prismjs';
 
 import * as Redux from '../../service/redux';
-import Account from '../../service/Account';
+import { Account } from '../../service/Account';
 import { UserInfo, DocumentInfo } from '../../service/Interface';
 import * as Utils from '../../service/utils';
 
@@ -163,14 +163,14 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   // 에디터 화면에 작성중인 내용을 우측의 프리뷰 화면에 출력하기 위한
-  private copyTextToPreview(event) {
+  copyTextToPreview(event) {
     // this.previewText = this.textForm.value.text;
     this.preview_target.nativeElement.innerHTML = marked(this.textForm.value.text);
     prism.highlightAllUnder(this.preview_target.nativeElement);
     // this.previewText = event.target.value;
   }
 
-  private getDocumentFromServer(documentId: string) {
+  getDocumentFromServer(documentId: string) {
 
     // TODO sdafkjsafkjkasdfjasf
     let observable;
@@ -206,12 +206,12 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   // 이벤트 버블링 방지 함수.
-  private stopBubbling(event) {
+  stopBubbling(event) {
     if (event) { event.stopPropagation(); }
   }
 
   // 프리뷰 보여줄건지 아닌지..
-  private changePreviewMode(event) {
+  changePreviewMode(event) {
     if (event) { event.stopPropagation(); }
 
     this.isPreviewMode = !this.isPreviewMode;
@@ -222,7 +222,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   // 취소 버튼. 이전 페이지로 이동.
-  private cancelBtn(event) {
+  cancelBtn(event) {
     if (event) { event.stopPropagation(); }
 
     this.location.back();
@@ -246,7 +246,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   // -----------------------------------------------------------------------
   // MarkDown Setting
   // -----------------------------------------------------------------------
-  private settingMakred() {
+  settingMakred() {
     marked.setOptions({
       renderer: new marked.Renderer(),
       gfm: true,

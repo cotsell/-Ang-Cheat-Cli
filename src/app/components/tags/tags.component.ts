@@ -25,14 +25,14 @@ export class TagsComponent implements OnInit {
   @Output() insert: EventEmitter<string> = new EventEmitter();
   @Output() remove: EventEmitter<string> = new EventEmitter();
 
-  private _tagList: Tag[] = [];
+  _tagList: Tag[] = [];
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  private insertNewTag(event) {
+  insertNewTag(event) {
     if (event) { event.stopPropagation(); }
 
     if (event.key === 'Enter') {
@@ -49,7 +49,7 @@ export class TagsComponent implements OnInit {
     }
   }
 
-  private removeTag(event) {
+  removeTag(event) {
     if (event) { event.stopPropagation(); }
 
     const title = event.target.innerText;

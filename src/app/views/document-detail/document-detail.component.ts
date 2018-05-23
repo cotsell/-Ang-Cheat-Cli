@@ -28,7 +28,7 @@ import { Network } from '../../service/Network';
 import * as Utils from '../../service/utils';
 import { Store } from '@ngrx/store';
 import * as Redux from '../../service/redux';
-import Account from '../../service/Account';
+import { Account } from '../../service/Account';
 import * as DocuDetail from '../../service/redux/DocumentDetailReducer';
 import * as conf from '../../service/SysConf';
 
@@ -61,7 +61,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   };
 
   // 함수들..
-  private changeTimeString;
+  changeTimeString;
 
   constructor(
     private route: ActivatedRoute,
@@ -127,7 +127,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   // 서버에 문서 삭제 요청을 하는 함수에요.
-  private deleteDocument(event) {
+  deleteDocument(event) {
     if (event) { event.stopPropagation(); }
 
     this.network.removeDocument(this.accessToken, this.documentInfo)
@@ -137,7 +137,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   // 서버로부터 문서를 가져옵니다.
-  private getDocumentFromServer() {
+  getDocumentFromServer() {
     const docHistoryId = this.route.snapshot.params['id'];
 
     let observable;
@@ -185,7 +185,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   // 엄지척 갯수를 가져와요.
-  private getThumbUpCount() {
+  getThumbUpCount() {
     this.network.getThumbUpCount(this.documentInfo.historyId)
       .subscribe(result => {
         if (result.result === true) {
@@ -197,20 +197,20 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  private changeEditMode(event?) {
+  changeEditMode(event?) {
     if (event) { event.stopPropagation(); }
 
     this.router.navigate(['./writeDocu', this.documentInfo.historyId, 'edit']);
   }
 
   // TODO 미완성.
-  private clickEvent(event) {
+  clickEvent(event) {
     if (event) { event.stopPropagation(); }
   }
 
   // account 리덕스를 구독하고,
   // 내친김에 로컬 저장소에 AccessToken과 userId가 있다면, 로그인을 시도합니다.
-  private subscribeAccountAndTryLoginWithAccessToken() {
+  subscribeAccountAndTryLoginWithAccessToken() {
     this.accountSubscription = this.account.loginWithAccessToken(result => {
       this.isLoggedIn = result.loggedIn;
       this.accessToken = result.accessToken;
@@ -222,7 +222,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   // UserInfo 리덕스를 구독해요.
-  private subscribeUserInfo() {
+  subscribeUserInfo() {
     this.store.select(Redux.getUserInfo)
       .subscribe(userInfo => {
         this.userInfo = userInfo;
@@ -231,7 +231,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   // DocumentDetail 리덕스를 구독해요.
-  private subscribeDocumentDetail() {
+  subscribeDocumentDetail() {
     this.store.select(Redux.getDocumentDetail)
       .subscribe(doc => {
         this.documentInfo = Object.assign({}, doc);
@@ -241,7 +241,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   // 문서 수정 버튼을 출력할 것인지를 결정.
-  private changeDocCtrlState() {
+  changeDocCtrlState() {
     if (this.documentInfo !== undefined && this.userInfo !== undefined) {
       if (this.documentInfo.userId === this.userInfo.id) {
         this.canUserControlDocument = true;
@@ -301,7 +301,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private scrap(event) {
+  scrap(event) {
     if (event) { event.stopPropagation(); }
 
     if (this.accessToken !== undefined && 
@@ -313,7 +313,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private thumbUp(event) {
+  thumbUp(event) {
     if (event) { event.stopPropagation(); }
 
     if (this.accessToken !== undefined && 
@@ -337,7 +337,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   // -----------------------------------------------------------
   // ---- MarkDown & PrismJS
   // -----------------------------------------------------------
-  private settingMarked() {
+  settingMarked() {
     marked.setOptions({
       renderer: new marked.Renderer(),
       gfm: true,
@@ -352,7 +352,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   // 문서내에 있는 마크다운과 코드 하이라이팅을 적용해서 다시 화면 랜더링.
-  private renderMarkdownAndPrism() {
+  renderMarkdownAndPrism() {
     if (this.documentInfo.text !== undefined) {
       this.target.nativeElement.innerHTML = marked(this.documentInfo.text);
       prism.highlightAllUnder(this.target.nativeElement);

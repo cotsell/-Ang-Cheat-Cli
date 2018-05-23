@@ -36,7 +36,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
     this.subscribeDocument();
   }
 
-  private subscribeAccount() {
+  subscribeAccount() {
     this.accountSubc = this.store.select(Redux.getAccount)
       .subscribe(value => {
         this.account = {
@@ -46,7 +46,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
       });
   }
 
-  private subscribeUserInfo() {
+  subscribeUserInfo() {
     this.userInfoSubc = this.store.select(Redux.getUserInfo)
       .subscribe(value => {
         this.userInfo = value;
@@ -54,7 +54,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   }
 
   // document를 구독하고, 해당 문서의 리플을 가져와요.
-  private subscribeDocument() {
+  subscribeDocument() {
     this.documentSubc = this.store.select(Redux.getDocumentDetail)
       .subscribe(value => {
         this.document = value;
@@ -66,14 +66,14 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   }
 
   // 리플작성 화면 화면에 보여줄까 말까
-  private changeReplyEditMode(event) {
+  changeReplyEditMode(event) {
     if (event) { event.stopPropagation(); }
 
     this.isReplyEditMode = !this.isReplyEditMode;
   }
 
   // 새로운 리플 작성.
-  private submitReply(event) {
+  submitReply(event) {
     if (event) { event.stopPropagation(); }
 
     const reply: Reply = {
@@ -102,7 +102,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   }
 
   // 새로운 리리플 작성.
-  private submitRereply(event) {
+  submitRereply(event) {
     const reply: Reply =
       Object.assign({}, {...event, userId: this.userInfo.id });
 
@@ -127,7 +127,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   }
 
   // 해당 문서의 리플 가져오기.
-  private getReply() {
+  getReply() {
     this.network.getReply(this.document.historyId)
       .subscribe(result => {
         if (result.result === true) {
@@ -233,7 +233,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   }
 
   // 리플 삭제.
-  private removeReply(event) {
+  removeReply(event) {
     const replyId = event;
     this.network.removeReply(this.account.accessToken, replyId)
       .subscribe(result => {
@@ -254,7 +254,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   }
 
   // 리리플 삭제
-  private removeRereply(event) {
+  removeRereply(event) {
     const rereply = event;
 
     this.network.removeRereply(this.account.accessToken, rereply)
@@ -274,7 +274,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   }
 
   // 리플 업데이트
-  private updateReply(event) {
+  updateReply(event) {
     console.log(event);
 
     this.network.updateReply(this.account.accessToken, event)
@@ -297,7 +297,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   }
 
   // 리리플 업데이트
-  private updateRereply(event) {
+  updateRereply(event) {
     console.log(event);
 
     this.network.updateRereply(this.account.accessToken, event)

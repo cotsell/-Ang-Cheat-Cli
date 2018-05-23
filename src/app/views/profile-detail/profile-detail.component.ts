@@ -15,7 +15,7 @@ import { Subscription } from 'rxJs';
 
 import { Network } from '../../service/Network';
 import * as Redux from '../../service/redux';
-import Account from '../../service/Account';
+import { Account } from '../../service/Account';
 import * as Utils from '../../service/utils';
 import { UserInfo, Result, Scrap } from '../../service/Interface';
 import { ModifyUserInfo } from '../../service/redux/UserInfoReducer';
@@ -39,13 +39,13 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   userDocumentsCount = 0;
   readonly SERVER_ADDRESS = conf.SERVER_ADDRESS;
 
-  userScrapList: Scrap[] = [];
+  userScrapList: Scrap = undefined;
 
   accountSubscription: Subscription;
   userInfoSubscription: Subscription;
 
   // 프로필 폼 설정.
-  private profileForm: FormGroup = new FormGroup(
+  profileForm: FormGroup = new FormGroup(
     {
       nickName: new FormControl('', Validators.required),
       signature: new FormControl('')
@@ -53,7 +53,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   );
 
   // 비밀번호 변경 폼.
-  private changePassForm: FormGroup = new FormGroup(
+  changePassForm: FormGroup = new FormGroup(
     {
       oldPass: new FormControl('',
         [Validators.required, Validators.minLength(8)]),
@@ -63,7 +63,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   );
 
   // 비밀번호 확인 폼.
-  private checkPassForm: FormGroup = new FormGroup(
+  checkPassForm: FormGroup = new FormGroup(
     { password: new FormControl("", Validators.required) }
   );
 
@@ -80,7 +80,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   }
 
   // 컴포넌트가 로그인 유저 정보를 보여줄지, 다른 유저의 정보를 보여줄지 결정.
-  private subscribeSelectedUserInfo() {
+  subscribeSelectedUserInfo() {
     const userId = this.route.snapshot.params['id'];
     if (userId !== undefined && userId !== null) {
       this.getOtherUserInfo(userId);
@@ -91,7 +91,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private subscribeAccountAndTryLogin() {
+  subscribeAccountAndTryLogin() {
     this.accountSubscription = this.account.loginWithAccessToken(
       result => {
         this.isLoggedIn = result.loggedIn;
@@ -120,7 +120,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   }
 
   // 리덕스에서 사용자 정보를 구독하고, 유저가 작성한 문서 리스트도 가져옵니다.
-  private subscribeUserInfo() {
+  subscribeUserInfo() {
     this.userInfoSubscription = this.store.select(Redux.getUserInfo)
       .subscribe(result => {
         if (result !== undefined && result !== null) {
@@ -134,7 +134,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
   // 서버에 다른 유저 정보를 요청하고, 해당 유저가 작성한 문서 리스트도 가져와요.
   // 리덕스에 정보를 넣지는 않고, 바로 변수로 넣어요.
-  private getOtherUserInfo(otherUserId: string) {
+  getOtherUserInfo(otherUserId: string) {
     this.network.getUserInfo(otherUserId)
       .subscribe(result => {
         this.userInfo = result.payload;
@@ -144,7 +144,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
   // this.userInfo에 저장된 유저의 작성한 문서 리스트를 가져와요.
   // this.userInfo는 로그인 한 유저일 수도, 다른 유저일 수도 있어요.
-  private getUserDocumentsCount() {
+  getUserDocumentsCount() {
     if (this.userInfo !== undefined && this.userInfo !== null) {
       this.network.getUserDocumentsCount(this.userInfo.id)
         .subscribe(value => {
@@ -158,7 +158,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   }
 
   // 서버로부터 유저의 스크랩 리스트를 가져와요.
-  private getScrap() {
+  getScrap() {
     this.network.getScrap(this.accessToken)
       .subscribe(result => {
         if (result.result === true) {
@@ -167,7 +167,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
           // console.log(this.userScrapList);
         } else {
           console.error(result.msg);
-          this.userScrapList = [];
+          this.userScrapList = undefined;
         }
       });
   }
@@ -201,7 +201,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private cancelEditProfile(event) {
+  cancelEditProfile(event) {
     if (event) { event.stopPropagation(); }
 
     this.isEditMode = false;
@@ -212,7 +212,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   // -------------------------------
 
   // 비밀번호 확인 모달을 열어주는 함수.
-  private modalOpen(event) {
+  modalOpen(event) {
     if (event) { event.stopPropagation(); }
 
     this.isModalOpen = true;
@@ -229,7 +229,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   }
 
   // 비밀번호 확인 모달을 취소하는 버튼.
-  private cancelModal(event) {
+  cancelModal(event) {
     if (event) { event.stopPropagation(); }
 
     this.isModalOpen = false;
@@ -238,7 +238,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   }
 
   // 유저가 입력한 확인용 비밀번호를 서버로 전송하는 버튼.
-  private okModal(event) {
+  okModal(event) {
     if (event) { event.stopPropagation(); }
 
     if (this.checkPassForm.valid) {
@@ -265,7 +265,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     Utils.bodyScroll(true);
   }
 
-  private resetCheckPassFormData() {
+  resetCheckPassFormData() {
     this.checkPassForm.setValue({ password: '' });
   }
 
@@ -281,7 +281,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   }
 
   // 패스워드 변경 모달에서 Submit을 누르면 실행되는 함수.
-  private changePassword(event) {
+  changePassword(event) {
     if (event) { event.stopPropagation(); }
 
     // 유효성 검사.
@@ -310,7 +310,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   }
 
   // 패스워드 변경 모달에서 reset을 누르면 실행되는 함수.
-  private passModalCancelButton(event) {
+  passModalCancelButton(event) {
     if (event) { event.stopPropagation(); }
 
     this.resetPasswordFormData();
@@ -319,7 +319,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   }
 
   // 패스워드 폼의 데이터를 모두 리셋해요.
-  private resetPasswordFormData() {
+  resetPasswordFormData() {
     this.changePassForm.setValue({
       oldPass: '',
       newPass: ''

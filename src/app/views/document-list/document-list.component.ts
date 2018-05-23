@@ -5,137 +5,137 @@ import { Subscription } from 'rxJs';
 
 import * as Redux from '../../service/redux';
 import { Network } from '../../service/Network';
-import Account from '../../service/Account';
-import * as Utils from '../../service/utils';
+import { Account } from '../../service/Account';
+import { unSubscribe } from '../../service/utils';
 import { UserInfo, DocumentInfo } from '../../service/Interface';
 import { NewDocumentList, RemoveAllDocumentList, FillUserInfo } from '../../service/redux/DocumentListReducer';
 
 
 @Component({
-    selector: 'app-document-list',
-    templateUrl: './document-list.component.html',
-    styleUrls: ['./document-list.component.scss']
+  selector: 'app-document-list',
+  templateUrl: './document-list.component.html',
+  styleUrls: ['./document-list.component.scss']
 })
 export class DocumentListComponent implements OnInit, OnDestroy {
-    private isLoggedIn = false;
-    private isNoResult = false;
-    private userInfo: UserInfo;
-    private docuList: DocumentInfo[];
-    private accountSubscription: Subscription;
-    private userInfoSubscription: Subscription;
-    private docuListSubscription: Subscription;
+  isLoggedIn = false;
+  isNoResult = false;
+  userInfo: UserInfo;
+  docuList: DocumentInfo[];
+  accountSubscription: Subscription;
+  userInfoSubscription: Subscription;
+  docuListSubscription: Subscription;
 
-    constructor(
-        private route: ActivatedRoute,
-        private store: Store<Redux.StoreInfo>,
-        private network: Network,
-        private account: Account) { }
+  constructor(
+    private route: ActivatedRoute,
+    private store: Store<Redux.StoreInfo>,
+    private network: Network,
+    private account: Account) { }
 
-    ngOnInit() {
-        this.subscribeAccountAndTryLogin();
-        this.subscribeUserInfo();
-        this.subscribeDocumentList();
-        this.subscribeRouter();
+  ngOnInit() {
+    this.subscribeAccountAndTryLogin();
+    this.subscribeUserInfo();
+    this.subscribeDocumentList();
+    this.subscribeRouter();
+  }
+
+  // 같은 페이지를 queryParams만 바꿔가면서 리프레쉬 하기 위해서는,
+  // activatedRoute를 구독해서 변화를 감지해야 함.
+  subscribeRouter() {
+    this.route.queryParams
+    .subscribe(value => {
+      console.log(value);
+      this.searchDocument();
+    });
+  }
+
+  // Account 리덕스를 구독하고, 로그인도 시도해요.
+  subscribeAccountAndTryLogin() {
+    this.accountSubscription = this.account.loginWithAccessToken(Result => {
+      this.isLoggedIn = Result.loggedIn;
+      // this.accessToken = Result.accessToken;
+    });
+  }
+
+  // UserInfo 리덕스를 구독해요.
+  subscribeUserInfo() {
+    this.userInfoSubscription = this.store.select(Redux.getUserInfo)
+    .subscribe(Result => {
+      this.userInfo = Result;
+    });
+  }
+
+  // DocumentList 리덕스를 구독해요.
+  subscribeDocumentList() {
+    this.docuListSubscription = this.store.select(Redux.getDocumentList)
+    .subscribe(Result => {
+      this.docuList = Result;
+    });
+  }
+
+  // 문서를 검색해서 리덕스에 집어 넣어줘요.
+  searchDocument() {
+    const lang = this.route.snapshot.queryParams['lang'];
+    const type = this.route.snapshot.queryParams['type'];
+    const subj = this.route.snapshot.queryParams['subj'];
+
+    // console.log(`검색어 확인`);
+    // console.log(`${lang}, ${type}, ${subj}`);
+
+    this.network.searchDocument(lang, type, subj)
+    .subscribe(value => {
+      if (value.result === true) {
+        this.isNoResult = false;
+        this.store.dispatch(new NewDocumentList(value.payload));
+
+        const ids = this.takeUserIds(value.payload);
+        this.getUserInfos(ids);
+      } else {
+        console.log(value.msg);
+        this.isNoResult = true;
+      }
+    });
+  }
+
+  getUserInfos(ids: string[]) {
+    this.network.getUserInfos(ids)
+    .subscribe(value => {
+      if (value.result === true) {
+        this.store.dispatch(new FillUserInfo(value.payload));
+      } else {
+        // TODO UserInfo를 가져오는데 실패를 하면.. 뭘 해줘야 하지?
+        console.log('해당 문서들의 유저정보를 가져오는데 실패했어요.');
+      }
+    });
+  }
+
+  // 서버로부터 받아온 문서에서 userId를 추출하고, 중복된 userId를 제거해줘요.
+  // 추출한 id들은 userInfo를 서버에 요청하는데 사용해요.
+  takeUserIds(doc: DocumentInfo[]): string[] {
+    const ids: string[] = [];
+    for (const document of doc) {
+      const result = ids.find(article => {
+        return article === document.userId ? true : false;
+      });
+
+      if (result === undefined) {
+        ids.push(document.userId);
+      }
     }
+    return ids;
+  }
 
-    // 같은 페이지를 queryParams만 바꿔가면서 리프레쉬 하기 위해서는,
-    // activatedRoute를 구독해서 변화를 감지해야 함.
-    private subscribeRouter() {
-        this.route.queryParams
-        .subscribe(value => {
-            console.log(value);
-            this.searchDocument();
-        });
-    }
+  // 사용자가 pagination을 사용하면 실행되는 함수에요
+  clickedPagination(event) {
+    console.log(event);
+    // TODO pagination의 상태가 변경되면 해야 할 코드..
+  }
 
-    // Account 리덕스를 구독하고, 로그인도 시도해요.
-    private subscribeAccountAndTryLogin() {
-        this.accountSubscription = this.account.loginWithAccessToken(Result => {
-            this.isLoggedIn = Result.loggedIn;
-            // this.accessToken = Result.accessToken;
-        });
-    }
+  ngOnDestroy() {
+    unSubscribe(this.accountSubscription);
+    unSubscribe(this.userInfoSubscription);
+    unSubscribe(this.docuListSubscription);
 
-    // UserInfo 리덕스를 구독해요.
-    private subscribeUserInfo() {
-        this.userInfoSubscription = this.store.select(Redux.getUserInfo)
-            .subscribe(Result => {
-                this.userInfo = Result;
-            });
-    }
-
-    // DocumentList 리덕스를 구독해요.
-    private subscribeDocumentList() {
-        this.docuListSubscription = this.store.select(Redux.getDocumentList)
-            .subscribe(Result => {
-                this.docuList = Result;
-            });
-    }
-
-    // 문서를 검색해서 리덕스에 집어 넣어줘요.
-    private searchDocument() {
-        const lang = this.route.snapshot.queryParams['lang'];
-        const type = this.route.snapshot.queryParams['type'];
-        const subj = this.route.snapshot.queryParams['subj'];
-
-        // console.log(`검색어 확인`);
-        // console.log(`${lang}, ${type}, ${subj}`);
-
-        this.network.searchDocument(lang, type, subj)
-        .subscribe(value => {
-            if (value.result === true) {
-                this.isNoResult = false;
-                this.store.dispatch(new NewDocumentList(value.payload));
-
-                const ids = this.takeUserIds(value.payload);
-                this.getUserInfos(ids);
-            } else {
-                console.log(value.msg);
-                this.isNoResult = true;
-            }
-        });
-    }
-
-    private getUserInfos(ids: string[]) {
-        this.network.getUserInfos(ids)
-        .subscribe(value => {
-            if (value.result === true) {
-                this.store.dispatch(new FillUserInfo(value.payload));
-            } else {
-                // TODO UserInfo를 가져오는데 실패를 하면.. 뭘 해줘야 하지?
-                console.log('해당 문서들의 유저정보를 가져오는데 실패했어요.');
-            }
-        });
-    }
-
-    // 서버로부터 받아온 문서에서 userId를 추출하고, 중복된 userId를 제거해줘요.
-    // 추출한 id들은 userInfo를 서버에 요청하는데 사용해요.
-    private takeUserIds(doc: DocumentInfo[]): string[] {
-        const ids: string[] = [];
-        for (const document of doc) {
-            const result = ids.find(article => {
-                return article === document.userId ? true : false;
-            });
-
-            if (result === undefined) {
-                ids.push(document.userId);
-            }
-        }
-        return ids;
-    }
-
-    // 사용자가 pagination을 사용하면 실행되는 함수에요
-    private clickedPagination(event) {
-        console.log(event);
-        // TODO pagination의 상태가 변경되면 해야 할 코드..
-    }
-
-    ngOnDestroy() {
-        Utils.unSubscribe(this.accountSubscription);
-        Utils.unSubscribe(this.userInfoSubscription);
-        Utils.unSubscribe(this.docuListSubscription);
-
-        this.store.dispatch(new RemoveAllDocumentList());
-    }
+    this.store.dispatch(new RemoveAllDocumentList());
+  }
 
 }

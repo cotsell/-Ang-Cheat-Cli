@@ -17,12 +17,12 @@ import { Network } from '../../service/Network';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  private isLoggedIn = false;
-  private signupMode = false;
-  private userInfo: UserInfo;
+  isLoggedIn = false;
+  signupMode = false;
+  userInfo: UserInfo;
 
-  private accountSubscription: Subscription;
-  private userInfoSubscription: Subscription;
+  accountSubscription: Subscription;
+  userInfoSubscription: Subscription;
 
   // 로그인 관련 폼 설정
   loginForm: FormGroup = new FormGroup({
@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   // Account 리덕스를 구독해요.
-  private subscribeAccount() {
+  subscribeAccount() {
     this.accountSubscription = this.store.select(Redux.getAccount)
       .subscribe(obs => {
         this.isLoggedIn = obs.loggedIn;
@@ -60,14 +60,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   // UserInfo 리덕스를 구독해요.
-  private subscribeUserInfo() {
+  subscribeUserInfo() {
     this.userInfoSubscription = this.store.select(Redux.getUserInfo)
       .subscribe(obs => {
         this.userInfo = obs;
       });
   }
 
-  private login(event) {
+  login(event) {
     if (event) { event.stopPropagation(); }
 
     if (this.loginForm.valid) {
@@ -109,7 +109,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   // 로그아웃 버튼을 누르면, 로컬 저장소의 계정 정보를 모두 삭제하고,
   // 리덕스의 로그인 관련 정보를 모두 삭제해요.
-  private logout(event) {
+  logout(event) {
     if (event) { event.stopPropagation(); }
 
     localStorage.removeItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN);
@@ -120,13 +120,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.store.dispatch(new RemoveUserInfo());
   }
 
-  private show_signup(event) {
+  show_signup(event) {
     if (event) { event.stopPropagation(); }
 
     this.signupMode = !this.signupMode;
   }
 
-  private signup(event) {
+  signup(event) {
     if (event) { event.stopPropagation(); }
 
     if (this.signupForm.valid) {

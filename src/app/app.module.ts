@@ -20,7 +20,7 @@ import { SignatureComponent } from './components/signature/signature.component';
 
 import { Network } from './service/Network';
 import { getReducers } from './service/redux';
-import Account from './service/Account';
+import { Account } from './service/Account';
 import { ProfileDetailComponent } from './views/profile-detail/profile-detail.component';
 import { ReplyListComponent } from './components/reply-list/reply-list.component';
 import { ReplyArticleComponent } from './components/reply-article/reply-article.component';

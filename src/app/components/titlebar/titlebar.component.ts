@@ -16,14 +16,14 @@ import { VALUE_ALL_CATEGORY } from '../../service/SysConf';
     styleUrls: ['./titlebar.component.scss']
 })
 export class TitlebarComponent implements OnInit, OnDestroy {
-    private readonly ALL_CATEGORY = VALUE_ALL_CATEGORY;
+    readonly ALL_CATEGORY = VALUE_ALL_CATEGORY;
 
     @ViewChild('searchBox') searchBox: ElementRef;
-    private isSearchBarOpen = false;
-    private selectedLanguage = VALUE_ALL_CATEGORY;
-    private categoryList: Category[] = [];
+    isSearchBarOpen = false;
+    selectedLanguage = VALUE_ALL_CATEGORY;
+    categoryList: Category[] = [];
 
-    private categorySubscription: Subscription;
+    categorySubscription: Subscription;
 
     constructor(
         private router: Router,
@@ -55,14 +55,14 @@ export class TitlebarComponent implements OnInit, OnDestroy {
         }
     }
 
-    private changeSearchBarState(event) {
+    changeSearchBarState(event) {
         if (event) { event.stopPropagation(); }
 
         this.searchBox.nativeElement.value = '';
         this.isSearchBarOpen = !this.isSearchBarOpen;
     }
 
-    private changedLanguage(event) {
+    changedLanguage(event) {
         event.stopPropagation();
         if (event.target.value !== undefined && event.target.value !== '0') {
             // TODO 언어가 바뀌면 할 일.
@@ -71,7 +71,7 @@ export class TitlebarComponent implements OnInit, OnDestroy {
         }
     }
 
-    private searchDocument(event) {
+    searchDocument(event) {
         if (event) { event.stopPropagation(); }
         
         const subject = this.searchBox.nativeElement.value;
