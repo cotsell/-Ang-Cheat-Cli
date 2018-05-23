@@ -34,14 +34,16 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   accessToken: string;
   isEditMode = false; // 프로필 내용 수정모드로 변환 구분.
   isEditable = false; // 프로필 수정하기 버튼을 화면에 표시할지 구분.
-  userInfo: UserInfo;
+  loginUserInfo: UserInfo = undefined;
+  userInfo: UserInfo = undefined;
   userDocumentsCount = 0;
   readonly SERVER_ADDRESS = conf.SERVER_ADDRESS;
 
   userScrapList: Scrap = undefined;
 
-  accountSubscription: Subscription;
-  userInfoSubscription: Subscription;
+  accountSubsc: Subscription;
+  loginUserInfoSubsc: Subscription;
+  userInfoSubsc: Subscription;
 
   // 프로필 폼 설정.
   profileForm: FormGroup = new FormGroup(
@@ -74,88 +76,56 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscribeAccount();
-    this.subscribeSelectedUserInfo();
-  }
-
-  // 컴포넌트가 로그인 유저 정보를 보여줄지, 다른 유저의 정보를 보여줄지 결정.
-  subscribeSelectedUserInfo() {
-    const userId = this.route.snapshot.params['id'];
-    if (userId !== undefined && userId !== null) {
-      this.getOtherUserInfo(userId);
-      this.isEditable = false;
-    } else {
-      this.subscribeUserInfo();
-      this.isEditable = true;
-    }
   }
 
   subscribeAccount() {
 
-    this.accountSubscription = this.store.select(Redux.getAccount)
+    this.accountSubsc = this.store.select(Redux.getAccount)
     .subscribe(result => {
       if (result.loggedIn) {
         this.isLoggedIn = result.loggedIn;
         this.accessToken = result.accessToken;
       } else {
-
         console.error('로그인 실패');
-
-        // 다른 유저 정보 보기는 로그인 안해도 가능.
-        // 다른 유저 정보 보기모드가 아닌 경우에는 로그아웃 상태면 메인화면으로 백.
-        const userId = this.route.snapshot.params['id'];
-        if (isMyProfileMode(userId)) {
-          console.error(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
-          this.router.navigate(['/']);
-        } else {
-          // 다른 유저 정보 보기 모드에서는 아무것도 하지 말자..
-        }
-
       }
+
+      this.subscribeUserInfo();
     });
 
     // ---- 정리용도 함수들 ----
     function isMyProfileMode(userId: string) {
       return (userId === undefined || userId === null || userId === '');
     }
-
-    // TODO Delete Me after Testing. 05-23
-    // this.accountSubscription = this.account.loginWithAccessToken(
-    //   result => {
-    //     this.isLoggedIn = result.loggedIn;
-    //     this.accessToken = result.accessToken;
-    //   },
-    //   () => {
-    //     // TODO 로그인 실패시 유저에게 뭘 해줘야 할지.
-    //     console.log('로그인 실패');
-
-    //     // 다른 유저 정보 보기는 로그인 안해도 가능.
-    //     // 다른 유저 정보 보기모드가 아닌 경우에는 로그아웃 상태면 메인화면으로 백.
-    //     const userId = this.route.snapshot.params['id'];
-    //     if (isMyProfileMode()) {
-    //       console.log(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
-    //       this.router.navigate(['/']);
-    //     } else {
-    //       // 다른 유저 정보 보기 모드에서는 아무것도 하지 말자..
-    //     }
-
-    //     // ---- 정리용도 함수들 ----
-    //     function isMyProfileMode() {
-    //       return (userId === undefined || userId === null || userId === '');
-    //     }
-    //   }
-    // );
   }
 
   // 리덕스에서 사용자 정보를 구독하고, 유저가 작성한 문서 리스트도 가져옵니다.
   subscribeUserInfo() {
-    this.userInfoSubscription = this.store.select(Redux.getUserInfo)
-      .subscribe(result => {
-        if (result !== undefined && result !== null) {
-          this.userInfo = result;
-          // console.log(this.userInfo);
+    this.loginUserInfoSubsc = this.store.select(Redux.getUserInfo)
+    .subscribe(result => {
+
+      if (result !== undefined && result !== null) {
+        this.loginUserInfo = result;
+      }
+
+      const userId = this.route.snapshot.params['id'];
+
+      if (this.loginUserInfo) {
+        if (userId === undefined || userId === this.loginUserInfo.id) {
+          this.userInfo = this.loginUserInfo;
           this.getUserDocumentsCount();
           this.getScrap();
+          this.chooseEditable();
+        } else {
+          this.getOtherUserInfo(userId);
         }
+      } else {
+        if (userId === undefined ) {
+          console.error(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
+          this.router.navigate(['/']);
+        } else {
+          this.getOtherUserInfo(userId);
+        }
+      }
     });
   }
 
@@ -163,10 +133,23 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   // 리덕스에 정보를 넣지는 않고, 바로 변수로 넣어요.
   getOtherUserInfo(otherUserId: string) {
     this.network.getUserInfo(otherUserId)
-      .subscribe(result => {
-        this.userInfo = result.payload;
-        this.getUserDocumentsCount();
-      });
+    .subscribe(result => {
+      this.userInfo = result.payload;
+      this.getUserDocumentsCount();
+    });
+  }
+
+  // isEditable를 활성화 시킬 것인지 결정.
+  chooseEditable() {
+    const userId = this.route.snapshot.params['id'];
+
+    if (this.loginUserInfo !== undefined &&
+        this.userInfo.id !== undefined &&
+        this.userInfo.id == this.loginUserInfo.id) {
+      this.isEditable = true;
+    } else {
+      this.isEditable = false;
+    }
   }
 
   // this.userInfo에 저장된 유저의 작성한 문서 리스트를 가져와요.
@@ -187,16 +170,16 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   // 서버로부터 유저의 스크랩 리스트를 가져와요.
   getScrap() {
     this.network.getScrap(this.accessToken)
-      .subscribe(result => {
-        if (result.result === true) {
-          console.log(result.msg);
-          this.userScrapList = result.payload;
-          // console.log(this.userScrapList);
-        } else {
-          console.error(result.msg);
-          this.userScrapList = undefined;
-        }
-      });
+    .subscribe(result => {
+      if (result.result === true) {
+        console.log(result.msg);
+        this.userScrapList = result.payload;
+        // console.log(this.userScrapList);
+      } else {
+        console.error(result.msg);
+        this.userScrapList = undefined;
+      }
+    });
   }
 
   // -----------------------------------------------------------
@@ -362,8 +345,6 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     this.isThisProfileForPlayer(() => {
       this.isScrapListModalOpen = !this.isScrapListModalOpen;
     });
-
-    // this.isScrapListModalOpen = !this.isScrapListModalOpen;
   }
 
   closeScrapListModal(event: boolean) {
@@ -430,8 +411,9 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    Utils.unSubscribe(this.accountSubscription);
-    Utils.unSubscribe(this.userInfoSubscription);
+    Utils.unSubscribe(this.accountSubsc);
+    Utils.unSubscribe(this.userInfoSubsc);
+    Utils.unSubscribe(this.loginUserInfoSubsc);
   }
 
 }
