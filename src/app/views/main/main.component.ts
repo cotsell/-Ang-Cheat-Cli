@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { Account } from '../../service/Account';
 import { unSubscribe } from '../../service/utils';
 import * as Redux from '../../service/redux';
 import { Subscription } from 'rxJs';
@@ -20,9 +19,7 @@ export class MainComponent implements OnInit, OnDestroy {
   accountSubsc: Subscription;
   userInfoSubsc: Subscription;
 
-  constructor(
-    private account: Account,
-    private store: Store<Redux.StoreInfo>) { }
+  constructor(private store: Store<Redux.StoreInfo>) { }
 
   ngOnInit() {
     this.subscribeAccountAndLogin();
@@ -30,11 +27,18 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   subscribeAccountAndLogin() {
-    // console.log(localStorage.getItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN));
+    console.log(localStorage.getItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN));
 
-    this.accountSubsc = this.account.loginWithAccessToken(result => {
-      this.isLoggedIn = result.loggedIn;
-    });
+    // TODO Delete Me after Testing. 05-23
+    // this.accountSubsc = this.account.loginWithAccessToken(result => {
+    //   this.isLoggedIn = result.loggedIn;
+    // });
+    this.accountSubsc = this.store.select(Redux.getAccount)
+    .subscribe(result => {
+      if (result.loggedIn) {
+        this.isLoggedIn = result.loggedIn;
+      }
+    }); 
   }
 
   subscribeUserInfo() {

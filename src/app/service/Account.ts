@@ -25,6 +25,9 @@ export class Account {
   // TODO 로그인에 실패했을 경우의 대응은?
   // - 이건 AccessToken을 이용한 로그인이므로, 실패 대응 필요없다.
   loginWithAccessToken(cbFunc, cbFailLoginFunc?): Subscription {
+    console.log(`ACCOUNT!!!`);
+
+
     let subscription: Subscription;
 
     subscription = this.store.select(Redux.getAccount)
@@ -39,6 +42,8 @@ export class Account {
         }
       });
 
+    return subscription;
+
     // -----------------------------------------------------------
     // ---- 정리 용도 함수들.
     // -----------------------------------------------------------
@@ -48,22 +53,22 @@ export class Account {
       if (accessToken !== undefined && accessToken !== null && accessToken !== '') {
         // 엑세스토큰이 로컬저장소에 존재하면..
         network.checkAccessToken(accessToken)
-          .subscribe(result => {
-            if (result['result'] === true) { // 엑세스토큰이 유효하다면..
-              const userId = Utils.jwtDecode(accessToken)['userId'];
-              changeLoginState(store, accessToken);
-              getUserInfo(network, store, userId);
-              
-            } else { // 유요한 엑세스토큰이 아니므로, 로컬 저장소 정리.
-              localStorage.removeItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN);
+        .subscribe(result => {
+          if (result['result'] === true) { // 엑세스토큰이 유효하다면..
+            const userId = Utils.jwtDecode(accessToken)['userId'];
+            changeLoginState(store, accessToken);
+            getUserInfo(network, store, userId);
+            
+          } else { // 유요한 엑세스토큰이 아니므로, 로컬 저장소 정리.
+            localStorage.removeItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN);
 
-              // 로그인 실패하면 실행할 함수가 입력되었다면, 시행.
-              if (cbFailLoginFunc !== undefined && cbFailLoginFunc !== null) {
-                console.log('로그인 실패 함수 가동.');
-                cbFailLoginFunc();
-              }
+            // 로그인 실패하면 실행할 함수가 입력되었다면, 시행.
+            if (cbFailLoginFunc !== undefined && cbFailLoginFunc !== null) {
+              console.log('로그인 실패 함수 가동.');
+              cbFailLoginFunc();
             }
-          });
+          }
+        });
       } else {
         // 엑세스 토큰이 로컬 저장소에 존재하지 않으면..
         // 로그인 실패하면 실행할 함수가 입력되었다면, 시행.
@@ -94,7 +99,5 @@ export class Account {
         }
       ));
     }
-
-    return subscription;
   }
 }

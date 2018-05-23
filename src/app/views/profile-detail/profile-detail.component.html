@@ -54,8 +54,9 @@
               <div class="lineDivUp">스크랩</div>
               <div id="scrapCount" class="lineDivDown"
                 (click)="changeScrapListModalState($event)">
-                {{ userScrapList?.docuList !== undefined ? 
-                  userScrapList?.docuList?.length : '0' }}
+                {{  userScrapList !== undefined &&
+                    userScrapList?.docuList !== undefined ? 
+                    userScrapList?.docuList?.length : '0' }}
               </div>
             </div>
 

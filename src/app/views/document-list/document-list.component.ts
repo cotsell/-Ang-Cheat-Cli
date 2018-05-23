@@ -5,7 +5,6 @@ import { Subscription } from 'rxJs';
 
 import * as Redux from '../../service/redux';
 import { Network } from '../../service/Network';
-import { Account } from '../../service/Account';
 import { unSubscribe } from '../../service/utils';
 import { UserInfo, DocumentInfo } from '../../service/Interface';
 import { NewDocumentList, RemoveAllDocumentList, FillUserInfo } from '../../service/redux/DocumentListReducer';
@@ -21,18 +20,18 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   isNoResult = false;
   userInfo: UserInfo;
   docuList: DocumentInfo[];
-  accountSubscription: Subscription;
-  userInfoSubscription: Subscription;
-  docuListSubscription: Subscription;
+
+  accountSubsc: Subscription;
+  userInfoSubsc: Subscription;
+  docuListSubsc: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private store: Store<Redux.StoreInfo>,
-    private network: Network,
-    private account: Account) { }
+    private network: Network) { }
 
   ngOnInit() {
-    this.subscribeAccountAndTryLogin();
+    this.subscribeAccount();
     this.subscribeUserInfo();
     this.subscribeDocumentList();
     this.subscribeRouter();
@@ -48,17 +47,27 @@ export class DocumentListComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Account 리덕스를 구독하고, 로그인도 시도해요.
-  subscribeAccountAndTryLogin() {
-    this.accountSubscription = this.account.loginWithAccessToken(Result => {
-      this.isLoggedIn = Result.loggedIn;
-      // this.accessToken = Result.accessToken;
+  // Account 리덕스를 구독해요.
+  subscribeAccount() {
+
+    this.accountSubsc = this.store.select(Redux.getAccount)
+    .subscribe(result => {
+      if (result.loggedIn) {
+        this.isLoggedIn = result.loggedIn;
+      }
     });
+
+
+    // Delete Me after Testing. 05-23.
+    // this.accountSubsc = this.account.loginWithAccessToken(Result => {
+    //   this.isLoggedIn = Result.loggedIn;
+    //   // this.accessToken = Result.accessToken;
+    // });
   }
 
   // UserInfo 리덕스를 구독해요.
   subscribeUserInfo() {
-    this.userInfoSubscription = this.store.select(Redux.getUserInfo)
+    this.userInfoSubsc = this.store.select(Redux.getUserInfo)
     .subscribe(Result => {
       this.userInfo = Result;
     });
@@ -66,7 +75,7 @@ export class DocumentListComponent implements OnInit, OnDestroy {
 
   // DocumentList 리덕스를 구독해요.
   subscribeDocumentList() {
-    this.docuListSubscription = this.store.select(Redux.getDocumentList)
+    this.docuListSubsc = this.store.select(Redux.getDocumentList)
     .subscribe(Result => {
       this.docuList = Result;
     });
@@ -131,9 +140,9 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    unSubscribe(this.accountSubscription);
-    unSubscribe(this.userInfoSubscription);
-    unSubscribe(this.docuListSubscription);
+    unSubscribe(this.accountSubsc);
+    unSubscribe(this.userInfoSubsc);
+    unSubscribe(this.docuListSubsc);
 
     this.store.dispatch(new RemoveAllDocumentList());
   }

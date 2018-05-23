@@ -22,7 +22,7 @@ export class ScrapModalComponent implements OnInit, OnDestroy, OnChanges {
   scrapList: Scrap;
   isMakeNewOpen = false;
 
-  private accountSubc: Subscription;
+  accountSubc: Subscription;
 
   constructor(
     private network: Network,

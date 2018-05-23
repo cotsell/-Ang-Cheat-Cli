@@ -28,7 +28,6 @@ import { Network } from '../../service/Network';
 import * as Utils from '../../service/utils';
 import { Store } from '@ngrx/store';
 import * as Redux from '../../service/redux';
-import { Account } from '../../service/Account';
 import * as DocuDetail from '../../service/redux/DocumentDetailReducer';
 import * as conf from '../../service/SysConf';
 
@@ -46,9 +45,9 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   userInfo: UserInfo;
   documentInfo: DocumentInfo;
   thumbUpCount = 0;
-  accountSubscription: Subscription;
-  userInfoSubscription: Subscription;
-  documentSubscription: Subscription;
+  accountSubsc: Subscription;
+  userInfoSubsc: Subscription;
+  documentSubsc: Subscription;
 
   // 다용도 모달용
   publicModal = {
@@ -67,14 +66,13 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private network: Network,
-    private store: Store<Redux.StoreInfo>,
-    private account: Account) {
+    private store: Store<Redux.StoreInfo>) {
       this.changeTimeString = Utils.changeTimeString;
 
   }
 
   ngOnInit() {
-    this.subscribeAccountAndTryLoginWithAccessToken();
+    this.subscribeAccount();
     this.subscribeUserInfo();
     this.subscribeDocumentDetail();
 
@@ -210,20 +208,31 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   // account 리덕스를 구독하고,
   // 내친김에 로컬 저장소에 AccessToken과 userId가 있다면, 로그인을 시도합니다.
-  subscribeAccountAndTryLoginWithAccessToken() {
-    this.accountSubscription = this.account.loginWithAccessToken(result => {
-      this.isLoggedIn = result.loggedIn;
-      this.accessToken = result.accessToken;
-      this.getDocumentFromServer();
-    },
-    () => {
+  subscribeAccount() {
+
+    this.accountSubsc = this.store.select(Redux.getAccount)
+    .subscribe(result => {
+      if (result.loggedIn) {
+        this.isLoggedIn = result.loggedIn;
+        this.accessToken = result.accessToken;
+      }
       this.getDocumentFromServer();
     });
+
+    // TODO Delete Me after Testing. 05-23.
+    // this.accountSubscription = this.account.loginWithAccessToken(result => {
+    //   this.isLoggedIn = result.loggedIn;
+    //   this.accessToken = result.accessToken;
+    //   this.getDocumentFromServer();
+    // },
+    // () => {
+    //   this.getDocumentFromServer();
+    // });
   }
 
   // UserInfo 리덕스를 구독해요.
   subscribeUserInfo() {
-    this.store.select(Redux.getUserInfo)
+    this.userInfoSubsc = this.store.select(Redux.getUserInfo)
       .subscribe(userInfo => {
         this.userInfo = userInfo;
         this.changeDocCtrlState();
@@ -232,7 +241,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   // DocumentDetail 리덕스를 구독해요.
   subscribeDocumentDetail() {
-    this.store.select(Redux.getDocumentDetail)
+    this.documentSubsc = this.store.select(Redux.getDocumentDetail)
       .subscribe(doc => {
         this.documentInfo = Object.assign({}, doc);
         this.changeDocCtrlState();
@@ -360,9 +369,9 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    Utils.unSubscribe(this.accountSubscription);
-    Utils.unSubscribe(this.userInfoSubscription);
-    Utils.unSubscribe(this.documentSubscription);
+    Utils.unSubscribe(this.accountSubsc);
+    Utils.unSubscribe(this.userInfoSubsc);
+    Utils.unSubscribe(this.documentSubsc);
     this.store.dispatch(new DocuDetail.RemoveDocumentDetail());
   }
 

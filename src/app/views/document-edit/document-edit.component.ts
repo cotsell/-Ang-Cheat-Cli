@@ -9,7 +9,6 @@ import * as marked from 'marked';
 import * as prism from 'prismjs';
 
 import * as Redux from '../../service/redux';
-import { Account } from '../../service/Account';
 import { UserInfo, DocumentInfo } from '../../service/Interface';
 import * as Utils from '../../service/utils';
 
@@ -26,8 +25,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   relatedId: string;
   documentInfo: DocumentInfo;
   userInfo: UserInfo;
-  accountSubscription: Subscription;
-  userInfoSubscription: Subscription;
+
+  accountSubsc: Subscription;
+  userInfoSubsc: Subscription;
 
   @ViewChild('target') preview_target: ElementRef;
 
@@ -42,12 +42,11 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private account: Account,
     private network: Network,
     private store: Store<Redux.StoreInfo>) { }
 
   ngOnInit() {
-    this.subscribeAccountAndTryLogin();
+    this.subscribeAccount();
     this.subscribeUserInfo();
     this.settingMakred();
   }
@@ -55,20 +54,36 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   // Account 리덕스를 구독하고, 미 로그인 상태일 시, 로컬 저장소를 살펴보고,
   // AccessToken이 있다면, 로그인을 시도해요.
   // 로그인 실패시에는 두번째 인자로 들어가는 콜백함수를 호출해요.
-  subscribeAccountAndTryLogin() {
-    this.accountSubscription = this.account.loginWithAccessToken(
-      result => {
+  subscribeAccount() {
+    this.accountSubsc = this.store.select(Redux.getAccount)
+    .subscribe(result => {
+      if (result.loggedIn) {
         this.isLoggedIn = result.loggedIn;
         this.accessToken = result.accessToken;
         console.log(this.accessToken);
 
         this.worksAfterCheckingLogin();
-      },
-      () => {
-        // TODO 로그인 실패시 내용 코딩
+      } else {
+        console.error(`비 로그인 상태라서 메인 화면으로 이동합니다.`)
         this.router.navigate(['/']);
       }
-    );
+    });
+
+
+    // Delete Me after Testing. 05-23.
+    // this.accountSubsc = this.account.loginWithAccessToken(
+    //   result => {
+    //     this.isLoggedIn = result.loggedIn;
+    //     this.accessToken = result.accessToken;
+    //     console.log(this.accessToken);
+
+    //     this.worksAfterCheckingLogin();
+    //   },
+    //   () => {
+    //     // TODO 로그인 실패시 내용 코딩
+    //     this.router.navigate(['/']);
+    //   }
+    // );
   }
 
   worksAfterCheckingLogin() {
@@ -86,7 +101,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   subscribeUserInfo() {
-    this.userInfoSubscription = this.store.select(Redux.getUserInfo)
+    this.userInfoSubsc = this.store.select(Redux.getUserInfo)
       .subscribe(Result => {
           this.userInfo = Result;
       });
@@ -261,7 +276,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    Utils.unSubscribe(this.accountSubscription);
-    Utils.unSubscribe(this.userInfoSubscription);
+    Utils.unSubscribe(this.accountSubsc);
+    Utils.unSubscribe(this.userInfoSubsc);
   }
 }

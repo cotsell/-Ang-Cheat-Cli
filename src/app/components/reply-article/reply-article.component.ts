@@ -22,15 +22,15 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
     @Output() modifyRereply = new EventEmitter<Reply>();
     @Output() deleteReply = new EventEmitter<string>();
     @Output() deleteRereply = new EventEmitter<Reply>();
-    private account = { logged: false, accessToken: undefined };
-    private isCommentShowed = false;
-    private isTextEditMode = false;
-    private isAbleToShowEditButtons = false; // 수정, 삭제 버튼 여부
-    private isAbleToShowReplyButton = false;
-    private accountSubsc: Subscription;
+    account = { logged: false, accessToken: undefined };
+    isCommentShowed = false;
+    isTextEditMode = false;
+    isAbleToShowEditButtons = false; // 수정, 삭제 버튼 여부
+    isAbleToShowReplyButton = false;
+    accountSubsc: Subscription;
 
     // 함수들..
-    private changeTimeString; // 시간 출력 모드 변환 함수.
+    changeTimeString; // 시간 출력 모드 변환 함수.
 
     constructor(private store: Store<Redux.StoreInfo>) {
         this.changeTimeString = util.changeTimeString;
@@ -42,7 +42,7 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
 
     // 사용자가 로그인 상태인지 구독.
     // 여기서 기능 버튼 노출 여부도 결정 돼요.
-    private subscribeAccount() {
+    subscribeAccount() {
         this.accountSubsc = this.store.select(Redux.getAccount)
             .subscribe(value => {
                 if (value.loggedIn === true) {
@@ -74,14 +74,14 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
             });
     }
 
-    private changeCommentShowed(event) {
+    changeCommentShowed(event) {
         if (event) { event.stopPropagation(); }
 
         this.isCommentShowed = !this.isCommentShowed;
     }
 
     // 댓글 작성 후 보내기
-    private sendRereply(event) {
+    sendRereply(event) {
         if (event) { event.stopPropagation(); }
 
         const reply: Reply = {
@@ -96,21 +96,21 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
     }
 
     // 리플을 삭제해요.
-    private removeReply(event) {
+    removeReply(event) {
         if (event) { event.stopPropagation(); }
 
         this.deleteReply.emit(this.reply._id);
     }
 
     // 리리플을 삭제해요.
-    private removeRereply(event) {
+    removeRereply(event) {
         if (event) { event.stopPropagation(); }
 
         this.deleteRereply.emit(this.reply);
     }
 
     // 댓글 작성 중 취소 하면 호출
-    private resetWriting(event) {
+    resetWriting(event) {
         if (event) { event.stopPropagation(); }
 
         this.textarea.nativeElement.value = '';
@@ -118,13 +118,13 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
     }
 
     // 댓글 수정버튼을 누르면 수정 모드로 변환.
-    private changeTextEditMode(event) {
+    changeTextEditMode(event) {
         if (event) { event.stopPropagation(); }
 
         this.isTextEditMode = !this.isTextEditMode;
     }
 
-    private updateReply(evnet) {
+    updateReply(evnet) {
         if (event) { event.stopPropagation(); }
 
         const reply: Reply = Object.assign({},
@@ -137,7 +137,7 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
         this.modifyReply.emit(reply);
     }
 
-    private updateRereply(event) {
+    updateRereply(event) {
         if (event) { event.stopPropagation(); }
 
         const reply: Reply = Object.assign({},

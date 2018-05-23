@@ -15,7 +15,6 @@ import { Subscription } from 'rxJs';
 
 import { Network } from '../../service/Network';
 import * as Redux from '../../service/redux';
-import { Account } from '../../service/Account';
 import * as Utils from '../../service/utils';
 import { UserInfo, Result, Scrap } from '../../service/Interface';
 import { ModifyUserInfo } from '../../service/redux/UserInfoReducer';
@@ -70,12 +69,11 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   constructor(
     private network: Network,
     private store: Store<Redux.StoreInfo>,
-    private account: Account,
     private router: Router,
     private route: ActivatedRoute) {  }
 
   ngOnInit() {
-    this.subscribeAccountAndTryLogin();
+    this.subscribeAccount();
     this.subscribeSelectedUserInfo();
   }
 
@@ -91,32 +89,61 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  subscribeAccountAndTryLogin() {
-    this.accountSubscription = this.account.loginWithAccessToken(
-      result => {
+  subscribeAccount() {
+
+    this.accountSubscription = this.store.select(Redux.getAccount)
+    .subscribe(result => {
+      if (result.loggedIn) {
         this.isLoggedIn = result.loggedIn;
         this.accessToken = result.accessToken;
-      },
-      () => {
-        // TODO 로그인 실패시 유저에게 뭘 해줘야 할지.
-        console.log('로그인 실패');
+      } else {
+
+        console.error('로그인 실패');
 
         // 다른 유저 정보 보기는 로그인 안해도 가능.
         // 다른 유저 정보 보기모드가 아닌 경우에는 로그아웃 상태면 메인화면으로 백.
         const userId = this.route.snapshot.params['id'];
-        if (isMyProfileMode()) {
-          console.log(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
+        if (isMyProfileMode(userId)) {
+          console.error(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
           this.router.navigate(['/']);
         } else {
           // 다른 유저 정보 보기 모드에서는 아무것도 하지 말자..
         }
 
-        // ---- 정리용도 함수들 ----
-        function isMyProfileMode() {
-          return (userId === undefined || userId === null || userId === '');
-        }
       }
-    );
+    });
+
+    // ---- 정리용도 함수들 ----
+    function isMyProfileMode(userId: string) {
+      return (userId === undefined || userId === null || userId === '');
+    }
+
+    // TODO Delete Me after Testing. 05-23
+    // this.accountSubscription = this.account.loginWithAccessToken(
+    //   result => {
+    //     this.isLoggedIn = result.loggedIn;
+    //     this.accessToken = result.accessToken;
+    //   },
+    //   () => {
+    //     // TODO 로그인 실패시 유저에게 뭘 해줘야 할지.
+    //     console.log('로그인 실패');
+
+    //     // 다른 유저 정보 보기는 로그인 안해도 가능.
+    //     // 다른 유저 정보 보기모드가 아닌 경우에는 로그아웃 상태면 메인화면으로 백.
+    //     const userId = this.route.snapshot.params['id'];
+    //     if (isMyProfileMode()) {
+    //       console.log(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
+    //       this.router.navigate(['/']);
+    //     } else {
+    //       // 다른 유저 정보 보기 모드에서는 아무것도 하지 말자..
+    //     }
+
+    //     // ---- 정리용도 함수들 ----
+    //     function isMyProfileMode() {
+    //       return (userId === undefined || userId === null || userId === '');
+    //     }
+    //   }
+    // );
   }
 
   // 리덕스에서 사용자 정보를 구독하고, 유저가 작성한 문서 리스트도 가져옵니다.
