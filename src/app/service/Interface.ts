@@ -1,6 +1,7 @@
 export class Account {
     accessToken?: string;
     loggedIn?: boolean;
+    state?: string;
 }
 
 export class UserInfo {
@@ -14,6 +15,7 @@ export class UserInfo {
     signature?: string;
     createdTime?: Date;
     updatedTime?: Date;
+    reduxState?: string;
 }
 
 export interface DocumentInfo {
