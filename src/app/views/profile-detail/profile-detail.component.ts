@@ -16,7 +16,7 @@ import { Subscription } from 'rxJs';
 import { Network } from '../../service/Network';
 import * as Redux from '../../service/redux';
 import * as Utils from '../../service/utils';
-import { UserInfo, Result, Scrap } from '../../service/Interface';
+import { UserInfo, Result, Scrap, Account as iAccount } from '../../service/Interface';
 import { ModifyUserInfo } from '../../service/redux/UserInfoReducer';
 import * as conf from '../../service/SysConf';
 
@@ -30,8 +30,10 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   isPasswordModalOpen = false; // 비밀번호 변경 버튼 누를시 출력되는 모달 구분.
   isScrapListModalOpen = false; // 스크랩 리스트 모달 오픈 여부
   isUserImgModalOpen = false; // 유저 이미지 변경 모달 오픈 여부
-  isLoggedIn = false; // 로그인 되어 있는지 구분.
-  accessToken: string;
+  // isLoggedIn = false; // 로그인 되어 있는지 구분.
+  // accessToken: string;
+  accountInfo: iAccount = 
+    { loggedIn: false, accessToken: undefined, reduxState: 'none' };
   isEditMode = false; // 프로필 내용 수정모드로 변환 구분.
   isEditable = false; // 프로필 수정하기 버튼을 화면에 표시할지 구분.
   loginUserInfo: UserInfo = undefined;
@@ -82,50 +84,80 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
     this.accountSubsc = this.store.select(Redux.getAccount)
     .subscribe(result => {
-      if (result.loggedIn) {
-        this.isLoggedIn = result.loggedIn;
-        this.accessToken = result.accessToken;
-      } else {
-        console.error('로그인 실패');
+      if (result.reduxState === 'done') {
+        if (result.loggedIn) {
+          this.accountInfo = result;
+        } else {
+          // console.error(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
+          // this.router.navigate(['/']);
+        }
+  
+        this.subscribeUserInfo();
       }
-
-      this.subscribeUserInfo();
     });
-
-    // ---- 정리용도 함수들 ----
-    function isMyProfileMode(userId: string) {
-      return (userId === undefined || userId === null || userId === '');
-    }
   }
 
   // 리덕스에서 사용자 정보를 구독하고, 유저가 작성한 문서 리스트도 가져옵니다.
   subscribeUserInfo() {
+    console.log(`!!!!`);
+    console.log(this.accountInfo);
+
     this.loginUserInfoSubsc = this.store.select(Redux.getUserInfo)
     .subscribe(result => {
 
-      if (result !== undefined && result !== null) {
-        this.loginUserInfo = result;
-      }
-
       const userId = this.route.snapshot.params['id'];
 
-      if (this.loginUserInfo) {
-        if (userId === undefined || userId === this.loginUserInfo.id) {
-          this.userInfo = this.loginUserInfo;
+      if (this.accountInfo.loggedIn && result.reduxState === 'done') { 
+        
+        if (result.id !== undefined &&
+            (userId === undefined || userId === result.id) ) {
+          this.loginUserInfo = result;
+          this.userInfo = result;
           this.getUserDocumentsCount();
           this.getScrap();
           this.chooseEditable();
-        } else {
+        } else if ( result.id !== undefined && 
+                    userId !== undefined && userId !== result.id){
           this.getOtherUserInfo(userId);
         }
-      } else {
+
+      } else if (this.accountInfo.loggedIn === false){
         if (userId === undefined ) {
           console.error(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
           this.router.navigate(['/']);
         } else {
           this.getOtherUserInfo(userId);
         }
-      }
+      } 
+
+      // Delete Me after Testing 05-24
+      // if (result.reduxState === 'done') {
+
+      //   if (result.id !== undefined) {
+      //     this.loginUserInfo = result;
+      //   }
+  
+      //   const userId = this.route.snapshot.params['id'];
+  
+      //   if (this.loginUserInfo) {
+      //     if (userId === undefined || userId === this.loginUserInfo.id) {
+      //       this.userInfo = this.loginUserInfo;
+      //       this.getUserDocumentsCount();
+      //       this.getScrap();
+      //       this.chooseEditable();
+      //     } else {
+      //       this.getOtherUserInfo(userId);
+      //     }
+      //   } else {
+      //     if (userId === undefined ) {
+      //       // console.error(`내 프로필 모드에서 로그인 되어있지 않으므로 메인화면으로 이동할께요.`);
+      //       // this.router.navigate(['/']);
+      //     } else {
+      //       this.getOtherUserInfo(userId);
+      //     }
+      //   }
+      // }
+
     });
   }
 
@@ -145,7 +177,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
     if (this.loginUserInfo !== undefined &&
         this.userInfo.id !== undefined &&
-        this.userInfo.id == this.loginUserInfo.id) {
+        this.userInfo.id === this.loginUserInfo.id) {
       this.isEditable = true;
     } else {
       this.isEditable = false;
@@ -169,7 +201,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
   // 서버로부터 유저의 스크랩 리스트를 가져와요.
   getScrap() {
-    this.network.getScrap(this.accessToken)
+    this.network.getScrap(this.accountInfo.accessToken)
     .subscribe(result => {
       if (result.result === true) {
         console.log(result.msg);
@@ -195,17 +227,17 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
         signature: this.profileForm.value['signature']
       };
 
-      this.network.updateProfile(this.accessToken, userInfo)
-        .subscribe(value => {
-          if (value.result === true) {
-            console.log(`업데이트 성공:\n` + value.msg);
-            this.store.dispatch(new ModifyUserInfo(userInfo));
-            this.isEditMode = false;
-          } else {
-            // TODO update실패시 대응..
-            alert(conf.MSG_PROFILE_DETAIL_UPDATE_ERROR);
-          }
-        });
+      this.network.updateProfile(this.accountInfo.accessToken, userInfo)
+      .subscribe(value => {
+        if (value.result === true) {
+          console.log(`업데이트 성공:\n` + value.msg);
+          this.store.dispatch(new ModifyUserInfo(userInfo));
+          this.isEditMode = false;
+        } else {
+          // TODO update실패시 대응..
+          alert(conf.MSG_PROFILE_DETAIL_UPDATE_ERROR);
+        }
+      });
     } else {
       alert('닉네임을 입력 해주세요.');
     }
@@ -253,7 +285,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
 
     if (this.checkPassForm.valid) {
       this.network.checkPassword(
-        this.accessToken, this.checkPassForm.value['password'])
+        this.accountInfo.accessToken, this.checkPassForm.value['password'])
         .subscribe(value => {
           if (value.result === true) {
             // TODO 비밀번호 확인 완료.
@@ -297,7 +329,7 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
     // 유효성 검사.
     if (this.changePassForm.valid) {
       this.network.changePassword(
-        this.accessToken,
+        this.accountInfo.accessToken,
         this.changePassForm.value['oldPass'],
         this.changePassForm.value['newPass'])
       .subscribe(value => {
@@ -375,9 +407,9 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
   // ---------------------
 
   isThisProfileForPlayer(cb: Function) {
-    if (this.accessToken !== undefined &&
+    if (this.accountInfo.accessToken !== undefined &&
         !hasUserInfoProblem(this.userInfo) &&
-        isSameUser(this.accessToken, this.userInfo)) {
+        isSameUser(this.accountInfo.accessToken, this.userInfo)) {
 
       cb();
 

@@ -9,7 +9,7 @@ import * as marked from 'marked';
 import * as prism from 'prismjs';
 
 import * as Redux from '../../service/redux';
-import { UserInfo, DocumentInfo } from '../../service/Interface';
+import { UserInfo, DocumentInfo, Account as iAccount } from '../../service/Interface';
 import * as Utils from '../../service/utils';
 
 @Component({
@@ -18,10 +18,11 @@ import * as Utils from '../../service/utils';
   styleUrls: ['./document-edit.component.scss']
 })
 export class DocumentEditComponent implements OnInit, OnDestroy {
-  isLoggedIn = false;
+  accountInfo: iAccount = { loggedIn: false, accessToken: undefined, reduxState: 'none' };
+  // isLoggedIn = false;
   isPreviewMode = false;
   isDocumentOptionModalOpen = false;
-  accessToken: string;
+  // accessToken: string;
   relatedId: string;
   documentInfo: DocumentInfo;
   userInfo: UserInfo;
@@ -57,15 +58,16 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   subscribeAccount() {
     this.accountSubsc = this.store.select(Redux.getAccount)
     .subscribe(result => {
-      if (result.loggedIn) {
-        this.isLoggedIn = result.loggedIn;
-        this.accessToken = result.accessToken;
-        console.log(this.accessToken);
-
-        this.worksAfterCheckingLogin();
-      } else {
-        console.error(`비 로그인 상태라서 메인 화면으로 이동합니다.`)
-        this.router.navigate(['/']);
+      if (result.reduxState === 'done') {
+        if (result.loggedIn) {
+          this.accountInfo = result;
+          console.log(this.accountInfo);
+  
+          this.worksAfterCheckingLogin();
+        } else {
+          console.error(`비 로그인 상태라서 메인 화면으로 이동합니다.`)
+          this.router.navigate(['/']);
+        }
       }
     });
 
@@ -102,9 +104,11 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
   subscribeUserInfo() {
     this.userInfoSubsc = this.store.select(Redux.getUserInfo)
-      .subscribe(Result => {
-          this.userInfo = Result;
-      });
+    .subscribe(Result => {
+      if (Result.reduxState === 'done' && Result.id !== undefined) {
+        this.userInfo = Result;
+      }
+    });
   }
 
   // 작성한 문서를 서버에 저장합니다.
@@ -114,7 +118,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     console.log(options);
 
     // 유효성 검사
-    if (this.textForm.valid) {
+    if (this.textForm.valid && 
+        this.userInfo.reduxState === 'done' && 
+        this.accountInfo.reduxState === 'done') {
 
       const NEW = 0;
       const EDIT = 1;
@@ -141,7 +147,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
       if (whatMode === NEW) {
         console.log('새로운 문서를 서버에 전송합니다.');
-        this.network.newDocument(this.accessToken, this.documentInfo)
+        this.network.newDocument(this.accountInfo.accessToken, this.documentInfo)
         .subscribe(value => {
           if (value.result === true) {
             console.log(value.msg);
@@ -158,7 +164,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         });
       } else {
         console.log('수정된 문서를 서버에 전송합니다.');
-        this.network.modifyDocument(this.accessToken, this.documentInfo)
+        this.network.modifyDocument(this.accountInfo.accessToken, this.documentInfo)
         .subscribe(value => {
           if (value.result === true) {
             console.log(value.msg);
@@ -185,39 +191,70 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     // this.previewText = event.target.value;
   }
 
+  // 문서를 가져옵니다.
+  // 엑세스 토큰이 없어도 문서를 가져오긴 해요. 다만 엑세스 토큰이 없으면, 비공개 문서일 경우 
+  // 오류가 발생해요.
   getDocumentFromServer(documentId: string) {
 
-    // TODO sdafkjsafkjkasdfjasf
     let observable;
-    if (this.accessToken === undefined) {
-      observable = this.network.getDocument(documentId);
-    } else {
-      observable = this.network.getDocument(documentId, this.accessToken);
-    }
-
-    observable.subscribe(value => {
-      if (value.result === true) {
-        console.log(value.msg);
-        this.documentInfo = value.payload;
-        this.textForm.setValue(
-          {
-            title: value.payload.title,
-            text: value.payload.text
-          }
-        );
-      } else {
-        if (value.code === 1) {
-          console.error(value.msg);
-          alert('엑세스토큰이 만료되었어요.');
-          this.router.navigate(['/']);
+    if (this.accountInfo.accessToken !== undefined && this.accountInfo.reduxState === 'done') {
+      observable = this.network.getDocument(documentId, this.accountInfo.accessToken);
+      observable.subscribe(value => {
+        if (value.result === true) {
+          console.log(value.msg);
+          this.documentInfo = value.payload;
+          this.textForm.setValue(
+            {
+              title: value.payload.title,
+              text: value.payload.text
+            }
+          );
         } else {
-          // 다른 오류일 경우 처리.
-          console.error(value.msg);
-          alert(value.msg);
-          this.location.back();
+          if (value.code === 1) {
+            console.error(value.msg);
+            alert('엑세스토큰이 만료되었어요.');
+            this.router.navigate(['/']);
+          } else {
+            // 다른 오류일 경우 처리.
+            console.error(value.msg);
+            alert(value.msg);
+            this.location.back();
+          }
         }
-      }
-    });
+      });
+    } else {
+      alert(`엑세스 토큰이 존재하지 않아요..`);
+      this.router.navigate(['/']);
+    }
+    // if (this.accountInfo.accessToken === undefined && this.accountInfo.reduxState === 'done') {
+    //   observable = this.network.getDocument(documentId);
+    // } else {
+    //   observable = this.network.getDocument(documentId, this.accountInfo.accessToken);
+    // }
+
+    // observable.subscribe(value => {
+    //   if (value.result === true) {
+    //     console.log(value.msg);
+    //     this.documentInfo = value.payload;
+    //     this.textForm.setValue(
+    //       {
+    //         title: value.payload.title,
+    //         text: value.payload.text
+    //       }
+    //     );
+    //   } else {
+    //     if (value.code === 1) {
+    //       console.error(value.msg);
+    //       alert('엑세스토큰이 만료되었어요.');
+    //       this.router.navigate(['/']);
+    //     } else {
+    //       // 다른 오류일 경우 처리.
+    //       console.error(value.msg);
+    //       alert(value.msg);
+    //       this.location.back();
+    //     }
+    //   }
+    // });
   }
 
   // 이벤트 버블링 방지 함수.

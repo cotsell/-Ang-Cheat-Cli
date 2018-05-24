@@ -25,19 +25,19 @@ export class ModifyAccountState implements Action {
     constructor(public payload: string) {}
 }
 
-const init: Account = { accessToken: undefined, loggedIn: false, state: 'none' };
+const init: Account = { accessToken: undefined, loggedIn: false, reduxState: 'none' };
 
 export function Reducer(state = init, action) {
     switch (action.type) {
 
         case NEW:
-            // return Object.assign({}, action.payload);
+            return Object.assign({}, action.payload);
 
         case MODIFY:
             return Object.assign({}, state, action.payload);
 
         case MODIFY_STATE:
-            return Object.assign({}, state, { state: action.payload });
+            return Object.assign({}, state, { reduxState: action.payload });
 
         case REMOVE:
             return init;

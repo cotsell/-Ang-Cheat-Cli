@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import * as Redux from '../../service/redux';
 import { Network } from '../../service/Network';
 import { Subscription } from 'rxJs';
-import { DocumentInfo, UserInfo, Reply } from '../../service/Interface';
+import { DocumentInfo, UserInfo, Reply, Account as iAccount } from '../../service/Interface';
 import * as util from '../../service/utils';
 import * as conf from '../../service/SysConf';
 
@@ -18,8 +18,9 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   document: DocumentInfo;
   userInfo: UserInfo;
   userInfos: UserInfo[] = [];
-  
-  account: { logged: boolean, accessToken: string };
+
+  accountInfo: iAccount = 
+    { loggedIn: false, accessToken: undefined, reduxState: 'none' };
   replyList: Reply[] = [];
 
   accountSubc: Subscription;
@@ -38,18 +39,19 @@ export class ReplyListComponent implements OnInit, OnDestroy {
 
   subscribeAccount() {
     this.accountSubc = this.store.select(Redux.getAccount)
-      .subscribe(value => {
-        this.account = {
-          logged: value.loggedIn,
-          accessToken: value.accessToken
-        };
-      });
+    .subscribe(value => {
+      if (value.reduxState === 'done' && value.loggedIn) {
+        this.accountInfo = value;
+      }
+    });
   }
 
   subscribeUserInfo() {
     this.userInfoSubc = this.store.select(Redux.getUserInfo)
       .subscribe(value => {
-        this.userInfo = value;
+        if (value.reduxState === 'done' && value.id !== undefined) {
+          this.userInfo = value;
+        }
       });
   }
 
@@ -69,20 +71,28 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   changeReplyEditMode(event) {
     if (event) { event.stopPropagation(); }
 
-    this.isReplyEditMode = !this.isReplyEditMode;
+    if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn &&
+        this.userInfo.reduxState === 'done' && this.userInfo.id !== undefined) {
+      this.isReplyEditMode = !this.isReplyEditMode;
+    } else {
+      console.error(`로그인 하고 이용 해 주세요.`);
+    }
   }
 
   // 새로운 리플 작성.
   submitReply(event) {
     if (event) { event.stopPropagation(); }
 
-    const reply: Reply = {
-      parentId: this.document.historyId,
-      text: this.textarea.nativeElement.value,
-      userId: this.userInfo.id
-    };
+    if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn &&
+        this.userInfo.reduxState === 'done' && this.userInfo.id !== undefined) {
 
-    this.network.makeReply(this.account.accessToken, reply)
+      const reply: Reply = {
+        parentId: this.document.historyId,
+        text: this.textarea.nativeElement.value,
+        userId: this.userInfo.id
+      };
+  
+      this.network.makeReply(this.accountInfo.accessToken, reply)
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);
@@ -99,18 +109,28 @@ export class ReplyListComponent implements OnInit, OnDestroy {
           alert(conf.MSG_REPLY_MAKE_REPLY_ERR);
         }
       });
+
+    } else {
+      console.error(`로그인 하지 않았어요.`);
+      this.textarea.nativeElement.value = '';
+      this.changeReplyEditMode(undefined);
+    }
   }
 
   // 새로운 리리플 작성.
   submitRereply(event) {
-    const reply: Reply =
-      Object.assign({}, {...event, userId: this.userInfo.id });
 
-    this.network.makeRereply(this.account.accessToken, reply)
+    if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn &&
+        this.userInfo.reduxState === 'done' && this.userInfo.id !== undefined) {
+          
+      const reply: Reply =
+        Object.assign({}, {...event, userId: this.userInfo.id });
+    
+      this.network.makeRereply(this.accountInfo.accessToken, reply)
       .subscribe(result => {
         if (result.result === true) {
           // TODO 성공시. 리덕스 연결 필요.
-
+  
           const replyList = this.replyList.map(value => {
             if (value._id === result.payload._id) {
               value = Object.assign({}, result.payload);
@@ -118,12 +138,14 @@ export class ReplyListComponent implements OnInit, OnDestroy {
             return value;
           });
           this.getUserInfosAndSet(replyList);
-
+  
         } else {
           // TODO 실패시..
           alert(conf.MSG_REPLY_MAKE_REPLY_ERR);
         }
       });
+    }
+    
   }
 
   // 해당 문서의 리플 가져오기.
@@ -152,7 +174,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
     .subscribe(users => {
 
       if (users.result === true) {
-        
+
         replyList = replyList.map(reply => {
 
           if (reply.rereply !== undefined && reply.rereply.length > 0) {
@@ -165,14 +187,14 @@ export class ReplyListComponent implements OnInit, OnDestroy {
               }
 
               // parentUserNickName도 여기서 설정.
-              rereply.parentUserNickName = 
+              rereply.parentUserNickName =
                 findNickName(rereply.parentUserId, users.payload);
               return rereply;
             });
           }
 
           const result = users.payload.find(user => {
-            return user.id === reply.userId ? true : false; 
+            return user.id === reply.userId ? true : false;
           });
           if (result !== undefined) {
             reply.userInfo = result;
@@ -186,7 +208,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
 
     // -----------------------------------------------------------
     // ---- 정리용도 함수 모음 시작
-    
+
     // 서버로부터 받아온 리플들에서 userId를 추출하고, 중복된 userId는 제거할꺼에요.
     // 추출한 id들은 서버에 ninkName을 요청하는데 사용 할 거에요.
     function takeUserIds(replyList: Reply[]) {
@@ -219,8 +241,8 @@ export class ReplyListComponent implements OnInit, OnDestroy {
 
       return ids;
     }
-    
-    
+
+
     function findNickName(userId: string, infos: any) {
       return infos.find(f => {
         return f.id === userId;
@@ -235,7 +257,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   // 리플 삭제.
   removeReply(event) {
     const replyId = event;
-    this.network.removeReply(this.account.accessToken, replyId)
+    this.network.removeReply(this.accountInfo.accessToken, replyId)
       .subscribe(result => {
         if (result.result === true) {
           // TODO 그냥 전체 리플을 다시 받는게 나으려나..;;
@@ -257,7 +279,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   removeRereply(event) {
     const rereply = event;
 
-    this.network.removeRereply(this.account.accessToken, rereply)
+    this.network.removeRereply(this.accountInfo.accessToken, rereply)
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);
@@ -277,7 +299,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   updateReply(event) {
     console.log(event);
 
-    this.network.updateReply(this.account.accessToken, event)
+    this.network.updateReply(this.accountInfo.accessToken, event)
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);
@@ -300,7 +322,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   updateRereply(event) {
     console.log(event);
 
-    this.network.updateRereply(this.account.accessToken, event)
+    this.network.updateRereply(this.accountInfo.accessToken, event)
       .subscribe(result => {
         if (result.result === true) {
           // TODO TEST

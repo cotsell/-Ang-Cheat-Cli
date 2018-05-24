@@ -32,7 +32,7 @@ export class ModifyState implements Action {
     constructor(public payload: string) {}
 }
 
-const init: UserInfo = undefined;
+const init: UserInfo = { reduxState: 'none' };
 
 export function Reducer(state = init, action) {
     switch (action.type) {

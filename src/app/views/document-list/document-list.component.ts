@@ -52,8 +52,10 @@ export class DocumentListComponent implements OnInit, OnDestroy {
 
     this.accountSubsc = this.store.select(Redux.getAccount)
     .subscribe(result => {
-      if (result.loggedIn) {
-        this.isLoggedIn = result.loggedIn;
+      if (result.reduxState === 'done') {
+        if (result.loggedIn) {
+          this.isLoggedIn = result.loggedIn;
+        }
       }
     });
 
@@ -69,7 +71,9 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   subscribeUserInfo() {
     this.userInfoSubsc = this.store.select(Redux.getUserInfo)
     .subscribe(Result => {
-      this.userInfo = Result;
+      if (Result.reduxState === 'done' && Result.id !== undefined) {
+        this.userInfo = Result;
+      }
     });
   }
 

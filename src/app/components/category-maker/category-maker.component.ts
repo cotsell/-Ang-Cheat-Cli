@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Network } from '../../service/Network';
 import * as conf from '../../service/SysConf';
 import * as Redux from '../../service/redux';
-import { Category, CategoryGrade2, CategoryGrade3 } from '../../service/Interface';
+import { Category, CategoryGrade2, CategoryGrade3, Account as iAccount } from '../../service/Interface';
 
 @Component({
   selector: 'app-category-maker',
@@ -15,7 +15,7 @@ import { Category, CategoryGrade2, CategoryGrade3 } from '../../service/Interfac
 export class CategoryMakerComponent implements OnInit {
   @Output() cancel = new EventEmitter<any>();
   @ViewChild('cateSelect') select: ElementRef;
-  account: { logged: boolean, accessToken: string };
+  accountInfo: iAccount;
   categoryList: Category[] = [];
   category: Category;
   tempId = 0;
@@ -38,14 +38,13 @@ export class CategoryMakerComponent implements OnInit {
       // 사용자가 로그인 한 상태가 아니라면 킥!
       // 어차피 카테고리 변경을 위해서는 엑세스토큰이 필요하니까,
       // 보안 걱정은 안해도 될 듯 해요.
-      if (value.loggedIn === false) {
+      if (value.reduxState === 'done' && value.loggedIn === false) {
         this.closeModal(undefined);
       }
 
-      this.account = {
-        logged: value.loggedIn,
-        accessToken:  value.accessToken
-      };
+      if (value.reduxState === 'done' && value.loggedIn) {
+        this.accountInfo = value;
+      }
     });
   }
 
@@ -212,7 +211,7 @@ export class CategoryMakerComponent implements OnInit {
       this.category.subCategory.map(deleteGrade2Ids);
     }
 
-    this.network.setCategory(this.account.accessToken, this.category)
+    this.network.setCategory(this.accountInfo.accessToken, this.category)
     .subscribe(value => {
       if (value.result === true) {
 
@@ -258,7 +257,7 @@ export class CategoryMakerComponent implements OnInit {
 
     } else {
 
-      this.network.removeCategory(this.account.accessToken, this.category._id)
+      this.network.removeCategory(this.accountInfo.accessToken, this.category._id)
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);

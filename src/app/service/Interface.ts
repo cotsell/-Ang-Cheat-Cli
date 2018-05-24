@@ -1,7 +1,7 @@
 export class Account {
     accessToken?: string;
     loggedIn?: boolean;
-    state?: string;
+    reduxState?: string;
 }
 
 export class UserInfo {

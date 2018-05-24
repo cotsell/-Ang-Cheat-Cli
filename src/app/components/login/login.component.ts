@@ -54,17 +54,21 @@ export class LoginComponent implements OnInit, OnDestroy {
   // Account 리덕스를 구독해요.
   subscribeAccount() {
     this.accountSubscription = this.store.select(Redux.getAccount)
-      .subscribe(obs => {
+    .subscribe(obs => {
+      if (obs.reduxState === 'done') {
         this.isLoggedIn = obs.loggedIn;
-      });
+      }
+    });
   }
 
   // UserInfo 리덕스를 구독해요.
   subscribeUserInfo() {
     this.userInfoSubscription = this.store.select(Redux.getUserInfo)
-      .subscribe(obs => {
+    .subscribe(obs => {
+      if (obs.reduxState === 'done' && obs.id !== undefined) {
         this.userInfo = obs;
-      });
+      }
+    });
   }
 
   login(event) {
@@ -72,34 +76,36 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     if (this.loginForm.valid) {
       console.log(`loginForm의 유효성 검사 결과는 ${this.loginForm.valid}`);
-      this.network.login(this.loginForm.value['id'],
-        this.loginForm.value['password'])
-        .subscribe(loginResult => {
-          const result = loginResult.result;
+      this.network.login( this.loginForm.value['id'],
+                          this.loginForm.value['password'])
+      .subscribe(loginResult => {
+        const result = loginResult.result;
 
-          if (result === true) { // 로그인 성공 시..
-            const accessToken = loginResult.payload.accessToken;
-            const userId = Utils.jwtDecode(accessToken)['userId'];
+        if (result === true) { // 로그인 성공 시..
+          const accessToken = loginResult.payload.accessToken;
+          const userId = Utils.jwtDecode(accessToken)['userId'];
 
-            localStorage.setItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN, accessToken);
+          localStorage.setItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN, accessToken);
 
-            this.store.dispatch(new NewAccount(
-              { accessToken: accessToken,
-                loggedIn: true }));
+          this.store.dispatch(new NewAccount(
+            { accessToken: accessToken, loggedIn: true, reduxState: 'done' }));
 
-            this.network.getUserInfo(userId)
-              .subscribe(userInfoResult => {
-                if (userInfoResult.result === true) {
-                  this.store.dispatch(new NewUserInfo(userInfoResult.payload));
-                } else {
-                  // TODO 유저정보 가져오기 실패시에는??
-                }
-              });
-          } else {
-            // TODO ID, PASSWORD 로그인 실패시 대응 코딩.
-            console.log('로그인 실패: ' + JSON.stringify(loginResult));
-          }
-        });
+          this.network.getUserInfo(userId)
+          .subscribe(userInfoResult => {
+            if (userInfoResult.result === true) {
+              this.store.dispatch(new NewUserInfo(
+                { ...userInfoResult.payload, reduxState: 'done' }));
+            } else {
+              // TODO 유저정보 가져오기 실패시에는??
+              this.store.dispatch(new NewUserInfo(
+                { reduxState: 'done' }));
+            }
+          });
+        } else {
+          // TODO ID, PASSWORD 로그인 실패시 대응 코딩.
+          console.log('로그인 실패: ' + JSON.stringify(loginResult));
+        }
+      });
     } else {
       alert(`ID와 PASSWORD를 입력 해주세요.`);
     }
@@ -115,7 +121,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     localStorage.removeItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN);
 
     this.store.dispatch(new ModifyAccount(
-      { accessToken: undefined, loggedIn: false }));
+      { accessToken: undefined, loggedIn: false, reduxState: 'none' }));
 
     this.store.dispatch(new RemoveUserInfo());
   }
@@ -134,47 +140,49 @@ export class LoginComponent implements OnInit, OnDestroy {
       // console.log(this.signupForm.value);
       const { id, passwordsGroup, nickName } = this.signupForm.value;
       this.network.signup(id, passwordsGroup.password, nickName)
-        .subscribe(Result => {
-          if (Result.result === true) { // 가입 성공하면, 로그인 시도.
-            const { result, payload } = Result;
-            const accessToken = payload.accessToken;
-            const userId = Utils.jwtDecode(accessToken)['userId'];
-  
-            // 가입 성공 후 받아온 accessToken과 userID를 로컬저장소에 저장.
-            localStorage.setItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN, accessToken);
-  
-            // 리덕스에 access token과 로그인 상태 true를 갱신.
-            // 로그인 한거로 간주합니다.
-            this.store.dispatch(new NewAccount({
-              accessToken: accessToken,
-              loggedIn: true
-            }));
-  
-            // 로그인 된 유저 정보를 요청합니다.
-            this.network.getUserInfo(userId)
-              .subscribe(userInfoResult => {
-                if (userInfoResult.result === true) {
-                  this.store.dispatch(new NewUserInfo(userInfoResult.payload));
-                } else {
-                  // TODO 유저 정보 조회 실패시의 대응??
-                }
-              });
-          } else {
-            // TODO 가입 실패 하면, 어떻게 할지 코딩 필요.
-            // TODO 가입 실패 사유를 표기한다거나..
-            console.log('가입 실패: ' + Result['msg']);
-            this.signupForm.setValue(
-              {
-                id: this.signupForm.value['id'],
-                nickName: this.signupForm.value['nickName'],
-                passwordsGroup: {
-                  password: '',
-                  confirm: ''
-                }
+      .subscribe(Result => {
+        if (Result.result === true) { // 가입 성공하면, 로그인 시도.
+          const { result, payload } = Result;
+          const accessToken = payload.accessToken;
+          const userId = Utils.jwtDecode(accessToken)['userId'];
+
+          // 가입 성공 후 받아온 accessToken과 userID를 로컬저장소에 저장.
+          localStorage.setItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN, accessToken);
+
+          // 리덕스에 access token과 로그인 상태 true를 갱신.
+          // 로그인 한거로 간주합니다.
+          this.store.dispatch(new NewAccount({
+            accessToken: accessToken,
+            loggedIn: true,
+            reduxState: 'done'
+          }));
+
+          // 로그인 된 유저 정보를 요청합니다.
+          this.network.getUserInfo(userId)
+            .subscribe(userInfoResult => {
+              if (userInfoResult.result === true) {
+                this.store.dispatch(new NewUserInfo(
+                  { ...userInfoResult.payload, reduxState: 'done'}));
+              } else {
+                // TODO 유저 정보 조회 실패시의 대응??
               }
-            );
-          }
-        });
+            });
+        } else {
+          // TODO 가입 실패 하면, 어떻게 할지 코딩 필요.
+          // TODO 가입 실패 사유를 표기한다거나..
+          console.error('가입 실패: ' + Result['msg']);
+          this.signupForm.setValue(
+            {
+              id: this.signupForm.value['id'],
+              nickName: this.signupForm.value['nickName'],
+              passwordsGroup: {
+                password: '',
+                confirm: ''
+              }
+            }
+          );
+        }
+      });
     }
   }
 

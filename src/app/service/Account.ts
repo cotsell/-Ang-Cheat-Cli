@@ -33,12 +33,15 @@ export class Account {
     subscription = this.store.select(Redux.getAccount)
       .subscribe(obs => {
         // cbFunc(obs); // 콜백함수에 Account 리덕스의 구독 내용을 보내준다.
-        if (obs.loggedIn === undefined ||
+        if ((obs.loggedIn === undefined ||
             obs.loggedIn === false ||
-            obs.loggedIn === null) {
+            obs.loggedIn === null) &&
+            obs.reduxState === 'none') {
             login(this.network, this.store);
-        } else {
+        } else if (obs.reduxState === 'done' && obs.loggedIn === true) {
           cbFunc(obs);
+        } else if (obs.reduxState === 'pending') {
+          // TODO pending일때 해야 할 일이 있을까?
         }
       });
 
@@ -61,19 +64,22 @@ export class Account {
             
           } else { // 유요한 엑세스토큰이 아니므로, 로컬 저장소 정리.
             localStorage.removeItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN);
+            store.dispatch(new AccountRedux.ModifyAccountState('done'));
 
             // 로그인 실패하면 실행할 함수가 입력되었다면, 시행.
             if (cbFailLoginFunc !== undefined && cbFailLoginFunc !== null) {
-              console.log('로그인 실패 함수 가동.');
+              console.error('로그인 실패 함수 가동.');
               cbFailLoginFunc();
             }
           }
         });
       } else {
         // 엑세스 토큰이 로컬 저장소에 존재하지 않으면..
+
         // 로그인 실패하면 실행할 함수가 입력되었다면, 시행.
+        store.dispatch(new AccountRedux.ModifyAccountState('done'));
         if (cbFailLoginFunc !== undefined && cbFailLoginFunc !== null) {
-          console.log('로그인 실패 함수 가동.');
+          console.error('로그인 실패 함수 가동.');
           cbFailLoginFunc();
         }
       }
@@ -84,9 +90,12 @@ export class Account {
         .subscribe(resultUserInfo => {
           // 리덕스에 유저정보 입력.
           if (resultUserInfo.result === true) {
-            store.dispatch(new UserInfoRedux.NewUserInfo(resultUserInfo.payload));
+            store.dispatch(new UserInfoRedux.NewUserInfo(
+              { ...resultUserInfo.payload, reduxState: 'done' }));
           } else {
             // TODO 실패하면 뭘 해줘야 하지?
+            store.dispatch(new UserInfoRedux.NewUserInfo(
+              { reduxState: 'done' }));
           }
         });
     }
@@ -95,7 +104,8 @@ export class Account {
       store.dispatch(new AccountRedux.NewAccount(
         {
           accessToken: accessToken,
-          loggedIn: true
+          loggedIn: true,
+          reduxState: 'done'
         }
       ));
     }

@@ -212,11 +212,13 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
     this.accountSubsc = this.store.select(Redux.getAccount)
     .subscribe(result => {
-      if (result.loggedIn) {
-        this.isLoggedIn = result.loggedIn;
-        this.accessToken = result.accessToken;
+      if (result.reduxState === 'done') {
+        if (result.loggedIn) {
+          this.isLoggedIn = result.loggedIn;
+          this.accessToken = result.accessToken;
+        }
+        this.getDocumentFromServer();
       }
-      this.getDocumentFromServer();
     });
 
     // TODO Delete Me after Testing. 05-23.
@@ -234,8 +236,10 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   subscribeUserInfo() {
     this.userInfoSubsc = this.store.select(Redux.getUserInfo)
       .subscribe(userInfo => {
-        this.userInfo = userInfo;
-        this.changeDocCtrlState();
+        if (userInfo.reduxState === 'done') {
+          this.userInfo = userInfo;
+          this.changeDocCtrlState();
+        }
       });
   }
 

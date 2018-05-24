@@ -22,12 +22,12 @@ export class MainComponent implements OnInit, OnDestroy {
   constructor(private store: Store<Redux.StoreInfo>) { }
 
   ngOnInit() {
-    this.subscribeAccountAndLogin();
+    this.subscribeAccount();
     this.subscribeUserInfo();
   }
 
-  subscribeAccountAndLogin() {
-    console.log(localStorage.getItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN));
+  subscribeAccount() {
+    // console.log(localStorage.getItem(SysConf.LOCAL_STORAGE_ACCESS_TOKEN));
 
     // TODO Delete Me after Testing. 05-23
     // this.accountSubsc = this.account.loginWithAccessToken(result => {
@@ -35,8 +35,10 @@ export class MainComponent implements OnInit, OnDestroy {
     // });
     this.accountSubsc = this.store.select(Redux.getAccount)
     .subscribe(result => {
-      if (result.loggedIn) {
-        this.isLoggedIn = result.loggedIn;
+      if (result.reduxState === 'done') {
+        if (result.loggedIn) {
+          this.isLoggedIn = result.loggedIn;
+        }
       }
     }); 
   }
@@ -44,7 +46,9 @@ export class MainComponent implements OnInit, OnDestroy {
   subscribeUserInfo() {
     this.userInfoSubsc = this.store.select(Redux.getUserInfo)
     .subscribe(obs => {
-      this.userInfo = obs;
+      if (obs.reduxState === 'done' && obs.id !== undefined) {
+        this.userInfo = obs;
+      }
     });
   }
 
