@@ -7,6 +7,7 @@ import * as Redux from '../../service/redux';
 import { ChangeUserImgUrl } from '../../service/redux/UserInfoReducer';
 import { bodyScroll, unSubscribe } from '../../service/utils';
 import { Network } from '../../service/Network';
+import { Account as iAccount } from '../../service/Interface';
 
 @Component({
   selector: 'app-user-img-change-modal',
@@ -17,7 +18,8 @@ export class UserImgChangeModalComponent implements OnInit, OnChanges, OnDestroy
   @Input() on = false;
   @Output() exit = new EventEmitter<boolean>();
 
-  account = { logged: false, accessToken: undefined };
+  accountInfo: iAccount = 
+    { loggedIn: false, accessToken: undefined, reduxState: 'none' };
   img: string = undefined;
 
   accountSubc: Subscription;
@@ -50,27 +52,32 @@ export class UserImgChangeModalComponent implements OnInit, OnChanges, OnDestroy
     const form = new FormData();
     form.append('userimg', files[0]);
 
-    console.log(form.get('userimg'));
-    this.network.changeUserImg(this.account.accessToken, form)
-    .subscribe(result => {
-      if (result.result === true) {
+    // console.log(form.get('userimg'));
 
-        // console.log(result.msg);
-        // console.log(result.payload);
-        this.store.dispatch(new ChangeUserImgUrl(result.payload));
-        this.exit.emit(true);
-
-      } else {
-
-        if (result.code === 1) {
-
-          alert(result.msg);
-          this.router.navigate(['/']);
-          
+    if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn) {
+      this.network.changeUserImg(this.accountInfo.accessToken, form)
+      .subscribe(result => {
+        if (result.result === true) {
+  
+          // console.log(result.msg);
+          // console.log(result.payload);
+          this.store.dispatch(new ChangeUserImgUrl(result.payload));
+          this.exit.emit(true);
+  
+        } else {
+  
+          if (result.code === 1) {
+  
+            alert(result.msg);
+            this.router.navigate(['/']);
+            
+          }
+          console.error(result.msg);
         }
-        console.error(result.msg);
-      }
-    });
+      });
+    } else {
+      console.error(`로그인 하지 않았어요.`);
+    }
 
   }
 
@@ -88,9 +95,10 @@ export class UserImgChangeModalComponent implements OnInit, OnChanges, OnDestroy
     bodyScroll(false);
     this.accountSubc = this.store.select(Redux.getAccount)
     .subscribe(result => {
-      if (result.loggedIn) {
-        this.account.logged = result.loggedIn;
-        this.account.accessToken = result.accessToken;
+      if (result.reduxState === 'done') {
+        if (result.loggedIn) {
+          this.accountInfo = result;
+        }
       }
     });
   }
@@ -98,6 +106,8 @@ export class UserImgChangeModalComponent implements OnInit, OnChanges, OnDestroy
   pause() {
     bodyScroll(true);
     this.img = undefined;
+    this.accountInfo = 
+      { loggedIn: false, accessToken: undefined, reduxState: 'none'};
     unSubscribe(this.accountSubc);
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, OnDestroy, OnChanges, EventEmitter, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { Scrap } from '../../service/Interface';
+import { Scrap, Account as iAccount } from '../../service/Interface';
 import { Network } from '../../service/Network';
 import { Store } from '@ngrx/store';
 import * as Redux from '../../service/redux';
@@ -18,7 +18,8 @@ export class ScrapListModalComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() userId: string;
   scrapList: Scrap;
-  account = { logged: false, accessToken: undefined };
+  accountInfo: iAccount = 
+    { loggedIn: false, accessToken: undefined, reduxState: 'none' };
   accountSubc: Subscription;
 
   constructor(
@@ -36,17 +37,16 @@ export class ScrapListModalComponent implements OnInit, OnDestroy, OnChanges {
 
   private subscribeAccount() {
     this.accountSubc = this.store.select(Redux.getAccount)
-      .subscribe(result => {
-        if (result !== undefined) {
-          this.account = {
-              logged: result.loggedIn,
-              accessToken: result.accessToken
-          };
+    .subscribe(result => {
+      if (result.reduxState === 'done') {
+        if (result.loggedIn) {
+          this.accountInfo = result;
           this.afterCheckingAccount();
         } else {
           this.exit.emit(true);
         }
-      });
+      }
+    });
   }
 
   afterCheckingAccount() {
@@ -56,7 +56,7 @@ export class ScrapListModalComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getScrapListFromServer() {
-    this.network.getScrap(this.account.accessToken)
+    this.network.getScrap(this.accountInfo.accessToken)
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);
@@ -114,7 +114,7 @@ export class ScrapListModalComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // console.log(msg);
-    this.network.removeScrap(this.account.accessToken, msg)
+    this.network.removeScrap(this.accountInfo.accessToken, msg)
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);

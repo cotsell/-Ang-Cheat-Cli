@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
-import { Scrap, DocumentInfo } from '../../service/Interface';
+import { Scrap, DocumentInfo, Account as iAccount } from '../../service/Interface';
 import { Network } from '../../service/Network';
 import { Store } from '@ngrx/store';
 import * as Redux from '../../service/redux';
@@ -18,7 +18,8 @@ export class ScrapModalComponent implements OnInit, OnDestroy, OnChanges {
   @Output() makeScrap = new EventEmitter<any>();
   @Output() exit = new EventEmitter<boolean>();
 
-  account =  { logged: false, accessToken: undefined };
+  accountInfo: iAccount = 
+    { loggedIn: false, accessToken: undefined, reduxState: 'none' };
   scrapList: Scrap;
   isMakeNewOpen = false;
 
@@ -38,17 +39,16 @@ export class ScrapModalComponent implements OnInit, OnDestroy, OnChanges {
 
   subscribeAccount() {
     this.accountSubc = this.store.select(Redux.getAccount)
-      .subscribe(result => {
-        if (result !== undefined) {
-          this.account = {
-              logged: result.loggedIn,
-              accessToken: result.accessToken
-          };
+    .subscribe(result => {
+      if (result.reduxState === 'done') {
+        if (result.loggedIn) {
+          this.accountInfo = result;
           this.afterCheckingAccount();
         } else {
           this.exit.emit(true);
         }
-      });
+      }
+    });
   }
 
   // 로그인이 된게 확실했을때 다음을 실행하기 위해 사용하는 함수.
@@ -58,7 +58,7 @@ export class ScrapModalComponent implements OnInit, OnDestroy, OnChanges {
 
   // 로그인 한 유저의 스크랩 리스트를 가져와요.
   getScrapList() {
-    this.network.getScrap(this.account.accessToken)
+    this.network.getScrap(this.accountInfo.accessToken)
     .subscribe(result => {
       if (result.result === true) {
         console.log(result.msg);
@@ -98,9 +98,9 @@ export class ScrapModalComponent implements OnInit, OnDestroy, OnChanges {
 
     if (labelObj.label === undefined || labelObj.label === '') {
       alert(`라벨 이름은 공백을 허용하지 않아요.`);
-    } else {
-
-      this.network.setScrap(this.account.accessToken, labelObj)
+    } else if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn) {
+     
+      this.network.setScrap(this.accountInfo.accessToken, labelObj)
       .subscribe(result => {
         if (result.result === true) {
           console.log(result.msg);
@@ -134,7 +134,8 @@ export class ScrapModalComponent implements OnInit, OnDestroy, OnChanges {
   pause() {
     unSubscribe(this.accountSubc);
     this.scrapList = undefined;
-    this.account = undefined;
+    this.accountInfo = 
+      { loggedIn: false, accessToken: undefined, reduxState: 'none' };
     this.isMakeNewOpen = false;
     bodyScroll(true);
   }

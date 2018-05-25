@@ -20,9 +20,10 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
   @Output() makeRereply = new EventEmitter<Reply>();
   @Output() modifyReply = new EventEmitter<Reply>();
   @Output() modifyRereply = new EventEmitter<Reply>();
-  @Output() deleteReply = new EventEmitter<string>();
+  @Output() deleteReply = new EventEmitter<Reply>();
   @Output() deleteRereply = new EventEmitter<Reply>();
-  accountInfo: iAccount = { loggedIn: false, accessToken: undefined, reduxState: 'none' };
+  accountInfo: iAccount = 
+    { loggedIn: false, accessToken: undefined, reduxState: 'none' };
   isCommentShowed = false;
   isTextEditMode = false;
   isAbleToShowEditButtons = false; // 수정, 삭제 버튼 여부
@@ -105,7 +106,8 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
     removeReply(event) {
         if (event) { event.stopPropagation(); }
 
-        this.deleteReply.emit(this.reply._id);
+        this.deleteReply.emit(this.reply);
+        // this.deleteReply.emit(this.reply._id);
     }
 
     // 리리플을 삭제해요.
@@ -130,7 +132,7 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
         this.isTextEditMode = !this.isTextEditMode;
     }
 
-    updateReply(evnet) {
+    updateReply(event) {
         if (event) { event.stopPropagation(); }
 
         const reply: Reply = Object.assign({},

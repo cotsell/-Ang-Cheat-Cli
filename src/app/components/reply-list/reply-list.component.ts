@@ -122,7 +122,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
 
     if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn &&
         this.userInfo.reduxState === 'done' && this.userInfo.id !== undefined) {
-          
+
       const reply: Reply =
         Object.assign({}, {...event, userId: this.userInfo.id });
     
@@ -255,92 +255,138 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   }
 
   // 리플 삭제.
-  removeReply(event) {
-    const replyId = event;
-    this.network.removeReply(this.accountInfo.accessToken, replyId)
-      .subscribe(result => {
-        if (result.result === true) {
-          // TODO 그냥 전체 리플을 다시 받는게 나으려나..;;
-          console.log(result.payload);
+  removeReply(event: Reply) {
+    const reply: Reply = event;
+    const replyId = event._id;
 
-          const replyList = this.replyList.map(value => {
-            return value.historyId === result.payload.historyId ?
-              result.payload : value;
-          });
-          this.getUserInfosAndSet(replyList);
-        } else {
-          // TODO
-          console.error(result.msg);
-        }
-      });
+    if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn &&
+        this.userInfo.reduxState === 'done' && this.userInfo.id !== undefined) {
+
+      if (reply.userId === this.userInfo.id) {
+        this.network.removeReply(this.accountInfo.accessToken, replyId)
+        .subscribe(result => {
+          if (result.result === true) {
+            // TODO 그냥 전체 리플을 다시 받는게 나으려나..;;
+            // console.log(result.payload);
+
+            const replyList = this.replyList.map(value => {
+              return value.historyId === result.payload.historyId ?
+                result.payload : value;
+            });
+            this.getUserInfosAndSet(replyList);
+          } else {
+            // TODO
+            console.error(result.msg);
+          }
+        });
+      } else {
+        console.error(`댓글 작성자 ${ reply.userId }와 로그인 사용자 ${ this.userInfo.id }는 다른 사람이에요.`);
+      }
+
+    } else {
+      console.error(`로그인 이후 이용해주세요.`);
+    }
+
   }
 
   // 리리플 삭제
-  removeRereply(event) {
+  removeRereply(event: Reply) {
     const rereply = event;
 
-    this.network.removeRereply(this.accountInfo.accessToken, rereply)
-      .subscribe(result => {
-        if (result.result === true) {
-          console.log(result.msg);
+    if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn &&
+        this.userInfo.reduxState === 'done' && this.userInfo.id !== undefined) {
 
-          const replyList = this.replyList.map(value => {
-            return value._id === result.payload._id ?
-                Object.assign({}, result.payload) : value;
-          });
-          this.getUserInfosAndSet(replyList);
-        } else {
-          alert(conf.MSG_REREPLY_REMOVE_REREPLY_ERR);
-        }
-      });
+      if (rereply.userId === this.userInfo.id) {
+        this.network.removeRereply(this.accountInfo.accessToken, rereply)
+        .subscribe(result => {
+          if (result.result === true) {
+            console.log(result.msg);
+  
+            const replyList = this.replyList.map(value => {
+              return value._id === result.payload._id ?
+                  Object.assign({}, result.payload) : value;
+            });
+            this.getUserInfosAndSet(replyList);
+          } else {
+            alert(conf.MSG_REREPLY_REMOVE_REREPLY_ERR);
+          }
+        });
+      } else {
+        console.error(`댓글 작성자 ${ rereply.userId }와 로그인 사용자 ${ this.userInfo.id }는 다른 사람이에요.`);
+      }
+
+    } else {
+      console.error(`로그인 이후 이용해주세요.`);
+    }
   }
 
   // 리플 업데이트
-  updateReply(event) {
-    console.log(event);
+  updateReply(event: Reply) {
+    // console.log(event);
 
-    this.network.updateReply(this.accountInfo.accessToken, event)
-      .subscribe(result => {
-        if (result.result === true) {
-          console.log(result.msg);
-          console.log(result.payload);
-          const replyList = this.replyList.map(value => {
-            if (value.historyId === result.payload.historyId) {
-              value = result.payload;
-            }
-            return value;
-          });
-          this.getUserInfosAndSet(replyList);
-        } else {
-          // TODO 실패.
-          console.log(result.msg);
-        }
-      });
+    if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn &&
+        this.userInfo.reduxState === 'done' && this.userInfo.id !== undefined) {
+
+      if (event.userId === this.userInfo.id) {
+        this.network.updateReply(this.accountInfo.accessToken, event)
+        .subscribe(result => {
+          if (result.result === true) {
+            // console.log(result.msg);
+            // console.log(result.payload);
+            const replyList = this.replyList.map(value => {
+              if (value.historyId === result.payload.historyId) {
+                value = result.payload;
+              }
+              return value;
+            });
+            this.getUserInfosAndSet(replyList);
+          } else {
+            // TODO 실패.
+            console.log(result.msg);
+          }
+        });
+      } else {
+        console.error(`댓글 작성자 ${ event.userId }와 로그인 사용자 ${ this.userInfo.id }는 다른 사람이에요.`);
+      }
+
+    } else {
+      console.error(`로그인 이후 이용해주세요.`);
+    }
   }
 
   // 리리플 업데이트
-  updateRereply(event) {
-    console.log(event);
+  updateRereply(event: Reply) {
+    // console.log(event);
 
-    this.network.updateRereply(this.accountInfo.accessToken, event)
-      .subscribe(result => {
-        if (result.result === true) {
-          // TODO TEST
-          console.log(result.msg);
-          console.log(result.payload);
+    if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn &&
+        this.userInfo.reduxState === 'done' && this.userInfo.id !== undefined) {
 
-          const replyList = this.replyList.map(value => {
-            if (value._id === result.payload._id) {
-              value = Object.assign({}, result.payload);
-            }
-            return value;
-          });
-          this.getUserInfosAndSet(replyList);
-        } else {
-          // TODO
-          console.log(result.msg);
-        }
-      });
+      if (event.userId === this.userInfo.id) {
+        this.network.updateRereply(this.accountInfo.accessToken, event)
+        .subscribe(result => {
+          if (result.result === true) {
+            // TODO TEST
+            // console.log(result.msg);
+            // console.log(result.payload);
+  
+            const replyList = this.replyList.map(value => {
+              if (value._id === result.payload._id) {
+                value = Object.assign({}, result.payload);
+              }
+              return value;
+            });
+            this.getUserInfosAndSet(replyList);
+          } else {
+            // TODO
+            console.log(result.msg);
+          }
+        });
+      } else {
+        console.error(`댓글 작성자 ${ event.userId }와 로그인 사용자 ${ this.userInfo.id }는 다른 사람이에요.`);
+      }
+    } else {
+      console.error(`로그인 이후 이용해주세요.`);
+    }
   }
 
   ngOnDestroy() {
