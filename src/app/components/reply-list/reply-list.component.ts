@@ -292,6 +292,7 @@ export class ReplyListComponent implements OnInit, OnDestroy {
   // 리리플 삭제
   removeRereply(event: Reply) {
     const rereply = event;
+    // console.log(event);
 
     if (this.accountInfo.reduxState === 'done' && this.accountInfo.loggedIn &&
         this.userInfo.reduxState === 'done' && this.userInfo.id !== undefined) {

@@ -1,5 +1,12 @@
 @import '../../../styles';
 
+#background {
+  width: 100%;
+  height: 2rem;
+  background-color: #4d4d4d;
+
+}
+
 #main_grid {
   display: grid;
   grid-template-columns: 2rem 2rem auto 2rem 2rem;
@@ -9,6 +16,7 @@
   box-sizing: border-box;
   align-content: center;
   background-color: #4d4d4d;
+  width: 100%;
 
   position: relative;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
@@ -111,11 +119,15 @@
 // }
 
 // @media (min-width: $g_mediaTablet) {
+  
 // }
 
-// @media (min-width: $g_mediaLaptop) {
-
-// }
+@media (min-width: $g_mediaLaptop) {
+  #main_grid {
+    width: 900px;
+    margin: 0px auto 0px auto;
+  }
+}
 
 // @media (min-width: $g_mediaDesktop) {
 

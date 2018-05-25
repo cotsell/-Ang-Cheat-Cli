@@ -1,7 +1,7 @@
 @import '../../../styles';
 
 #mainDiv {
-    width: 768px;
+    width: 900px;
     margin: 0px auto 0px auto;
     background-color: white;
 
@@ -48,10 +48,15 @@
 }
 
 @media (min-width: $g_mediaTablet) {
+    #mainDiv {
+        width: 100%;
+    }
 }
 
 @media (min-width: $g_mediaLaptop) {
-
+    #mainDiv {
+        width: 900px;
+    }
 }
 
 // @media (min-width: $g_mediaDesktop) {

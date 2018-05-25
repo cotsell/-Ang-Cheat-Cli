@@ -22,7 +22,7 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
   @Output() modifyRereply = new EventEmitter<Reply>();
   @Output() deleteReply = new EventEmitter<Reply>();
   @Output() deleteRereply = new EventEmitter<Reply>();
-  accountInfo: iAccount = 
+  accountInfo: iAccount =
     { loggedIn: false, accessToken: undefined, reduxState: 'none' };
   isCommentShowed = false;
   isTextEditMode = false;
@@ -51,15 +51,15 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
 
         if (value.loggedIn === true) {
           this.accountInfo = value;
-  
+
           // 댓글에 수정, 댓글, 삭제 버튼을 노출할 것인가를 결정.
           const userId = jwtDecode(this.accountInfo.accessToken)['userId'];
-  
+
           // 삭제된 리플이 아니라면 댓글은 쓸 수 있게 해줄께.
           if (this.reply.deletedReply === false) {
             this.isAbleToShowReplyButton = true;
           }
-  
+
           // 근데 리플 작성자가 너라면, 수정이랑 삭제도 할 수 있게 해줄께.
           if (userId === this.reply.userId &&
             this.reply.deletedReply === false) {
@@ -67,7 +67,7 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
           } else {
             this.isAbleToShowEditButtons = false;
           }
-  
+
         } else {
           // this.accountInfo.loggedIn = false;
           // this.accountInfo.accessToken = undefined;
@@ -87,12 +87,13 @@ export class ReplyArticleComponent implements OnInit, OnDestroy {
         this.isCommentShowed = !this.isCommentShowed;
     }
 
-    // 댓글 작성 후 보내기
+    // 대댓글 작성 후 보내기.
+    // 댓글 작성은 reply-list.component에 있어요.
     sendRereply(event) {
         if (event) { event.stopPropagation(); }
 
         const reply: Reply = {
-            parentId: this.reply._id,
+            parentId: this.reply.historyId,
             parentUserId: this.reply.userId,
             text: this.textarea.nativeElement.value,
             userId: ''
