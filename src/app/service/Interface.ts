@@ -101,3 +101,9 @@ export interface Result {
     code?: number;
     payload?: any;
 }
+
+export interface pageCursor {
+    cursor: number;
+    countPerPage: number;
+    totalCount: number;
+}

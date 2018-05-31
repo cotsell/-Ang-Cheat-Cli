@@ -9,9 +9,9 @@
     
         <div id="pagination">
             <app-pagination
-                [cursor]="4"
-                [totalArticle]="101"
-                [perPage]="10"
+                [cursor]="cursor.cursor"
+                [totalArticle]="cursor.totalCount"
+                [perPage]="cursor.countPerPage"
                 (output)="clickedPagination($event)"
                 >
             </app-pagination>

@@ -6,7 +6,7 @@ import { Subscription } from 'rxJs';
 import * as Redux from '../../service/redux';
 import { Network } from '../../service/Network';
 import { unSubscribe } from '../../service/utils';
-import { UserInfo, DocumentInfo } from '../../service/Interface';
+import { UserInfo, DocumentInfo, pageCursor } from '../../service/Interface';
 import { NewDocumentList, RemoveAllDocumentList, FillUserInfo } from '../../service/redux/DocumentListReducer';
 
 
@@ -20,6 +20,7 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   isNoResult = false;
   userInfo: UserInfo;
   docuList: DocumentInfo[];
+  cursor: pageCursor = { cursor: 1, countPerPage: 30, totalCount: 1 };
 
   accountSubsc: Subscription;
   userInfoSubsc: Subscription;
@@ -94,14 +95,17 @@ export class DocumentListComponent implements OnInit, OnDestroy {
     // console.log(`검색어 확인`);
     // console.log(`${lang}, ${type}, ${subj}`);
 
-    this.network.searchDocument(lang, type, subj)
+    this.network.searchDocument(lang, type, subj, this.cursor)
     .subscribe(value => {
       if (value.result === true) {
-        this.isNoResult = false;
-        this.store.dispatch(new NewDocumentList(value.payload));
 
-        const ids = this.takeUserIds(value.payload);
+        this.isNoResult = false;
+        this.cursor.totalCount = value.payload.totalCount;
+        this.store.dispatch(new NewDocumentList(value.payload.list));
+
+        const ids = this.takeUserIds(value.payload.list);
         this.getUserInfos(ids);
+
       } else {
         console.log(value.msg);
         this.isNoResult = true;
@@ -141,6 +145,8 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   clickedPagination(event) {
     console.log(event);
     // TODO pagination의 상태가 변경되면 해야 할 코드..
+    this.cursor.cursor = event;
+    this.searchDocument();
   }
 
   ngOnDestroy() {

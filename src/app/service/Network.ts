@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxJs';
 
-import { DocumentInfo, UserInfo, Result, Category, Reply } from '../service/Interface';
+import { DocumentInfo, UserInfo, Result, Category, Reply, pageCursor } from '../service/Interface';
 import * as SysConf from '../service/SysConf';
 import * as Redux from './redux';
 
@@ -176,8 +176,8 @@ export class Network {
     }
 
     // type의 값은 서버의 DB/document.ts의 searchDocument()에서 확인 가능해요.
-    searchDocument(lang: string, type: number, subject: string): Observable<Result> {
-        const query = `?lang=${lang}&type=${type}&subj=${subject}`;
+    searchDocument(lang: string, type: number, subject: string, cursor: pageCursor): Observable<Result> {
+        const query = `?lang=${lang}&type=${type}&subj=${subject}&cursor=${cursor.cursor}&cpp=${cursor.countPerPage}&total=${cursor.totalCount}`;
         return this.http.get<Result>(SysConf.SEARCH_DOCUMENT + query);
     }
 
