@@ -49,6 +49,15 @@
         // justify-content: center;
         margin: auto;
 
+        #userDocuList {
+          #count {
+            cursor: pointer;
+            &:hover {
+              color: tomato;
+            }
+          }
+        }
+
         #scrap {
           #scrapCount {
             cursor: pointer;

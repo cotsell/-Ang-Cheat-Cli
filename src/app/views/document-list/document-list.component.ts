@@ -17,6 +17,7 @@ import { NewDocumentList, RemoveAllDocumentList, FillUserInfo } from '../../serv
 })
 export class DocumentListComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
+  accessToken: string = undefined;
   isNoResult = false;
   userInfo: UserInfo;
   docuList: DocumentInfo[];
@@ -43,8 +44,22 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   subscribeRouter() {
     this.route.queryParams
     .subscribe(value => {
-      console.log(value);
-      this.searchDocument();
+      // -----------------------------------------------------------
+      // ---- 정리용 함수 모음.
+      // -----------------------------------------------------------
+      const func = (() => {
+        return new Promise((resolve, reject) => {
+          this.pause();
+        }
+        )})();
+      // -----------------------------------------------------------
+      // ---- 정리용 함수 모음 끝.
+      // -----------------------------------------------------------
+
+      func.then(result => {
+        this.onInitAfterCheckingAccount();
+      });
+
     });
   }
 
@@ -56,16 +71,24 @@ export class DocumentListComponent implements OnInit, OnDestroy {
       if (result.reduxState === 'done') {
         if (result.loggedIn) {
           this.isLoggedIn = result.loggedIn;
-        }
+          this.accessToken = result.accessToken;
+        } 
+
+        this.onInitAfterCheckingAccount();
       }
     });
+  }
 
+  onInitAfterCheckingAccount() {
+    const data = this.route.snapshot.data[0]['userDocu'];
+    // console.log(`data: ${data}`);
 
-    // Delete Me after Testing. 05-23.
-    // this.accountSubsc = this.account.loginWithAccessToken(Result => {
-    //   this.isLoggedIn = Result.loggedIn;
-    //   // this.accessToken = Result.accessToken;
-    // });
+    
+    if (!data) {
+      this.searchDocument();
+    } else {
+      this.searchUserDocuments();
+    }
   }
 
   // UserInfo 리덕스를 구독해요.
@@ -92,22 +115,49 @@ export class DocumentListComponent implements OnInit, OnDestroy {
     const type = this.route.snapshot.queryParams['type'];
     const subj = this.route.snapshot.queryParams['subj'];
 
-    // console.log(`검색어 확인`);
-    // console.log(`${lang}, ${type}, ${subj}`);
+    console.log(`검색어 확인`);
+    console.log(`${lang}, ${type}, ${subj}`);
 
     this.network.searchDocument(lang, type, subj, this.cursor)
-    .subscribe(value => {
-      if (value.result === true) {
-
+    .subscribe(result => {
+      if (result.result === true) {
+        
         this.isNoResult = false;
-        this.cursor.totalCount = value.payload.totalCount;
-        this.store.dispatch(new NewDocumentList(value.payload.list));
+        this.cursor.totalCount = result.payload.totalCount;
+        this.store.dispatch(new NewDocumentList(result.payload.list));
 
-        const ids = this.takeUserIds(value.payload.list);
+        const ids = this.takeUserIds(result.payload.list);
         this.getUserInfos(ids);
 
       } else {
-        console.log(value.msg);
+        console.log(result.msg);
+        this.isNoResult = true;
+      }
+    });
+  }
+
+  // 유저 프로필 등에서 유저가 작성한 문서 리스트를 누르면 작동되는 함수.
+  // Access Token이 없을때, 있는데 문서 작성 리스트의 유저 본인이 조회할 때,
+  // 있는데 문서 작성 리스트의 유저 본인이 아닌 유저가 조회할 때
+  // 이렇게 3가지 모드로 또 나뉘어요.
+  // network 함수에서 access token이 있는지 알아서 검사해서 작동시킬거고,
+  // 서버에서 access token의 유저와 문서 리스트의 유저가 같은 유저인지 아닌지를
+  // 알아서 구분하고 작동시켜요. 
+  // 그래서 여기서는 그냥 냅따 데이터가 undefined이든 아니든 때려 넣고 봐요.
+  searchUserDocuments() {
+    const docuUserId = this.route.snapshot.queryParams['docuUserId'];
+    
+    this.network.searchUserDocuments(this.accessToken, docuUserId, this.cursor)
+    .subscribe(result => {
+      if (result.result === true) {
+        this.isNoResult = false;
+        this.cursor.totalCount = result.payload.totalCount;
+        this.store.dispatch(new NewDocumentList(result.payload.list));
+
+        const ids = this.takeUserIds(result.payload.list);
+        this.getUserInfos(ids);
+      } else {
+        console.log(result.msg);
         this.isNoResult = true;
       }
     });
@@ -144,9 +194,25 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   // 사용자가 pagination을 사용하면 실행되는 함수에요
   clickedPagination(event) {
     console.log(event);
-    // TODO pagination의 상태가 변경되면 해야 할 코드..
+    const userDocuMode = this.route.snapshot.data[0]['userDocu'];
     this.cursor.cursor = event;
-    this.searchDocument();
+
+    if (!userDocuMode) {
+
+      this.searchDocument();
+    } else {
+      this.searchUserDocuments();
+    }
+  }
+
+  pause() {
+    this.store.dispatch(new RemoveAllDocumentList());
+    this.cursor = 
+      {
+        cursor: 1,
+        countPerPage: 30,
+        totalCount: 1
+      };
   }
 
   ngOnDestroy() {

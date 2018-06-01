@@ -39,7 +39,10 @@ const route: Routes = [
   { path: 'writeDocu/:relatedId', component: DocumentEditComponent },
   { path: 'writeDocu/:documentId/edit', component: DocumentEditComponent },
   { path: 'docuDetail/:id', component: DocumentDetailComponent },
-  { path: 'docuList', component: DocumentListComponent },
+  { path: 'docuList', component: DocumentListComponent,
+    data: [{ userDocu: false }] },
+  { path: 'docuList/userDocu', component: DocumentListComponent,
+    data: [{ userDocu: true }] },
   { path: 'profileDetail', component: ProfileDetailComponent },
   { path: 'profileDetail/:id', component: ProfileDetailComponent }
 ];

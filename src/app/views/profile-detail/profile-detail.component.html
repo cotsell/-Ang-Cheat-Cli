@@ -43,9 +43,11 @@
               </div>
             </div>
 
-            <div>
+            <div id="userDocuList">
               <div class="lineDivUp">작성한 글</div>
-              <div class="lineDivDown">
+              <div id="count"
+                class="lineDivDown"
+                (click)="showUserDocumentList($event)">
                 {{ userDocumentsCount }}
               </div>
             </div>

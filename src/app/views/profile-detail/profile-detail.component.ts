@@ -8,7 +8,7 @@
  */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxJs';
@@ -436,6 +436,17 @@ export class ProfileDetailComponent implements OnInit, OnDestroy {
       }
       return true;
     }
+  }
+
+  showUserDocumentList(event) {
+    if (event) { event.stopPropagation(); }
+
+    const query: NavigationExtras = {
+      queryParams: {
+        docuUserId: this.userInfo.id
+      }
+    }
+    this.router.navigate(['/docuList/userDocu'], query);
   }
 
   stopBubbling(event) {

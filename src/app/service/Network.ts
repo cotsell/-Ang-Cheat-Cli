@@ -176,9 +176,23 @@ export class Network {
     }
 
     // type의 값은 서버의 DB/document.ts의 searchDocument()에서 확인 가능해요.
-    searchDocument(lang: string, type: number, subject: string, cursor: pageCursor): Observable<Result> {
+    searchDocument( lang: string, type: number,
+                    subject: string, cursor: pageCursor): Observable<Result> {
         const query = `?lang=${lang}&type=${type}&subj=${subject}&cursor=${cursor.cursor}&cpp=${cursor.countPerPage}&total=${cursor.totalCount}`;
         return this.http.get<Result>(SysConf.SEARCH_DOCUMENT + query);
+    }
+
+    searchUserDocuments(accessToken: string | undefined, docuUserId: string,
+                        cursor: pageCursor): Observable<Result> {
+      if (accessToken) {
+        return this.http.post<Result>(SysConf.SEARCH_USER_DOCUMENTS,
+          { cursor: cursor, docuUserId: docuUserId },
+          { headers: { 'c-access-token': accessToken } });
+      } else {
+        return this.http.post<Result>(SysConf.SEARCH_USER_DOCUMENTS,
+          { cursor: cursor, docuUserId: docuUserId });
+      }
+                        
     }
 
     // Grade 1인 모든 카테고리의 grade 1 뎁스만 가지고 와요.

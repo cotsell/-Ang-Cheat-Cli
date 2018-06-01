@@ -10,106 +10,108 @@ Output
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 
 interface Page {
-    num: number;
-    selected: boolean;
+  num: number;
+  selected: boolean;
 }
 
 @Component({
-    selector: 'app-pagination',
-    templateUrl: './pagination.component.html',
-    styleUrls: ['./pagination.component.scss']
+  selector: 'app-pagination',
+  templateUrl: './pagination.component.html',
+  styleUrls: ['./pagination.component.scss']
 })
 export class PaginationComponent implements OnInit, OnChanges {
-    @Input() cursor = 1;
-    @Input() totalArticle = 0;
-    @Input() perPage = 10;
-    @Output() output: EventEmitter<number> = new EventEmitter();
-    MAX_PAGE = 0;
-    pages: Page[] = [];
+  @Input() cursor = 1;
+  @Input() totalArticle = 0;
+  @Input() perPage = 10;
+  @Output() output: EventEmitter<number> = new EventEmitter();
+  MAX_PAGE = 0;
+  pages: Page[] = [];
 
-    constructor() { }
+  constructor() { }
 
-    ngOnInit() {
+  ngOnInit() {
+  }
+
+  ngOnChanges() {
+    this.reRender();
+    // console.log(this.pages);
+  }
+
+  reRender() {
+    let start = 1;
+    let end = 10;
+    this.MAX_PAGE = (this.totalArticle / this.perPage);
+
+    if ((this.totalArticle % this.perPage) > 0) {
+      this.MAX_PAGE += 1;
     }
+    // console.log((this.totalArticle % this.perPage));
 
-    ngOnChanges() {
-        this.reRender();
-        // console.log(this.pages);
-    }
+    this.pages = [];
 
-    reRender() {
-        let start = 1;
-        let end = 10;
-        this.MAX_PAGE = (this.totalArticle / this.perPage);
-        if ((this.totalArticle % this.perPage) > 0) {
-            this.MAX_PAGE += 1;
-        }
-        console.log((this.totalArticle % this.perPage));
-
-        this.pages = [];
-
-        if (this.MAX_PAGE <= 10) {
-            for (let i = start; i <= this.MAX_PAGE; i++) {
-                draw(i, this.cursor, this.pages);
-            }
-        } else { // 총페이지가 10보다 크고..
-            if (this.cursor < 6) { // 커서가 6보다 작으면..
-                start = 1;
-                end = 10;
-            } else { // 커서가 6보다 크면..
-                if (this.cursor < (this.MAX_PAGE - 9)) {
-                    start = this.cursor - 4;
-                    end = this.cursor + 4;
-                } else {
-                    start = this.MAX_PAGE - 9;
-                    end = this.MAX_PAGE;
-                }
-            }
-            // for (let i = start; i < (start + 9); i++) {
-            console.log(`start: ${start}, end: ${end}, cursor: ${this.cursor}, max-page: ${this.MAX_PAGE}`);
-
-            for (let i = start; i <= end; i++) {
-                draw(i, this.cursor, this.pages);
-            }
-        }
-
-        function draw(number, cursor, pages) {
-            if (cursor === number) {
-                pages.push({ num: number, selected: true });
-            } else {
-                pages.push({ num: number, selected: false });
-            }
-        }
-    }
-
-    // 페이지 변경을 하면 실행되는 함수에요
-    outputCursor(number, event?) {
-        if (event !== undefined && event !== null) {
-            event.stopPropagation();
-        }
-            this.output.emit(number);
-    }
-
-    // 왼쪽방향 커서를 클릭하면 실행
-    leftCursor(event) {
-        event.stopPropagation();
-        const result = this.cursor - 1;
-        if (result < 1) {
-            this.outputCursor(1);
+    if (this.MAX_PAGE <= 10) {
+      for (let i = start; i <= this.MAX_PAGE; i++) {
+        draw(i, this.cursor, this.pages);
+      }
+    } else { // 총페이지가 10보다 크고..
+      if (this.cursor < 6) { // 커서가 6보다 작으면..
+        start = 1;
+        end = 10;
+      } else { // 커서가 6보다 크면..
+        if (this.cursor < (this.MAX_PAGE - 9)) {
+          start = this.cursor - 4;
+          end = this.cursor + 4;
         } else {
-            this.outputCursor(result);
+          start = this.MAX_PAGE - 9;
+          end = this.MAX_PAGE;
         }
+      }
+      // for (let i = start; i < (start + 9); i++) {
+      console.log(`start: ${start}, end: ${end}, cursor: ${this.cursor}, max-page: ${this.MAX_PAGE}`);
+
+      for (let i = start; i <= end; i++) {
+        draw(i, this.cursor, this.pages);
+      }
     }
 
-    // 오른쪽 방향 커서를 클릭하면 실행
-    rightCursor(event) {
-        event.stopPropagation();
-        const result = this.cursor + 1;
-        if (result > this.MAX_PAGE) {
-            this.outputCursor(this.MAX_PAGE);
+    function draw(number, cursor, pages) {
+        if (cursor === number) {
+            pages.push({ num: number, selected: true });
         } else {
-            this.outputCursor(result);
+            pages.push({ num: number, selected: false });
         }
     }
+  }
+
+  // 페이지 변경을 하면 실행되는 함수에요
+  outputCursor(number, event?) {
+    if (event) { event.stopPropagation(); }
+
+    this.output.emit(number);
+  }
+
+  // 왼쪽방향 커서를 클릭하면 실행
+  leftCursor(event) {
+    event.stopPropagation();
+
+    const result = this.cursor - 1;
+    if (result < 1) {
+      this.outputCursor(1);
+    } else {
+      this.outputCursor(result);
+    }
+  }
+
+  // 오른쪽 방향 커서를 클릭하면 실행
+  rightCursor(event) {
+    event.stopPropagation();
+
+    const result = this.cursor + 1;
+    if (result > this.MAX_PAGE) {
+      this.outputCursor(this.MAX_PAGE);
+    } else {
+      this.outputCursor(result);
+    }
+  }
 
 }
