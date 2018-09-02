@@ -111,16 +111,26 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
 
     // 선택된 카테고리의 내부 정보가 서버로부터 받아졌는지 확인,
     // 안 받아졌다면, 서버로 요청.
-    this.category = this.categoryList.find(isRight);
-    if (this.category !== undefined) {
-      if (this.category.subCategory === undefined ||
-          this.category.subCategory === null ||
-          this.category.subCategory.length < 1) {
 
-        this.network.getCategory(this.category._id)
-          .subscribe(checkCategoryResult);
-      }
-    }
+    // TODO 아래 코드에 문제가 있어서, 일단 대체용 코드사용.
+    // 카테고리 매니져로 카테고리 구조 수정 후에 메뉴의 카테고리를 변경하면,
+    // 변경된 내용이 적용되지 않는 문제가 있음. 일단은 무조껀 새로 가져와서 갱신하게 
+    // 해둠.
+    // this.category = this.categoryList.find(isRight);
+    // if (this.category !== undefined) {
+    //   if (this.category.subCategory === undefined ||
+    //       this.category.subCategory === null ||
+    //       this.category.subCategory.length < 1) {
+
+    //     this.network.getCategory(this.category._id)
+    //     .subscribe(checkCategoryResult);
+    //   }
+    // }
+
+    // 바로 위 내용의 대체코드임. 해결되면 삭제 요망.
+    this.category = this.categoryList.find(isRight);
+    this.network.getCategory(this.category.historyId)
+    .subscribe(checkCategoryResult);
 
     // ---- 정리용도 함수들 ----
     function isRight(value: Category) {
@@ -128,6 +138,8 @@ export class TitlebarMenuComponent implements OnInit, OnDestroy {
     }
 
     function checkCategoryResult(value: Result) {
+      console.log(`In category networking`);
+      console.log(value);
       store.dispatch(new Modify(value.payload));
     }
   }

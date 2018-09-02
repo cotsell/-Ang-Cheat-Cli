@@ -36,7 +36,7 @@ export function Reducer(state = init, action) {
 
         case MODIFY:
             return state.map(value => {
-                return value._id === action.payload._id ?
+                return value.historyId === action.payload.historyId ?
                     Object.assign({}, action.payload) : value;
             });
 

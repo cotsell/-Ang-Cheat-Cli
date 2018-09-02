@@ -32,12 +32,14 @@
         width: 10rem;
         background-color: #4d4d4d;
         border-radius: 5px;
+        cursor: pointer;
         
         #userImg {
           width: calc(100% - 4px);
           height: calc(100% - 4px);
           border-radius: 5px;
           margin: 2px;
+          cursor: pointer;
         }
       }
 

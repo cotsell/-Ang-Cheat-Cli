@@ -21,7 +21,7 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   isNoResult = false;
   userInfo: UserInfo;
   docuList: DocumentInfo[];
-  cursor: pageCursor = { cursor: 1, countPerPage: 30, totalCount: 1 };
+  cursor: pageCursor = { cursor: 1, countPerPage: 3, totalCount: 1 };
 
   accountSubsc: Subscription;
   userInfoSubsc: Subscription;
@@ -44,18 +44,12 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   subscribeRouter() {
     this.route.queryParams
     .subscribe(value => {
-      // -----------------------------------------------------------
-      // ---- 정리용 함수 모음.
-      // -----------------------------------------------------------
-      const func = (() => {
-        return new Promise((resolve, reject) => {
-          this.pause();
-        }
-        )})();
-      // -----------------------------------------------------------
-      // ---- 정리용 함수 모음 끝.
-      // -----------------------------------------------------------
-
+      
+      const func = new Promise((resolve, reject) => {
+        this.pause();
+        resolve();
+      });
+      
       func.then(result => {
         this.onInitAfterCheckingAccount();
       });
@@ -80,9 +74,9 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   }
 
   onInitAfterCheckingAccount() {
+    // console.log(`onInitAfterCheckingAccount()`);
     const data = this.route.snapshot.data[0]['userDocu'];
     // console.log(`data: ${data}`);
-
     
     if (!data) {
       this.searchDocument();
@@ -210,7 +204,7 @@ export class DocumentListComponent implements OnInit, OnDestroy {
     this.cursor = 
       {
         cursor: 1,
-        countPerPage: 30,
+        countPerPage: 3,
         totalCount: 1
       };
   }

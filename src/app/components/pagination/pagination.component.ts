@@ -34,7 +34,8 @@ export class PaginationComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     this.reRender();
-    // console.log(this.pages);
+    console.log(this.pages);
+    console.log(`${this.cursor} : ${this.totalArticle} : ${this.perPage}`);
   }
 
   reRender() {

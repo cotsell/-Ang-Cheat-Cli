@@ -1,4 +1,5 @@
-export const SERVER_ADDRESS = 'http://localhost:8010';
+// export const SERVER_ADDRESS = 'http://localhost:8010';
+export const SERVER_ADDRESS = 'http://49.163.172.170:8010';
 
 // Account
 export const SIGNUP = SERVER_ADDRESS + '/account/signup';
